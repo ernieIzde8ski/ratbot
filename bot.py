@@ -1,24 +1,21 @@
-# bot.py #i don't know what this does but it's here i guess
+# bot.py 
+# ^ dunno what it means but i assume it serves a purpose
 import os
+import sys
 import discord
 import asyncio
 from datetime import datetime
 import random
-
-
-TOKEN = 'put token here'
+import config
 
 client = discord.Client()
-
 
 def is_in(symbol, lst):
     return any(symbol in x for x in lst)
 
-
-shutUp = ['shut up liberal', 'what do you want', 'i am your god who the hell do you think you are', 'wot', 'wut', 'WHAT DO YOU WANT', 'wot you want, pathetic mortal', 'lower your shields and surrender your ships because this is the end for your civilization', 'death to capitalism & you', 'do you have nothing better with your life to do right now', 'what', 'что', 'look i don\'t know what you think is a productive use of time but this is not it', 'how HIGH do you even have to BE', 'do you ever think of the utterly meaningless impact your messages right here will ever have', 'couldn\'t you be out there being productive rn', 'I DONT CARE ABOUT YOU', 'you look your best away from the keyboard; never forget', 'https://en.wikipedia.org/wiki/Shut_up', 'https://www.youtube.com/watch?v=KRB-iHGHSqk', 'https://www.youtube.com/watch?v=RwC9CP_2YKE', 'this is explicitly a bot admin command what do you want from me', '']
-slursList = ['nigger', 'nigga', 'niga', 'negroid', 'jigaboo', 'cracker', 'faggot', 'fag', 'slut', 'whore', 'gook', 'ExampleSlur']
-guildOptIn = ['488475203303768065', '682704934621282307']
-notFunctional = 'this functional is not currently functional. please fix it soon eridan man'
+def restart():
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
 
 
 @client.event
@@ -28,49 +25,55 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    coolMessageIDs = '(' + str(message.guild.id) + '.' + str(message.channel.id) + '.' + str(message.id) + ')'
-    now = datetime.today()
 
-    if message.author == client.user or message.author.bot: #obvious return is obvious
+    auth = message.author
+
+    if auth == client.user or message.author.bot: #obvious return is obvious
         return
 
-    elif 'retard' in message.content: #correct ratards
-        await message.channel.send('*ratard')
+    now = datetime.today().strftime("%d/%m/%Y %H:%M:%S")
+    authID = message.author.id
+    msg = message.content
+    msgID = message.id
+    guild = message.guild
+    guildID = message.guild.id
+    cn = message.channel
+    cnName = message.channel.name
+    cnID = message.channel.id
+    coolMsgIDs = str(guildID) + '.' + str(cnID) + '.' + str(msgID)
+
+    if authID == 368780147563823114 and msg.lower() == 'ernie':
+        await cn.send(spokesperson)
         return
 
-    elif any(word in message.content for word in slursList) and any(word in str(message.guild.id) for word in guildOptIn): #detect slurs & make them only work in whichever servers have opted in
+    elif 'retard' in msg: #correct ratards
+        await cn.send('*ratard')
+        return
+
+    elif any(word in msg for word in config.slursList) and any(word in str(message.guild.id) for word in config.guildOptIn): #detect slurs & make them only work in whichever servers have opted in
         print('loser detected')
-        await message.channel.send('loser ' + message.author.mention)
+        await cn.send('loser ' + message.author.mention)
         return
 
-    elif message.content.startswith('ratmin ') or message.content == 'ratmin' or message.content == 'ratmint':#non functioning ratmin commands
-        print('[' + now.strftime("%d/%m/%Y %H:%M:%S") + '] ratmin in #' + message.channel.name + ' of ' + str(message.guild) + ' ' + coolMessageIDs)
-        if message.author.id == 302956027656011776:
-            if message.content == 'ratmin sendhere':#don't bother getting this to work
-                channel = message.channel
-                await channel.send('say hello now')
-
-                def check(m):
-                    return m.content == 'hello' and m.channel == channel
-
-                msg = await client.wait_for('message', check=check)
-                await channel.send('hello {.author}!'.format(msg))
-                return
+    elif msg.startswith('ratmin ') or msg == 'ratmin' or msg == 'ratmint':#non functioning ratmin commands
+        print(f'[{now}] ratmin in #{cnName} of {str(guild)} ({coolMsgIDs})')
+        if authID == config.ratminID:
+            if msg == 'ratmin sendhere':#don't bother getting this to work
+                await cn.send(notFunctional)
             else:
-                await message.channel.send('bruh that\'s not a command')
+                await cn.send('bruh that\'s not a command')
                 return
         else:#if someone isn't ratmin, tell them to shut up
-            await message.channel.send(random.choice(shutUp))
+            await cn.send(random.choice(config.shutUp))
             return
-
-    elif message.content == 'rat' or message.content == 'ratbot':#respond to rat with rat
-        print('[' + now.strftime("%d/%m/%Y %H:%M:%S") + '] rat in #' + message.channel.name + ' of ' + str(message.guild) + ' ' + coolMessageIDs)
-        respuesta = 'rat'
-        await message.channel.send(respuesta)
+    elif msg == 'ratstart' and authID == config.ratminID:
+        restart()
+    elif msg.startswith('rat'):#respond to rat with rat
+        print(f'[{now}] rat in #{cnName} of {str(guild)} ({coolMsgIDs})')
+        await cn.send('rat')
         return
-
     else:
-#       print('else reached; message is ' + message.content) #for debugging
+#       print('else reached; message is ' + msg) #for debugging
         return
 
-client.run(TOKEN)
+client.run(config.TOKEN)
