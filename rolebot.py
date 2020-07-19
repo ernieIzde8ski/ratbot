@@ -1,3 +1,7 @@
+"""
+this one is bad
+Pretend it doesnt exist thanks
+"""
 import discord
 import asyncio
 
