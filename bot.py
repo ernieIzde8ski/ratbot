@@ -16,6 +16,12 @@ bot = commands.Bot(command_prefix='r.')
 item = 'item'
 lst = 'lst'
 
+#Yes i think i figured out cogs this time
+extensions = ['cogs.star trek']
+if __name__ == '__main__':
+	for extension in extensions:
+		bot.load_extension(extension)
+
 
 # really shortens down some useless lines
 def is_in(item, lst):
@@ -81,8 +87,7 @@ async def vessel(ctx, messageable: int, *, text: str):
 @commands.is_owner()
 async def admin(ctx, option: str):
 	if option == 'ratstart':
-		await ctx.send('idiot you know this is bugged')
-		await ctx.send('but ok')
+		await ctx.send('Suspended until further notice. Lo l!')
 		await restart()
 	if option == 'die':
 		await ctx.send('ok sure')
