@@ -1,8 +1,6 @@
 # i dont understand half of whats here myself
 # good luck
 # here's all the necessary imports
-import os
-import sys
 import discord
 import discord.ext.commands as commands
 import asyncio
@@ -10,40 +8,28 @@ from datetime import datetime
 import random
 import config
 from typing import Union
+from time import sleep
 
-bot = commands.Bot(command_prefix='r.')
+bot = commands.Bot(command_prefix=["r.", "rat! "])
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+intents.members = True
+
 # this seems necessary for some dumb reason
-item = 'item'
-lst = 'lst'
+item = ''
+lst = ''
 
 #Yes i think i figured out cogs this time
-extensions = ['cogs.star trek']
 if __name__ == '__main__':
-	for extension in extensions:
+	for extension in config.enabledcogs:
 		bot.load_extension(extension)
 
 
-# really shortens down some useless lines
+# is this what they call legacy code
 def is_in(item, lst):
 	return any(word in str(item) for word in lst)
-def now():
-	return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
-
-# defining functions for shutdown and restart
-async def die():
-	channel = bot.get_channel(config.statusChannel)
-	await channel.send('<:offline:708886391672537139> shutting down...'
-	+ f' ({now()})')
-	print('shutting down')
-	sys.exit()
-async def restart():
-	channel = bot.get_channel(config.statusChannel)
-	await channel.send(f'<:restarting:708887315853869087> restarting...'
-	+ f'           ({now()})')#  all these spaces are here to align the chat
-	print('restarting...')
-	python = sys.executable
-	os.execl(python, python, * sys.argv)
-
+def _removeNonAscii(s): return "".join(i for i in s if ord(i)<384)
 def msg_log(msg, msg_type):
 	#if in DMs
 	if msg.guild == None:
@@ -65,42 +51,14 @@ async def on_ready():
 	print(f'{bot.user} has connected to Discord!')
 	channel = bot.get_channel(config.statusChannel)
 	await channel.send('<:online:708885917133176932> online!'
-	+ f'                  ({now()})')
-
-@bot.command()
-@commands.is_owner()
-async def run(ctx, *, command: str):
-	eval(command)
-
-@bot.command()
-@commands.is_owner()
-async def echo(ctx, messageable: Union[commands.TextChannelConverter, commands.UserConverter], *, text: str):
-	await messageable.send(text)
-
-@bot.command()
-@commands.is_owner()
-async def vessel(ctx, messageable: int, *, text: str):
-	messageable = bot.get_channel(messageable)
-	await messageable.send(text)
-
-@bot.command()
-@commands.is_owner()
-async def admin(ctx, option: str):
-	if option == 'ratstart':
-		await ctx.send('Suspended until further notice. Lo l!')
-		await restart()
-	if option == 'die':
-		await ctx.send('ok sure')
-		await die()
-
-@bot.command()
-async def time(ctx):
-	await ctx.send(f'it\'s {now()} in EST (Ernie Standard Time)')
-	return
+	+ f'                  ({str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))})')
 
 @bot.event
 async def on_message(message):
 
+	if message.author.id == 159985870458322944 and message.channel.id == 759131420823650364 and "you just advanced" in message.content:
+		sleep(5)
+		await message.delete()
 	auth = message.author
 	if auth == bot.user or message.author.bot:  # obvious return is obvious
 		return
@@ -110,6 +68,7 @@ async def on_message(message):
 	channel = message.channel
 	slursExist = is_in(item=msg, lst=config.slursList)
 	logChannel = bot.get_channel(config.logChannel)
+	cleaned_content = message.content
 
 	if guild != None:
 		guild_id = guild.id
@@ -119,7 +78,9 @@ async def on_message(message):
 		await logChannel.send(embed=msg_log(message, None))
 		await bot.process_commands(message)
 
-
+	if message.author.id == 562644324832247818 and 'baza' in message.content:
+		await message.delete()
+		await message.channel.send('Abake Owned?')
 	# respond when anyone says my name
 	if msg.lower() == 'ernie' and auth.id != config.ratmin_id:
 		await channel.send(config.spokesperson)
@@ -154,8 +115,8 @@ async def on_message(message):
 		await channel.send('did you mean: Señora')
 	elif 'senor' in msg.lower():
 		await channel.send('did you mean: Señor')
-
-	await bot.process_commands(message)
+	elif channel.name != 'rat':
+		await bot.process_commands(message)
 
 
 bot.run(config.TOKEN)
