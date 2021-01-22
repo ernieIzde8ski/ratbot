@@ -11,10 +11,7 @@ from typing import Union
 from time import sleep
 
 bot = commands.Bot(command_prefix=["r.", "rat! "])
-intents = discord.Intents.default()
-intents.typing = False
-intents.presences = False
-intents.members = True
+intents = discord.Intents.all()
 
 # this seems necessary for some dumb reason
 item = ''
@@ -23,7 +20,8 @@ lst = ''
 #Yes i think i figured out cogs this time
 if __name__ == '__main__':
 	for extension in config.enabledcogs:
-		bot.load_extension(extension)
+		try:   bot.load_extension(extension)
+		except commands.ExtensionError as e:   print(f"{e.__class__.__name__}: {e}")
 
 
 # is this what they call legacy code
@@ -56,12 +54,11 @@ async def on_ready():
 @bot.event
 async def on_message(message):
 
-	if message.author.id == 159985870458322944 and message.channel.id == 759131420823650364 and "you just advanced" in message.content:
-		sleep(5)
+	if message.author.id == 159985870458322944 and message.guild.id == 526207286067068928 and "you just advanced" in message.content:
+		sleep(10)
 		await message.delete()
 	auth = message.author
-	if auth == bot.user or message.author.bot:  # obvious return is obvious
-		return
+	if message.author == bot.user: return
 	msg = message.content
 	msgID = message.id
 	guild = message.guild
@@ -70,38 +67,17 @@ async def on_message(message):
 	logChannel = bot.get_channel(config.logChannel)
 	cleaned_content = message.content
 
-	if guild != None:
-		guild_id = guild.id
-	elif guild == None:
-		guild_id = None
-		logChannel = bot.get_channel(config.logChannel)
-		await logChannel.send(embed=msg_log(message, None))
-		await bot.process_commands(message)
-
 	if message.author.id == 562644324832247818 and 'baza' in message.content:
 		await message.delete()
 		await message.channel.send('Abake Owned?')
 	# respond when anyone says my name
-	if msg.lower() == 'ernie' and auth.id != config.ratmin_id:
+	if msg.lower() == config.adminname and auth.id != config.ratmin_id:
 		await channel.send(config.spokesperson)
 		return
 	elif "ernie reads star trek fanfics" in msg.lower():
 		await message.delete()
 	elif "ernie does not read star trek fanfics" in msg.lower():
 		await channel.send('True')
-	elif guild_id not in config.guildOptOut and 'retard' in msg:  # correct ratards
-		await channel.send('*ratard')
-		return
-
-	# detect slurs & make them only work in whichever servers have opted in
-	elif slursExist and guild_id in config.guildOptIn:
-		print('loser detected')
-		await channel.send('loser ' + auth.mention)
-		return
-	# kill tenor links lmao
-	elif guild_id in config.guildOptIn and (msg.startswith('https://giphy.com/gifs/') or msg.startswith('https://tenor.com/view/')):
-		await channel.send('loser ' + auth.mention)
-		await message.delete()
 	# the ultimate purpose: respond to rat with rat & moderate rat channels
 	elif channel.name == 'rat' and msg != 'rat':
 		try:
