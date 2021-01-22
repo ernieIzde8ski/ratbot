@@ -7,6 +7,8 @@ ratmin_id = 302956027656011776
 statusChannel = 708882977202896957
 logChannel = 715297562613121084
 enabledcogs = ['cogs.admin', 'cogs.misc', "cogs.star trek"]
+#only relevant if you want to enable cogs.hypixel
+api_key = "do /api key on hypixel"
 #line when responding to my name
 adminname= "Ernie"
 spokesperson = "i am his spokesperson, what do you want of him"
