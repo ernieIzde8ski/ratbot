@@ -1,0 +1,15 @@
+START = THING OPTIONAL_SPEC_1 ACTION OPTIONAL_SPEC_2 ". This is solved by" RESOLUTIONS "."
+
+THING = "A distress call" | "A disease" | "A mysterious lifeform" | "An asteroid" | "A clone of" CHARACTER_CLONE | SHIP | "A moral dilemma" | "Q, teaching Picard," | "A rogue Starfleet Admiral"
+ACTION = "steals the Enterprise and flies" LOCATION | "makes everyone go mad" | "marries" CHARACTER | "accuses" CHARACTER "of" CRIME | "body swaps" BODY_SWAP "with" BODY_SWAP | "travels through time" | "dies"
+RESOLUTIONS = RESOLUTION | RESOLUTION "and" RESOLUTION | RESOLUTIONS "and" RESOLUTION
+RESOLUTION = "diplomacy" | "lame resolution sorry i cant think of anything"
+
+OPTIONAL_SPEC_1 = NONE | "that's actually" SPEC_1
+OPTIONAL_SPEC_2 = NONE | SPEC_2
+
+
+CHARACTER_CLONE = "Picard" | "Data" | "Riker" | "Deanna Troi, Goddess of Empathy" | "Regiment Broccoli"
+SHIP = "A Ferengi cargo ship" | "A Borg Cube" | "A Romulan Bird-of-Prey" | "A Klingon warship"
+LOCATION = "through the Neutral Zone" | "to Qo'noS" | "to an uncharted planet" | "into the Q Continuum"
+CHARACTER = "Picard" | "Data" | "Riker" | "Troi" | "Dr. Crusher" | "Wesley" | "Worf" | "Cmdr. LaForge" | "Ensign Ro"
