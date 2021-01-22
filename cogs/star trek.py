@@ -21,7 +21,7 @@ class startrek(commands.Cog):
         await ctx.send('Reloaded! probably')
 
     @commands.command(aliases = ["tos"])
-    async def random_tos(self, ctx, count: int = 3):
+    async def random_tos(self, ctx, count: int = 1):
         """Generates a randomized Star Trek: TOS plot."""
 
         if not (1 <= count <= 5):
@@ -31,7 +31,7 @@ class startrek(commands.Cog):
             await ctx.send(self.tos_generator.generate())
 
     @commands.command(aliases = ["tng"])
-    async def random_tng(self, ctx, count: int = 3):
+    async def random_tng(self, ctx, count: int = 1):
         """Generates a randomized Star Trek: TNG plot."""
         if not (1 <= count <= 5):
             await ctx.send(f"1-5 pls (Not {count} Bro)")
