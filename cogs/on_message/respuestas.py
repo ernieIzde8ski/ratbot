@@ -5,8 +5,6 @@ import config
 class respuestas(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.corrections = [("bano", "baño")]
-        self.dym = "did you mean: "
 
     @commands.Cog.listener("on_message")
     async def Censorship(self, ctx):
@@ -32,12 +30,6 @@ class respuestas(commands.Cog):
                 print("tenor loser detected")
                 await ctx.channel.send(f"loser {ctx.author.mention}")
                 await ctx.message.delete()
-        correction = self.dym
-        for i in self.corrections:
-            if i[0] in words:
-                correction += f"{i[1]}, "
-        if correction != self.dym:
-            await ctx.channel.send()
 
 def setup(bot):
     bot.add_cog(respuestas(bot))
