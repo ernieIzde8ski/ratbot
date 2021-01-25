@@ -1,6 +1,6 @@
 import discord
 import discord.ext.commands as commands
-corrections_list = ("bano", "Baño"), ("senor", "Señor"), ("senora", "Señora"), ("jalapeno", "Jalapeño")
+corrections_list = ("bano", "Baño"), ("senor", "Señor"), ("senora", "Señora"), ("jalapeno", "Jalapeño"), ("canada", "Cañada")
 
 class corrections(commands.Cog):
     def __init__(self, bot):
