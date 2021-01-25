@@ -4,9 +4,10 @@
 import discord
 import discord.ext.commands as commands
 import asyncio
+import config
+from token import TOKEN
 from datetime import datetime
 import random
-import config
 from typing import Union
 from time import sleep
 
@@ -94,5 +95,5 @@ async def on_message(message):
 		await bot.process_commands(message)
 
 
-bot.run(config.TOKEN)
+bot.run(TOKEN)
 # clouds
