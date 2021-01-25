@@ -7,7 +7,7 @@ import discord.ext.commands as commands
 import asyncio
 from hypixelaPY import Hypixel
 
-from config import api_key
+from token import api_key
 hypixel = Hypixel(api_key)
 
 class hypixelbasedlevels(commands.Cog):
