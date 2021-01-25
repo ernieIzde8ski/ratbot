@@ -5,7 +5,7 @@ import discord
 import discord.ext.commands as commands
 import asyncio
 import config
-from token import TOKEN
+from secrets import token
 from datetime import datetime
 import random
 from typing import Union
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 		try:   bot.load_extension(extension)
 		except commands.ExtensionError as e:   print(f"{e.__class__.__name__}: {e}")
 
-
+def now(): return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
 # is this what they call legacy code
 def is_in(item, lst):
 	return any(word in str(item) for word in lst)
@@ -59,7 +59,7 @@ async def on_message(message):
 		sleep(10)
 		await message.delete()
 	auth = message.author
-	if message.author == bot.user: return
+	if message.author.bot: return
 	msg = message.content
 	msgID = message.id
 	guild = message.guild
@@ -79,21 +79,18 @@ async def on_message(message):
 	elif "ernie does not read star trek fanfics" in msg.lower():
 		await channel.send('True')
 	# the ultimate purpose: respond to rat with rat & moderate rat channels
-	elif channel.name == 'rat' and msg != 'rat':
+	elif message.guild and (message.channel.name == "rat" and message.content != "rat"):
 		try:
 			await message.delete()
 		except Forbidden:
 			await logChannel.send(f'Lacking perms to delete a message in {guild}. Sad!')
 	elif msg.startswith('rat'):
 		await channel.send('rat')
-		await logChannel.send(embed=msg_log(message, 'rat'))
-	elif 'senora' in msg.lower():
-		await channel.send('did you mean: Señora')
-	elif 'senor' in msg.lower():
-		await channel.send('did you mean: Señor')
-	elif channel.name != 'rat':
+		print(f"[{now()}] rat from {str(message.author)} in " + ("dms" if not message.guild else message.guild.name))
+
+	if not message.guild or message.channel.name != "rat":
 		await bot.process_commands(message)
 
 
-bot.run(TOKEN)
+bot.run(token)
 # clouds
