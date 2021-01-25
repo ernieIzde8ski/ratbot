@@ -5,7 +5,6 @@ ratmin_id = 302956027656011776
 statusChannel = 708882977202896957
 logChannel = 715297562613121084
 enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.on_message.dms", "cogs.on_message.PIPI", "cogs.on_message.corrections"]
-api_key = "ed428f1c-3aac-457f-afcf-09ed85cef8e5"
 #line when responding to my name
 adminname= "Ernie"
 spokesperson = "i am his spokesperson, what do you want of him"
