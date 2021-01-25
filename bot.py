@@ -63,7 +63,6 @@ async def on_message(message):
 	msgID = message.id
 	guild = message.guild
 	channel = message.channel
-	slursExist = is_in(item=msg, lst=config.slursList)
 	logChannel = bot.get_channel(config.logChannel)
 	cleaned_content = message.content
 
