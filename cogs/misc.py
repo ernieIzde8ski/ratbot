@@ -3,18 +3,9 @@ from random import choice, randint
 from datetime import datetime
 import discord
 import discord.ext.commands as commands
-from config import slursList
 from urllib.parse import quote_plus
 import core.mentions as mentions
 
-def removeStrangeChars(s): return "".join(i for i in s if ord(i)<384)
-def cleantext(txt: str):
-    txt = removeStrangeChars(txt)
-    if not txt:
-        return False
-    for i in txt.split(" "):
-        if i in slursList: return False
-    return txt
 def birthdaylink(name):
     return f"https://itsyourbirthday.today/#{quote_plus(name)}"
 def now():
@@ -61,20 +52,16 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=["bd"])
     async def birthday(self, ctx, recipient: Union[commands.MemberConverter, str], *, name: Optional[str]):
-        print(f"BEFORE CLEANING - {type(recipient)}, {recipient}")
-        recipient = cleantext(recipient) if isinstance(recipient, str) else recipient
-        name = cleantext(name) if name else None
-        print(f"AFTER CLEANING  - {type(recipient)}, {recipient}")
         if name == False:
             await ctx.channel.send("Cringe?")
             return
         if not isinstance(recipient, str) and not name: #if the person is mentioned without additional name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(recipient.display_name)}", allowed_mentions=mentions.users)
+            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(recipient.display_name)}", allowed_mentions=mentions.none)
         elif not isinstance(recipient, str) and name:     #if the person is mentioned with name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(name)}", allowed_mentions=mentions.users)
+            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(name)}", allowed_mentions=mentions.none)
         elif isinstance(recipient, str) and not name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(recipient)}", allowed_mentions=mentions.users)
+            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(recipient)}", allowed_mentions=mentions.none)
         elif isinstance(recipient, str) and name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(name)}", allowed_mentions=mentions.users)
+            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(name)}", allowed_mentions=mentions.none)
 def setup(bot):
     bot.add_cog(Fun(bot))
