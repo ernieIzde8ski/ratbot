@@ -1,10 +1,10 @@
 import discord
 import discord.ext.commands as commands
+
 import modules.SentenceGenerator as SentenceGenerator
-from typing import Optional
 
 
-class startrek(commands.Cog):
+class Startrek(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         try:
@@ -20,7 +20,7 @@ class startrek(commands.Cog):
         self.tng_generator = SentenceGenerator.loadGenerator("modules/StarTrekTNG.txt")
         await ctx.send('Reloaded! probably')
 
-    @commands.command(aliases = ["tos"])
+    @commands.command(aliases=["tos"])
     async def random_tos(self, ctx, count: int = 1):
         """Generates a randomized Star Trek: TOS plot."""
 
@@ -30,7 +30,7 @@ class startrek(commands.Cog):
         for i in range(count):
             await ctx.send(self.tos_generator.generate())
 
-    @commands.command(aliases = ["tng"])
+    @commands.command(aliases=["tng"])
     async def random_tng(self, ctx, count: int = 1):
         """Generates a randomized Star Trek: TNG plot."""
         if not (1 <= count <= 5):
@@ -42,8 +42,9 @@ class startrek(commands.Cog):
     @commands.command()
     async def borg(self, ctx, *, item: str):
         """Generates a borg phrase dependent on your input."""
-        await ctx.send(f"We are the {item}. Lower your shields and surrender your ships. We will add your biological and technological distinctiveness to our own. Your culture will adapt to service us. Resistance is futile.", allowed_mentions=discord.AllowedMentions.none())
+        await ctx.send(
+            f"We are the {item}. Lower your shields and surrender your ships. We will add your biological and technological distinctiveness to our own. Your culture will adapt to service us. Resistance is futile.")
 
 
 def setup(bot):
-    bot.add_cog(startrek(bot))
+    bot.add_cog(Startrek(bot))
