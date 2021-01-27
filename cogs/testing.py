@@ -1,21 +1,26 @@
-from typing import Optional, Union
-from datetime import datetime
+import asyncio
+from typing import Optional
+
 import discord
 import discord.ext.commands as commands
-from time import sleep
-import asyncio
 
-def printList(list):
-    for x in range(len(list)):
-        print(list[x])
+
+def printList(list_):
+    for x in range(len(list_)):
+        print(list_[x])
+
+
 def predicate(message):
     if message.author.id == 466737001832382464:
         return True
     else:
         return False
+
+
 async def spammy(messageable, phrase):
     await messageable.send(phrase)
     await asyncio.sleep(1.5)
+
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -62,13 +67,16 @@ class Fun(commands.Cog):
             if len(role.members) == 0:
                 a.append(role.name)
             print(f"{len(role.members)}, {role.name}")
-        await ctx.channel.send(a, allowed_mentions=discord.AllowedMentions.none())
+        await ctx.channel.send(a)
 
     @commands.command()
     @commands.is_owner()
     async def purge(self, ctx):
         """deletes roles in the list and prints their hex id"""
-        namelist = ["LEWD SATAN", "noogie god", "Maximum Foxxo", "Paradox Meme", "TheSmol", "Everyone and Everything", "That One Child", "Jew of Mew say Awoo", "Online?", "former god", "Clowns for Jesus", "The Backwards Bois", "band", "gay baby", "what the fuck", "shUT THEF FUCK UP", "Chicken Man", "clonck gay", "Pervy Bard", "Cracker-Obsessed Loon"]
+        namelist = ["LEWD SATAN", "noogie god", "Maximum Foxxo", "Paradox Meme", "TheSmol", "Everyone and Everything",
+                    "That One Child", "Jew of Mew say Awoo", "Online?", "former god", "Clowns for Jesus",
+                    "The Backwards Bois", "band", "gay baby", "what the fuck", "shUT THEF FUCK UP", "Chicken Man",
+                    "clonck gay", "Pervy Bard", "Cracker-Obsessed Loon"]
         guildlist = ctx.guild.roles
         for rolename in namelist:
             for role in ctx.guild.roles:
@@ -80,14 +88,19 @@ class Fun(commands.Cog):
     @commands.is_owner()
     async def channelList(self, ctx):
         await ctx.channel.send(str(ctx.guild.text_channels))
+
     @commands.command()
     @commands.is_owner()
     async def bargeinto(self, ctx, *, channel: commands.TextChannelConverter):
         await ctx.channel.send("ok lemme try")
-        try:              await channel.set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True)
-        except discord.Forbidden: await ctx.channel.send("Mission Failed: Denied")
-        except:           await ctx.channel.send("Mission Failed")
-        else:             await ctx.channel.send("Mission Suceed?")
+        try:
+            await channel.set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True)
+        except discord.Forbidden:
+            await ctx.channel.send("Mission Failed: Denied")
+        except:
+            await ctx.channel.send("Mission Failed")
+        else:
+            await ctx.channel.send("Mission Suceed?")
 
     @commands.command()
     @commands.is_owner()
@@ -96,7 +109,8 @@ class Fun(commands.Cog):
 
         messages = await ctx.channel.history(limit=(cap if cap else 1400)).filter(predicate).flatten()
         for m in messages:
-            if '** are **' in m.content:  print(m.content.replace("**", "").replace(" are ", ", ") + f"[{m.created_at}]")
+            if '** are **' in m.content:  print(
+                m.content.replace("**", "").replace(" are ", ", ") + f"[{m.created_at}]")
 
 
 def setup(bot):

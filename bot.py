@@ -1,17 +1,16 @@
 # i dont understand half of whats here myself
 # good luck
 # here's all the necessary imports
-import discord
-import discord.ext.commands as commands
-import asyncio
-import config
-from secrets import token
 from datetime import datetime
-import random
-from typing import Union
+from secrets import token
 from time import sleep
 
-bot = commands.Bot(command_prefix=["r.", "rat! "])
+import discord
+import discord.ext.commands as commands
+
+import config
+
+bot = commands.Bot(command_prefix=["r.", "rat! "], allowed_mentions=discord.AllowedMentions.none())
 intents = discord.Intents.all()
 
 # this seems necessary for some dumb reason
