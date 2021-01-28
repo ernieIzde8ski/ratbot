@@ -19,8 +19,7 @@ class HypixelBasedLevels(commands.Cog):
     @commands.command()
     async def bm_hypixel(self, ctx, player_name):
         player = await self.hypixel.player.get(name=player_name)
-        await ctx.send("based") if player.bedwars.games_played < 10 else await ctx.send(
-            f"cringe ({player.bedwars.games_played} Cringegamecount)")
+        await ctx.send("based" if player.bedwars.games_played < 10 else f"cringe ({player.bedwars.games_played} Cringegamecount)")
 
 
 def setup(bot):

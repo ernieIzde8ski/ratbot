@@ -13,7 +13,7 @@ class Respuestas(commands.Cog):
         words = msg.content.split(" ")
         if message and "roblox it you" in message.lower():
             await msg.delete()
-        if msg.author == commands.Bot.user or msg.author.bot:  return
+        if msg.author == commands.Bot.user or msg.author.bot: return
         if msg.guild and msg.channel.name != "rat":
             # detect slurs & make them only work in whichever servers have opted in
 

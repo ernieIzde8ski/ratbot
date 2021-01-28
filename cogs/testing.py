@@ -91,7 +91,7 @@ class Fun(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def bargeinto(self, ctx, *, channel: commands.TextChannelConverter):
+    async def bargeinto(self, ctx, *, channel: discord.TextChannel):
         await ctx.channel.send("ok lemme try")
         try:
             await channel.set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True)
@@ -107,10 +107,11 @@ class Fun(commands.Cog):
     async def rat_history(self, ctx, *, cap: Optional[int]):
         """get rats in channel history"""
 
-        messages = await ctx.channel.history(limit=(cap if cap else 1400)).filter(predicate).flatten()
-        for m in messages:
-            if '** are **' in m.content:  print(
-                m.content.replace("**", "").replace(" are ", ", ") + f"[{m.created_at}]")
+        messages = await ctx.channel.history(limit=(cap if cap else 1400)).filter(
+            lambda m: m.author.id == 466737001832382464).flatten()
+        for message in messages:
+            if '** are **' in message.content:
+                print(message.content.replace("**", "").replace(" are ", ", ") + f"[{message.created_at}]")
 
 
 def setup(bot):
