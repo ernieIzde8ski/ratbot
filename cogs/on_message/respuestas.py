@@ -9,28 +9,12 @@ class Respuestas(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def censorship(self, msg):
-        message = config.cleantext(msg.content)
-        words = msg.content.split(" ")
-        if message and "roblox it you" in message.lower():
-            await msg.delete()
-        if msg.author == commands.Bot.user or msg.author.bot:  return
-        if msg.guild and msg.channel.name != "rat":
-            # detect slurs & make them only work in whichever servers have opted in
-
-            if config.SlursExist(msg.content) and (msg.guild.id in config.guildOptIn):
-                print("loser detected")
-                await msg.channel.send(f"loser {msg.author.mention}")
-                return
-            # correct ratards
-            elif message:
-                if not (msg.guild.id in config.guildOptOut) and "retard" in message.lower():
-                    await msg.channel.send("*ratard")
-                    return
+        if msg.author.bot or not msg.guild: return
+        if msg.channel.name != "rat":
             # kill tenor links lmao
             elif msg.guild.id in config.guildOptIn and (
                     msg.content.startswith("https://giphy.com/gifs/") or msg.content.startswith(
                 "https://tenor.com/view/")):
-                print("tenor loser detected")
                 await msg.channel.send(f"loser {msg.author.mention}")
                 await msg.message.delete()
 
