@@ -23,19 +23,3 @@ slursList = []  # message from myer: this doesn't exist for some reason
 
 
 def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 384)
-
-
-def SlursExist(content: str):
-    content = removeStrangeChars(content)
-    for i in content.split(" "):
-        if i.lower() in slursList: return True
-    return False
-
-
-def cleantext(content: str):
-    content = removeStrangeChars(content)
-    if not content:
-        return False
-    for i in content.split(" "):
-        if i.lower() in slursList: return False
-    return str(content)

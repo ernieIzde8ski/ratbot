@@ -64,7 +64,6 @@ async def on_message(message):
     guild = message.guild
     channel = message.channel
     logChannel = bot.get_channel(config.logChannel)
-    cleaned_content = message.content
 
     # respond when anyone says my name
     if message.content.lower() == config.adminname and auth.id != config.ratmin_id:

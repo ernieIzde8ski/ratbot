@@ -7,11 +7,11 @@ import modules.SentenceGenerator as SentenceGenerator
 class Startrek(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.tos_generator = SentenceGenerator.loadGenerator("modules/StarTrek.txt")
         try:
-            self.tos_generator = SentenceGenerator.loadGenerator("modules/StarTrek.txt")
             self.tng_generator = SentenceGenerator.loadGenerator("modules/StarTrekTNG.txt")
-        except:
-            print("Lol TNG Proaly Not working")
+        except ValueError as e:
+            print(f"ValueError: {e}")
 
     @commands.command(hidden=True)
     async def load_trek(self, ctx):
