@@ -35,7 +35,7 @@ class Fun(commands.Cog):
     async def bM_meter(self, ctx, *, option: Optional[str]):
         """decides Based or Cringe"""
         option = option.replace("```", "Armenium") if option else 'Your'
-        random.seed(option)
+        random.seed(option.lower())
         BC_decision = random.choice(["Based", "Cringe"]) if option else "Cringe"
         punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
 
