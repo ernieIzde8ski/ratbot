@@ -7,7 +7,7 @@ import discord
 import discord.ext.commands as commands
 
 
-def birthdaylink(name):
+def birthday_link(name):
     return f"https://itsyourbirthday.today/#{quote_plus(name)}"
 
 
@@ -36,12 +36,12 @@ class Fun(commands.Cog):
         """decides Based or Cringe"""
         option = option.replace("```", "Armenium") if option else 'Your'
         random.seed(option.lower())
-        BC_decision = random.choice(["Based", "Cringe"]) if option else "Cringe"
+        bc_decision = random.choice(["Based", "Cringe"]) if option else "Cringe"
         punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
 
-        await ctx.send(content=(f"**{option}** are **{BC_decision}**{punctuation_ending}"))
+        await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
         await log(self.bot, "```"
-                            f"{option}, {BC_decision}{punctuation_ending}   [{ctx.message.created_at}]"
+                            f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
                             "```")
 
     @commands.command(aliases=["time", "now", "EST", "est"])
@@ -64,13 +64,13 @@ class Fun(commands.Cog):
             await ctx.channel.send("Cringe?")
             return
         if not isinstance(recipient, str) and not name:  # if the person is mentioned without additional name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(recipient.display_name)}")
+            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(recipient.display_name)}")
         elif not isinstance(recipient, str) and name:  # if the person is mentioned with name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(name)}")
+            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(name)}")
         elif isinstance(recipient, str) and not name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(recipient)}")
+            await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(recipient)}")
         elif isinstance(recipient, str) and name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(name)}")
+            await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(name)}")
 
 
 def setup(bot):

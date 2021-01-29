@@ -13,7 +13,8 @@ class Administration(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # i didn't write any of the following lines xddddddddd
+    # i didn't write any of the following lines xddd
+    # aside from the wessel command
     @commands.command()
     @commands.is_owner()
     async def load(self, ctx, *, module):

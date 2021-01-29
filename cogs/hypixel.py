@@ -1,7 +1,4 @@
-# this seems to like to generate a weird error a lot of the time:
-#   C:\Users\izdeb\AppData\Local\Programs\Python\Python39\lib\site-packages\hypixelaPY\objects\stats.py:57: RuntimeWarning: coroutine 'get_api_stats' was never awaited
-#     self.ratio = Ratio(self.kills, self.deaths)
-# it might be fixed now in the latest hypixelaPY ?
+# Error Gone I Ran 1.2.0 Instead Of 1.2.5
 from secrets import api_key
 
 import discord.ext.commands as commands
