@@ -1,13 +1,10 @@
 from datetime import datetime
-from random import choice
 import random
 from typing import Optional, Union
 from urllib.parse import quote_plus
 
 import discord
 import discord.ext.commands as commands
-
-import core.mentions as mentions
 
 
 def birthdaylink(name):
@@ -38,9 +35,9 @@ class Fun(commands.Cog):
     async def bM_meter(self, ctx, *, option: Optional[str]):
         """decides Based or Cringe"""
         option = option.replace("```", "Armenium") if option else 'Your'
-
-        BC_decision = choice(["Based", "Cringe"]) if option else "Cringe"
-        punctuation_ending = choice([choice(("!", ".")) * x for x in range(1, 8)])
+        random.seed(option)
+        BC_decision = random.choice(["Based", "Cringe"]) if option else "Cringe"
+        punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
 
         await ctx.send(content=(f"**{option}** are **{BC_decision}**{punctuation_ending}"))
         await log(self.bot, "```"
