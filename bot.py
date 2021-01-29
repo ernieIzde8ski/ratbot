@@ -13,12 +13,8 @@ import config
 bot = commands.Bot(command_prefix=["r.", "rat! "], allowed_mentions=discord.AllowedMentions.none())
 intents = discord.Intents.all()
 
-# this seems necessary for some dumb reason
-item = ''
-lst = ''
-
-# Yes i think i figured out cogs this time
-if __name__ == '__main__':
+# Cog ?
+if __name__ == "__main__":
     for extension in config.enabledcogs:
         try:
             bot.load_extension(extension)
@@ -27,11 +23,6 @@ if __name__ == '__main__':
 
 
 def now(): return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
-
-
-# is this what they call legacy code
-def is_in(item, lst):
-    return any(word in str(item) for word in lst)
 
 
 def _removeNonAscii(s): return "".join(i for i in s if ord(i) < 384)
@@ -44,23 +35,20 @@ def msg_log(msg, msg_type):
                               description=msg.content, timestamp=msg.created_at)
         return embed
     # if not
-    if msg.guild.id != None:
+    if msg.guild.id is not None:
         embed = discord.Embed(title=f"{msg_type} in #{msg.channel.name} of {msg.guild.name}",
                               url=f"https://discordapp.com/channels/{msg.guild.id}/{msg.channel.id}/{msg.id}",
                               description=msg.content, timestamp=msg.created_at)
         return embed
 
 
-# [27/05/2020 16:31:23] rat in #🔬testing of Fire Nation (682704934621282307.709816228587503728.715301148004712520)
-# https://discordapp.com/channels/516604644793778177/516604645418991627/715314741064499311
-
 # finally, some god damnned events
 @bot.event
 async def on_ready():
-    print(f'{bot.user} has connected to Discord!')
+    print(f"{bot.user} has connected to Discord!")
     channel = bot.get_channel(config.statusChannel)
-    await channel.send('<:online:708885917133176932> online!'
-                       + f'                  ({str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))})')
+    embed = discord.Embed(title="<:online:708885917133176932> online!", timestamp=datetime.today())
+    await channel.send(embed=embed)
 
 
 @bot.event
