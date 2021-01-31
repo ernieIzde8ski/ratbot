@@ -1,14 +1,14 @@
 from datetime import datetime
 import random
 from typing import Optional, Union
-from urllib.parse import quote_plus
+from urllib.parse import quote
 
 import discord
 import discord.ext.commands as commands
 
 
 def birthday_link(name):
-    return f"https://itsyourbirthday.today/#{quote_plus(name)}"
+    return f"https://itsyourbirthday.today/#{quote(name)}"
 
 
 def now():
@@ -60,9 +60,6 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=["bd"])
     async def birthday(self, ctx, recipient: Union[discord.Member, str], *, name: Optional[str]):
-        if not name:
-            await ctx.channel.send("Cringe?")
-            return
         if not isinstance(recipient, str) and not name:  # if the person is mentioned without additional name
             await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(recipient.display_name)}")
         elif not isinstance(recipient, str) and name:  # if the person is mentioned with name
