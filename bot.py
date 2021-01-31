@@ -61,9 +61,7 @@ async def on_message(message):
     auth = message.author
     if message.author.bot: return
     msg = message.content
-    guild = message.guild
     channel = message.channel
-    logChannel = bot.get_channel(config.logChannel)
 
     # respond when anyone says my name
     if message.content.lower() == config.adminname and auth.id != config.ratmin_id:
@@ -73,16 +71,6 @@ async def on_message(message):
         await message.delete()
     elif "ernie does not read star trek fanfics" in msg.lower():
         await channel.send('True')
-    # the ultimate purpose: respond to rat with rat & moderate rat channels
-    elif message.guild and (message.channel.name == "rat" and message.content != "rat"):
-        try:
-            await message.delete()
-        except discord.errors.Forbidden:
-            await logChannel.send(f'Lacking perms to delete a message in {guild}. Sad!')
-    elif msg.startswith('rat'):
-        await channel.send('rat')
-        print(f"[{now()}] rat from {str(message.author)} in " + ("dms" if not message.guild else message.guild.name))
-
     if not message.guild or message.channel.name != "rat":
         await bot.process_commands(message)
 
