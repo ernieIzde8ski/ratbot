@@ -43,34 +43,22 @@ def msg_log(msg, msg_type):
         return embed
 
 
-# finally, some god damnned events
-@bot.event
-async def on_ready():
-    print(f"{bot.user} has connected to Discord!")
-    channel = bot.get_channel(config.statusChannel)
-    embed = discord.Embed(title="<:online:708885917133176932> online!", timestamp=datetime.today())
-    await channel.send(embed=embed)
-
-
 @bot.event
 async def on_message(message):
     if message.author.id == 159985870458322944 and message.guild.id == 526207286067068928:
         if "you just advanced" in message.content:
             sleep(10)
             await message.delete()
-    auth = message.author
     if message.author.bot: return
-    msg = message.content
-    channel = message.channel
 
     # respond when anyone says my name
-    if message.content.lower() == config.adminname and auth.id != config.ratmin_id:
-        await channel.send(config.spokesperson)
+    if message.content.lower() == config.adminname and message.author.id != config.ratmin_id:
+        await message.channel.send(config.spokesperson)
         return
-    elif "ernie reads star trek fanfics" in msg.lower():
+    elif "ernie reads star trek fanfics" in message.content.lower():
         await message.delete()
-    elif "ernie does not read star trek fanfics" in msg.lower():
-        await channel.send('True')
+    elif "ernie does not read star trek fanfics" in message.content.lower():
+        await message.channel.send('True')
     if not message.guild or message.channel.name != "rat":
         await bot.process_commands(message)
 
