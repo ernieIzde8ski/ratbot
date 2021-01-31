@@ -30,7 +30,7 @@ class Startrek(commands.Cog):
         for i in range(count):
             await ctx.send(self.tos_generator.generate())
 
-    @commands.command(aliases=["tng"])
+    @commands.command(aliases=["tng"], hidden=True)
     async def random_tng(self, ctx, count: int = 1):
         """Generates a randomized Star Trek: TNG plot."""
         if not (1 <= count <= 5):
