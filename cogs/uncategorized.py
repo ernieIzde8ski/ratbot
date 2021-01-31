@@ -12,7 +12,7 @@ class Uncategorized(commands.Cog):
 
     @commands.command(aliases=["support", "info"])
     async def information(self, ctx):
-        """Provides"  general/support information"""
+        """Provides general/support information"""
         bot_owner = (await commands.Bot.application_info(self.bot)).owner
         embed = discord.Embed(
             name="Awesome?",
