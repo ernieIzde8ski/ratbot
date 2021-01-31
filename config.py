@@ -9,11 +9,18 @@ statusChannel = 708882977202896957
 logChannel = 715297562613121084
 # cogs that load alongside the bot
 enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.on_message.dms", "cogs.on_message.PIPI",
-               "cogs.on_message.corrections", "cogs.on_message.ratsponding"]
+               "cogs.on_message.corrections", "cogs.on_message.ratsponding", "cogs.uncategorized"]
 # bot admin name - must be lowercase
 adminname = "ernie"
 # line when responding to bot admin name
 spokesperson = "i am his spokesperson, what do you want of him"
+# songs referenced in cogs.uncategorized via youtube url
+songs = ["i-mWU2JFvUU", "alQei8zVMyM", "dpZ0wK48qKY", "HaM69OVOf74", "ng8mh6JUIqY", "whhTjySxxYE", "tlYU8mxXGnY",
+         "U5w7tjrqDlo", "YEMEAxlYL04", "IoiaAA4vNaI", "9iHn_roIApY", "YZVJb1dyiV8", "MoN3zUJb6tA", "aXvG_Lx0Kp4",
+         "eLoMej34zvA", "OZuW6BH_Vak", "4v8KEbQA8kw", "O0PV0M6-j9w", "mJag19WoAe0", "j_JaDDcyIIU", "W-0qx0yf_Hg",
+         "BJhMjuza_1A", "W1LsRShUPtY", "Eq7-DsMhLaA", "AjZrV4wbdnQ", "VkuY33xb6v8", "MYKbQVw80mI", "4gNR7UDSLXo",
+         "bRLML36HnzU", "ha0icvcByDs", "j_nuOyxMrMQ", "S7Jw_v3F_Q0", "KXrgF30VplE", "hTkW8DLVpwA", "tKJwvQfraY8",
+         "j9BcQcFVcRM", "hCuMWrfXG4E", "oe2hdbft5-U", "Es5mh7pBeec", "aJfgHSUlr-s", "eYNMcolpHEM", "L3YwMmJgszI"]
 
 
 def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 384)
