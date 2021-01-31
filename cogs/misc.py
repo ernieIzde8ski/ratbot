@@ -28,6 +28,7 @@ def b(x):
 
 
 class Fun(commands.Cog):
+    """Miscellaneous drivellous commands"""
     def __init__(self, bot):
         self.bot = bot
 

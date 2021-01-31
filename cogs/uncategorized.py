@@ -20,7 +20,7 @@ class Uncategorized(commands.Cog):
         description=f"[GitHub](https://github.com/ernieIzde8ski/ratbot)\n"
             f"[Bot Invite](https://discordapp.com/api/oauth2/authorize?client_id=466737001832382464&permissions=8&scope=bot)\n"
             f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
-            f"[Good song](https://www.youtube.com/watch?v={choice(songs)})\n",
+            f"[Good song](https://www.youtube.com/watch?v={choice(songs)})",
             color=ctx.author.color, timestamp=ctx.message.created_at
         ).set_author(name=bot_owner, icon_url=bot_owner.avatar_url)
         await ctx.send(embed=embed)

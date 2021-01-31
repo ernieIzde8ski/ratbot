@@ -14,6 +14,7 @@ def now():
 
 
 class Administration(commands.Cog):
+    """no run if not admin ok"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -21,8 +22,8 @@ class Administration(commands.Cog):
     async def on_ready(self):
         print(f"{self.bot.user} has connected to Discord!")
         log_channel = self.bot.get_channel(statusChannel)
-        _embed = discord.Embed(title="<:online:708885917133176932> online!", timestamp=datetime.today())
-        await log_channel.send(embed=_embed)
+        await log_channel.send(embed=discord.Embed(title="<:online:708885917133176932> online!",
+                                                   timestamp=datetime.now()))
 
     # i stole the following lines up until wessel Xd
     @commands.command()
@@ -71,6 +72,9 @@ class Administration(commands.Cog):
     @commands.is_owner()
     async def shutdown(self, ctx):
         """Shut down the bot and whole script Lol"""
+        log_channel = self.bot.get_channel(statusChannel)
+        await log_channel.send(embed=discord.Embed(title="<:offline:708886391672537139> shutting Down.....",
+                                                   timestamp=ctx.message.created_at))
         exit()
 
 

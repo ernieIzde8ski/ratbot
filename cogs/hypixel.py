@@ -15,6 +15,7 @@ class HypixelBasedLevels(commands.Cog):
 
     @commands.command()
     async def bm_hypixel(self, ctx, player_name):
+        """Determines whether a person is based or cringe, judging by their total plays in bedwars"""
         player = await self.hypixel.player.get(name=player_name)
         await ctx.send("based") if player.bedwars.games_played < 10 else await ctx.send(
             f"cringe ({player.bedwars.games_played} Cringegamecount)")

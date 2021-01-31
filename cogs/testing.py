@@ -23,6 +23,7 @@ async def spammy(messageable, phrase):
 
 
 class Fun(commands.Cog):
+    """This file was not intended to be uploaded but OK ."""
     def __init__(self, bot):
         self.bot = bot
 
