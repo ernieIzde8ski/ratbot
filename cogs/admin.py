@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Union
 from sys import exit
+from pytz import timezone
 
 import discord
 import discord.ext.commands as commands
@@ -23,7 +24,8 @@ class Administration(commands.Cog):
         print(f"{self.bot.user} has connected to Discord!")
         log_channel = self.bot.get_channel(statusChannel)
         await log_channel.send(embed=discord.Embed(title="<:online:708885917133176932> online!",
-                                                   timestamp=datetime.now()))
+                                                   timestamp=datetime.now(tz=timezone("America/New_York")),
+                                                   color=discord.Color.green()))
 
     # i stole the following lines up until wessel Xd
     @commands.command()
@@ -74,7 +76,8 @@ class Administration(commands.Cog):
         """Shut down the bot and whole script Lol"""
         log_channel = self.bot.get_channel(statusChannel)
         await log_channel.send(embed=discord.Embed(title="<:offline:708886391672537139> shutting Down.....",
-                                                   timestamp=ctx.message.created_at))
+                                                   timestamp=ctx.message.created_at,
+                                                   color=discord.Color.dark_red()))
         exit()
 
 
