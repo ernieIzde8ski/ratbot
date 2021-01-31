@@ -19,7 +19,6 @@ enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.on_message.dms
 # line when responding to my name
 adminname = "Ernie"
 spokesperson = "i am his spokesperson, what do you want of him"
-slursList = []  # message from myer: this doesn't exist for some reason
 
 
 def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 384)
