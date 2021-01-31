@@ -16,8 +16,8 @@ statusChannel = 708882977202896957
 logChannel = 715297562613121084
 enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.on_message.dms", "cogs.on_message.PIPI",
                "cogs.on_message.corrections", "cogs.on_message.ratsponding"]
-# line when responding to my name
-adminname = "Ernie"
+# line when responding to my name - must be lowercase
+adminname = "ernie"
 spokesperson = "i am his spokesperson, what do you want of him"
 
 
