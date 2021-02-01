@@ -45,6 +45,7 @@ class Spame(commands.Cog):
     @commands.command(aliases=["respame"], hidden=True)
     @commands.has_permissions(manage_nicknames=True)
     async def rename_spame(self, ctx, *, nick: Optional[str]):
+        """Renames all users (optionally, only with a given nickname) to variants on "spame"."""
         member_list = ctx.guild.members
         if nick:
             _list = []
