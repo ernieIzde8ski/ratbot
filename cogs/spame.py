@@ -42,7 +42,7 @@ class Spame(commands.Cog):
                 msg += f", {generate_spame()}"
         await ctx.channel.send(msg)
 
-    @commands.command(aliases=["respame"])
+    @commands.command(aliases=["respame"], hidden=True)
     @commands.has_permissions(manage_nicknames=True)
     async def rename_spame(self, ctx, *, nick: Optional[str]):
         member_list = ctx.guild.members
@@ -63,12 +63,6 @@ class Spame(commands.Cog):
         await ctx.channel.send(f"Successfully changed {successes[0]} nick(s)\n"
                                f"{successes[1]+successes[2]} failures ({successes[1]} Forbidden, "
                                f"{successes[2]} HTTPException)")
-
-    @commands.command()
-    async def rename_ernie(self, ctx, name: str):
-        for member in ctx.guild.members:
-            if member.nick == "ernie alt":
-                await member.edit(nick=name)
 
 
 def setup(bot):
