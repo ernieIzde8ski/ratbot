@@ -20,7 +20,8 @@ songs = ["i-mWU2JFvUU", "alQei8zVMyM", "dpZ0wK48qKY", "HaM69OVOf74", "ng8mh6JUIq
          "eLoMej34zvA", "OZuW6BH_Vak", "4v8KEbQA8kw", "O0PV0M6-j9w", "mJag19WoAe0", "j_JaDDcyIIU", "W-0qx0yf_Hg",
          "BJhMjuza_1A", "W1LsRShUPtY", "Eq7-DsMhLaA", "AjZrV4wbdnQ", "VkuY33xb6v8", "MYKbQVw80mI", "4gNR7UDSLXo",
          "bRLML36HnzU", "ha0icvcByDs", "j_nuOyxMrMQ", "S7Jw_v3F_Q0", "KXrgF30VplE", "hTkW8DLVpwA", "tKJwvQfraY8",
-         "j9BcQcFVcRM", "hCuMWrfXG4E", "oe2hdbft5-U", "Es5mh7pBeec", "aJfgHSUlr-s", "eYNMcolpHEM", "L3YwMmJgszI"]
+         "j9BcQcFVcRM", "hCuMWrfXG4E", "oe2hdbft5-U", "Es5mh7pBeec", "aJfgHSUlr-s", "eYNMcolpHEM", "L3YwMmJgszI"
+         "PZc0Dd2n5Js", "u8rtCPEL79o", "IvVe-uHRD-U", "ZJJHeI5izHE", "cK3NMZAUKGw", "No08DrgSy0Y", "alQei8zVMyM"]
 
 
 def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 384)
