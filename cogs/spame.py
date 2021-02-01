@@ -1,4 +1,5 @@
 from discord.ext import commands
+from typing import Optional
 import random
 
 replacements = {
@@ -14,9 +15,31 @@ def generate_spame():
     out_str = ""
     while True:
         for letter in "spame":
-            if random.random() < 0.1:
+            if random.random() < 0.2:
                 out_str += random.choice(replacements[letter])
             else:
                 out_str += letter
-        if out_str == "spame": continue
+        if out_str == "spame":
+            out_str = ""
+            continue
         else: return out_str
+
+
+class Spame(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command(aliases=["spame"])
+    async def print_spame(self, ctx, count: int = 1):
+        if count > 200:
+            await ctx.channel.send("no")
+            return
+        msg = generate_spame()
+        if count != 1:
+            for i in range(1, (count-1)):
+                msg += f", {generate_spame()}"
+        await ctx.channel.send(msg)
+
+
+def setup(bot):
+    bot.add_cog(Spame(bot))
