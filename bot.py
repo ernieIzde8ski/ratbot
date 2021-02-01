@@ -10,9 +10,12 @@ import discord.ext.commands as commands
 
 import config
 
+intentions = discord.Intents.all()
+intentions.presences = False
+
 bot = commands.Bot(command_prefix=["r.", "rat! "],
                    allowed_mentions=discord.AllowedMentions.none(),
-                   intents=discord.Intents.all())
+                   intents=intentions)
 
 # Cog ?
 if __name__ == "__main__":
@@ -38,7 +41,7 @@ async def on_message(message):
     elif "ernie reads star trek fanfics" in message.content.lower():
         await message.delete()
     elif "ernie does not read star trek fanfics" in message.content.lower():
-        await message.channel.send('True')
+        await message.channel.send("True")
     if not message.guild or message.channel.name != "rat":
         await bot.process_commands(message)
 
