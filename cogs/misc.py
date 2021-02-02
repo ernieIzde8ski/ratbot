@@ -1,10 +1,11 @@
 from datetime import datetime
-import random
-from typing import Optional, Union
 from urllib.parse import quote
+from config import songs
+import random
 
 import discord
 import discord.ext.commands as commands
+from typing import Optional, Union
 
 
 def birthday_link(name):
@@ -18,13 +19,6 @@ def now():
 async def log(bot, msg: str):
     channel = bot.get_channel(762166605458964510)
     await channel.send(content=msg)
-
-
-def b(x):
-    if x > 104:
-        return "To Much Bro"
-    else:
-        return f"""Bro.... Liking {'"Liking ' * x}Things {'Is Cringe" ' * x}is Cringe...."""
 
 
 class Fun(commands.Cog):
@@ -54,10 +48,10 @@ class Fun(commands.Cog):
     @commands.command(aliases=["CC", "cc"])
     async def cringecount(self, ctx, iteration: int = 1):
         """\"Liking liking things is cringe is cringe\""""
-        try:
-            await ctx.send(b(iteration))
-        except:
-            await ctx.send("Yo Did it Wrong Bro")
+        if int < 105:
+            await ctx.channel.send("""Bro.... Liking {'"Liking ' * int}Things {'Is Cringe" ' * int}is Cringe....""")
+        else:
+            await ctx.channel.send("no")
 
     @commands.command(aliases=["bd"])
     async def birthday(self, ctx, recipient: Union[discord.Member, str], *, name: Optional[str]):
@@ -69,6 +63,10 @@ class Fun(commands.Cog):
             await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(recipient)}")
         elif isinstance(recipient, str) and name:
             await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(name)}")
+
+    @commands.command(aliases=["song", "rs"])
+    async def random_song(self, ctx):
+        await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
 
 def setup(bot):
