@@ -48,7 +48,7 @@ class Fun(commands.Cog):
     @commands.command(aliases=["CC", "cc"])
     async def cringecount(self, ctx, iteration: int = 1):
         """\"Liking liking things is cringe is cringe\""""
-        if int < 105:
+        if iteration < 105:
             await ctx.channel.send("""Bro.... Liking {'"Liking ' * int}Things {'Is Cringe" ' * int}is Cringe....""")
         else:
             await ctx.channel.send("no")
@@ -66,6 +66,7 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=["song", "rs"])
     async def random_song(self, ctx):
+        """Pulls a random song from the configuration file"""
         await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
 
