@@ -28,9 +28,20 @@ async def get_verse(verse):
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://bible-api.com/{quote(verse)}?translation=kjv") as resp:
             respuesta = await resp.json()
+
+            text = ""
+            iteration = 0
+            for word in respuesta["text"].replace("\n", " ").split(" "):
+                text += f"{word} "
+                iteration += 1
+                if iteration == 12:
+                    text += "\n"
+                    iteration = 0
+            print(text)
+
             return {
                 "heading": respuesta["reference"],
-                "text": respuesta["text"].replace("\n", "")
+                "text": text
             }
 
 
@@ -82,14 +93,16 @@ class Fun(commands.Cog):
         """Pulls a random song from the configuration file"""
         await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
-    @commands.command(aliases=["bible", "verse", "🙏"])
+    @commands.command(aliases=["bible", "verse","v", "🙏"])
     async def bible_verse(self, ctx, *, verse):
         verse = await get_verse(verse)
         embed = discord.Embed(title=verse["heading"], description=verse["text"],
                               url=f"https://www.biblegateway.com/passage/?search={quote(verse['heading'])}&version=NIV",
                               timestamp=ctx.message.created_at)
-        await ctx.channel.send(embed=embed)
-
+        try:
+            await ctx.channel.send(embed=embed)
+        except discord.errors.HTTPException as e:
+            await ctx.channel.send(f"discord.errors.HTTPException: {e}")
 
 def setup(bot):
     bot.add_cog(Fun(bot))
