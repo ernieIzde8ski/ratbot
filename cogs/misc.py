@@ -30,14 +30,13 @@ async def get_verse(verse):
             respuesta = await resp.json()
 
             text = ""
-            iteration = 0
-            for word in respuesta["text"].replace("\n", " ").split(" "):
+            # remove all instances of \n from the verse(s) and make into a list
+            word_list = respuesta["text"].replace("\n", " ").split(" ")
+            for index, word in enumerate(word_list):
+                # append a word & add a new line if twelfth word in a row
                 text += f"{word} "
-                iteration += 1
-                if iteration == 12:
+                if (index+1) % 12 == 0:
                     text += "\n"
-                    iteration = 0
-            print(text)
 
             return {
                 "heading": respuesta["reference"],
@@ -93,7 +92,7 @@ class Fun(commands.Cog):
         """Pulls a random song from the configuration file"""
         await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
-    @commands.command(aliases=["bible", "verse","v", "🙏"])
+    @commands.command(aliases=["bible", "verse", "v", "🙏"])
     async def bible_verse(self, ctx, *, verse):
         verse = await get_verse(verse)
         embed = discord.Embed(title=verse["heading"], description=verse["text"],
@@ -103,6 +102,7 @@ class Fun(commands.Cog):
             await ctx.channel.send(embed=embed)
         except discord.errors.HTTPException as e:
             await ctx.channel.send(f"discord.errors.HTTPException: {e}")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
