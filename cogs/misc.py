@@ -29,14 +29,15 @@ async def get_verse(verse):
         async with session.get(f"https://bible-api.com/{quote(verse)}") as resp:
             respuesta = await resp.json()
             return {
-                "heading": respuesta["heading"],
+                "heading": respuesta["reference"],
                 "text": respuesta["text"].replace("\n", "")
             }
+
+
 class Fun(commands.Cog):
     """Miscellaneous drivellous commands"""
     def __init__(self, bot):
         self.bot = bot
-
 
     @commands.command(aliases=["bM", "bm"])
     async def bM_meter(self, ctx, *, option: Optional[str]):
@@ -82,9 +83,13 @@ class Fun(commands.Cog):
         await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
     @commands.command(aliases=["verse"])
-    async def bible_verse(self, ctx, verse):
+    async def bible_verse(self, ctx, *, verse):
         verse = await get_verse(verse)
-        await ctx.channel.send(str(verse))
+        embed = discord.Embed(title=verse["heading"], description=verse["text"],
+                              url=f"https://www.biblegateway.com/passage/?search={quote(verse['heading'])}&version=KJV",
+                              timestamp=ctx.message.created_at)
+        await ctx.channel.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
