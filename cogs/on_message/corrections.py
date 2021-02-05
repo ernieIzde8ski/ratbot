@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 corrections_list = ("bano", "Baño"), ("senor", "Señor"), ("senora", "Señora"), ("jalapeno", "Jalapeño"), (
-                    "canada", "Cañada"), ("canadian", "Cañadian")
+                    "canada", "Cañada"), ("canadian", "Cañadian"), ("retard", "Ratard")
 
 
 class Corrections(commands.Cog):
