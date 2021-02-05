@@ -74,6 +74,7 @@ class Administration(commands.Cog):
     @commands.is_owner()
     async def shutdown(self, ctx):
         """Shut down the bot and whole script Lol"""
+        await ctx.channel.send("Ok")
         log_channel = self.bot.get_channel(statusChannel)
         await log_channel.send(embed=discord.Embed(title="<:offline:708886391672537139> shutting Down.....",
                                                    timestamp=ctx.message.created_at,
