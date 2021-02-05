@@ -26,7 +26,7 @@ async def log(bot, msg: str):
 
 async def get_verse(verse):
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://bible-api.com/{quote(verse)}") as resp:
+        async with session.get(f"https://bible-api.com/{quote(verse)}?translation=kjv") as resp:
             respuesta = await resp.json()
             return {
                 "heading": respuesta["reference"],
@@ -82,11 +82,11 @@ class Fun(commands.Cog):
         """Pulls a random song from the configuration file"""
         await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
-    @commands.command(aliases=["verse"])
+    @commands.command(aliases=["bible", "verse", "🙏"])
     async def bible_verse(self, ctx, *, verse):
         verse = await get_verse(verse)
         embed = discord.Embed(title=verse["heading"], description=verse["text"],
-                              url=f"https://www.biblegateway.com/passage/?search={quote(verse['heading'])}&version=KJV",
+                              url=f"https://www.biblegateway.com/passage/?search={quote(verse['heading'])}&version=NIV",
                               timestamp=ctx.message.created_at)
         await ctx.channel.send(embed=embed)
 
