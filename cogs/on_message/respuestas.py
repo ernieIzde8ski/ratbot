@@ -21,6 +21,3 @@ class Respuestas(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Respuestas(bot))
-
-# message from myer: this is the biggest mess of nested ifs i've ever seen and i'm too lazy to figure it out
-# cause i'll probably break something so deal with it

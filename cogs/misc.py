@@ -7,6 +7,9 @@ import discord
 import discord.ext.commands as commands
 from typing import Optional, Union
 
+import asyncio
+import aiohttp
+
 
 def birthday_link(name):
     return f"https://itsyourbirthday.today/#{quote(name)}"
@@ -21,10 +24,19 @@ async def log(bot, msg: str):
     await channel.send(content=msg)
 
 
+async def get_verse(verse):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"https://bible-api.com/{quote(verse)}") as resp:
+            respuesta = await resp.json()
+            return {
+                "heading": respuesta["heading"],
+                "text": respuesta["text"].replace("\n", "")
+            }
 class Fun(commands.Cog):
     """Miscellaneous drivellous commands"""
     def __init__(self, bot):
         self.bot = bot
+
 
     @commands.command(aliases=["bM", "bm"])
     async def bM_meter(self, ctx, *, option: Optional[str]):
@@ -69,6 +81,10 @@ class Fun(commands.Cog):
         """Pulls a random song from the configuration file"""
         await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
 
+    @commands.command(aliases=["verse"])
+    async def bible_verse(self, ctx, verse):
+        verse = await get_verse(verse)
+        await ctx.channel.send(str(verse))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
