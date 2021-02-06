@@ -103,6 +103,11 @@ class Fun(commands.Cog):
         except discord.errors.HTTPException as e:
             await ctx.channel.send(f"discord.errors.HTTPException: {e}")
 
+    @commands.command()
+    async def decide(self, ctx, *, _list: str):
+        """choose item from a list separated by forward slashes"""
+        await ctx.channel.send(f"i Choose `{random.choice(_list.split(' / '))}`")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
