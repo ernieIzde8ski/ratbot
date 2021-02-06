@@ -7,9 +7,12 @@ ratmin_id = 302956027656011776
 statusChannel = 708882977202896957
 # channel where miscellaneous actions [i.e. dm messages to rat] are logged
 logChannel = 715297562613121084
+# channel where based meter is stored
+bmChannel = 762166605458964510
 # cogs that load alongside the bot
-enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.uncategorized", "cogs.on_message.dms",
-               "cogs.on_message.PIPI", "cogs.on_message.corrections", "cogs.on_message.ratsponding"]
+enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.uncategorized", "cogs.random",
+               "cogs.on_message.dms", "cogs.on_message.PIPI", "cogs.on_message.corrections",
+               "cogs.on_message.ratsponding"]
 # bot admin name - must be lowercase
 adminname = "ernie"
 # line when responding to bot admin name

@@ -1,7 +1,5 @@
 from datetime import datetime
 from urllib.parse import quote
-from config import songs
-import random
 
 import discord
 import discord.ext.commands as commands
@@ -49,19 +47,6 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["bM", "bm"])
-    async def bM_meter(self, ctx, *, option: Optional[str]):
-        """decides Based or Cringe"""
-        option = option.replace("```", "Armenium") if option else "Your"
-        random.seed(option.lower())
-        bc_decision = random.choice(["Based", "Cringe"]) if option else "Cringe"
-        punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
-
-        await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
-        await log(self.bot, "```"
-                            f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
-                            "```")
-
     @commands.command(aliases=["time", "now", "EST", "est"])
     async def based_time(self, ctx):
         """Tells the Ernie Standard Time"""
@@ -88,11 +73,6 @@ class Fun(commands.Cog):
         elif isinstance(recipient, str) and name:
             await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(name)}")
 
-    @commands.command(aliases=["song", "rs"])
-    async def random_song(self, ctx):
-        """Pulls a random song from the configuration file"""
-        await ctx.channel.send(f"https://youtu.be/{random.choice(songs)}")
-
     @commands.command(aliases=["bible", "verse", "v", "🙏"])
     async def bible_verse(self, ctx, *, verse):
         """returns a bible verse or passage from the format book chapter:verse(s)"""
@@ -104,11 +84,6 @@ class Fun(commands.Cog):
             await ctx.channel.send(embed=embed)
         except discord.errors.HTTPException as e:
             await ctx.channel.send(f"discord.errors.HTTPException: {e}")
-
-    @commands.command()
-    async def decide(self, ctx, *, _list: str):
-        """choose item from a list separated by forward slashes"""
-        await ctx.channel.send(f"i Choose `{random.choice(_list.split(' / '))}`")
 
 
 def setup(bot):
