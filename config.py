@@ -28,4 +28,4 @@ songs = ["i-mWU2JFvUU", "alQei8zVMyM", "dpZ0wK48qKY", "HaM69OVOf74", "ng8mh6JUIq
          "Jxj9w_7JasU"]
 
 
-def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 384)
+def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 128)
