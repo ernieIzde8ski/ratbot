@@ -1,5 +1,3 @@
-from pytz import timezone
-from datetime import datetime
 from urllib.parse import quote
 
 import discord
@@ -12,12 +10,6 @@ import aiohttp
 
 def birthday_link(name):
     return f"https://itsyourbirthday.today/#{quote(name)}"
-
-
-def now(armenium: Optional[bool]):
-    if armenium:
-        return str(datetime.now(tz=timezone("America/Los_Angeles")).strftime("%m-%d-%Y %H:%M:%S"))
-    return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
 
 
 async def log(bot, msg: str):
@@ -49,17 +41,6 @@ class Fun(commands.Cog):
     """Miscellaneous drivellous commands"""
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command(aliases=["time", "now", "EST", "est"])
-    async def based_time(self, ctx):
-        """Tells the Ernie Standard Time"""
-        await ctx.send(f"it's {now(False)} in EST (Ernie Standard Time)")
-        return
-
-    @commands.command(aliases=["bitchtime", "PST", "pst", "cst"])
-    async def bitch_time(self, ctx):
-        """Tells the Cringe standard time"""
-        await ctx.send(f"it's {now(True)} in PST (Plebeian Standard Time)")
 
     @commands.command(aliases=["CC", "cc"])
     async def cringecount(self, ctx, iteration: int = 1):
