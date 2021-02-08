@@ -10,7 +10,7 @@ logChannel = 715297562613121084
 # channel where based meter is stored
 bmChannel = 762166605458964510
 # cogs that load alongside the bot
-enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.uncategorized", "cogs.random", "cogs.timekeeping"
+enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.uncategorized", "cogs.random", "cogs.timekeeping",
                "cogs.on_message.dms", "cogs.on_message.PIPI", "cogs.on_message.corrections",
                "cogs.on_message.ratsponding"]
 # bot admin name - must be lowercase
