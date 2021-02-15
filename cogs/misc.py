@@ -51,6 +51,11 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command()
+    @commands.is_owner()
+    async def everyone(self, ctx):
+        await ctx.channel.send("@everyone", allowed_mentions=discord.AllowedMentions(everyone=True))
+
     @commands.command(aliases=["CC", "cc"])
     async def cringecount(self, ctx, iteration: int = 1):
         """\"Liking liking things is cringe is cringe\""""
