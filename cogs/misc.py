@@ -24,7 +24,15 @@ async def get_verse(verse):
 
             text = ""
             # remove all instances of \n from the verse(s) and make into a list
-            word_list = respuesta["text"].replace("\n", " ").split(" ")
+            try:
+                word_list = respuesta["text"].replace("\n", " ").split(" ")
+            except KeyError as e:
+                return {
+                    "heading": f"KeyError: {e}",
+                    "text": "did you perhaps not write the verse correctly ?",
+                    "url": None
+                }
+
             for index, word in enumerate(word_list):
                 # append a word & add a new line if twelfth word in a row
                 text += f"{word} "
@@ -33,7 +41,8 @@ async def get_verse(verse):
 
             return {
                 "heading": respuesta["reference"],
-                "text": text
+                "text": text,
+                "url": f"https://www.biblegateway.com/passage/?search={quote(respuesta['reference'])}&version=NIV"
             }
 
 
@@ -67,7 +76,7 @@ class Fun(commands.Cog):
         """returns a bible verse or passage from the format book chapter:verse(s)"""
         verse = await get_verse(verse)
         embed = discord.Embed(title=verse["heading"], description=verse["text"],
-                              url=f"https://www.biblegateway.com/passage/?search={quote(verse['heading'])}&version=NIV",
+                              url=verse["url"],
                               timestamp=ctx.message.created_at)
         try:
             await ctx.channel.send(embed=embed)
