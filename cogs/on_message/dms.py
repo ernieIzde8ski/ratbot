@@ -15,15 +15,15 @@ class DM(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def log_message(self, msg):
-        if msg.author == self.bot.user and not msg.guild:
+        if msg.guild: return
+        if msg.author == self.bot.user:
             embed = discord.Embed(title=f"Direct Message → {msg.channel.recipient} ({msg.channel.recipient.id})",
-                                  description=msg.content,
-                                  timestamp=msg.created_at)
+                                  description=msg.content, timestamp=msg.created_at, color=discord.Color.orange())
             await self.log_channel.send(embed=embed)
         if msg.author.bot: return
-        elif not msg.guild:
-            embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})", description=msg.content,
-                                  timestamp=msg.created_at)
+        else:
+            embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
+                                  description=msg.content, timestamp=msg.created_at, color=discord.Color.dark_blue())
             await self.log_channel.send(embed=embed)
 
 
