@@ -1,6 +1,8 @@
+from typing import Optional
+
 import discord
 from discord.ext import commands
-from typing import Optional
+
 import random
 
 replacements = {
@@ -23,7 +25,8 @@ def generate_spame():
         if out_str == "spame":
             out_str = ""
             continue
-        else: return out_str
+        else:
+            return out_str
 
 
 class Spame(commands.Cog):
@@ -38,7 +41,7 @@ class Spame(commands.Cog):
             return
         msg = generate_spame()
         if count != 1:
-            for i in range(1, (count-1)):
+            for i in range(1, (count - 1)):
                 msg += f", {generate_spame()}"
         await ctx.channel.send(msg)
 
@@ -50,19 +53,24 @@ class Spame(commands.Cog):
         if nick:
             _list = []
             for member in member_list:
-                if member.nick == nick: _list.append(member)
-                else: continue
+                if member.nick == nick:
+                    _list.append(member)
+                else:
+                    continue
             member_list = _list
         successes = [0, 0, 0]
         for member in member_list:
             new_name = generate_spame()
             try:
                 await member.edit(nick=new_name)
-            except discord.Forbidden: successes[1] += 1
-            except discord.HTTPException: successes[2] += 1
-            else: successes[0] += 1
+            except discord.Forbidden:
+                successes[1] += 1
+            except discord.HTTPException:
+                successes[2] += 1
+            else:
+                successes[0] += 1
         await ctx.channel.send(f"Successfully changed {successes[0]} nick(s)\n"
-                               f"{successes[1]+successes[2]} failures ({successes[1]} Forbidden, "
+                               f"{successes[1] + successes[2]} failures ({successes[1]} Forbidden, "
                                f"{successes[2]} HTTPException)")
 
 

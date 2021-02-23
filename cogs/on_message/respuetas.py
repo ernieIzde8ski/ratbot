@@ -1,6 +1,4 @@
-import discord.ext.commands as commands
-
-import config
+from discord.ext import commands
 
 
 class Respuestas(commands.Cog):
@@ -12,11 +10,11 @@ class Respuestas(commands.Cog):
         if msg.author.bot or not msg.guild: return
         if msg.channel.name != "rat":
             # kill tenor links lmao
-            if msg.guild.id in config.guildOptIn and (
+            if msg.guild.id in self.bot.config.guild_opt_in and (
                     msg.content.startswith("https://giphy.com/gifs/") or msg.content.startswith(
-                    "https://tenor.com/view/")):
+                "https://tenor.com/view/")):
                 await msg.channel.send(f"loser {msg.author.mention}")
-                await msg.message.delete()
+                await msg.delete()
 
 
 def setup(bot):

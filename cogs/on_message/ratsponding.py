@@ -1,8 +1,4 @@
 from discord.ext import commands
-from datetime import datetime
-
-
-def now(): return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
 
 
 class Ratsponding(commands.Cog):
@@ -15,10 +11,11 @@ class Ratsponding(commands.Cog):
             if message.channel.name == "rat" and message.content != "rat":
                 await message.delete()
                 return
-        if message.author.bot: return
+        if message.author.bot:
+            return
         elif message.content.startswith("rat"):
             await message.channel.send("rat")
-            log = f"[{now()}] rat from {message.author} in "
+            log = f"[{self.bot.static.now()}] rat from {message.author} in "
             log += "dms" if not message.guild else str(message.guild)
             print(log)
 
