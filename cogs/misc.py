@@ -1,20 +1,15 @@
-from datetime import datetime
-from random import choice
-from typing import Optional, Union
-from urllib.parse import quote_plus
+from urllib.parse import quote
 
 import discord
 import discord.ext.commands as commands
+from typing import Optional, Union
 
-import core.mentions as mentions
-
-
-def birthdaylink(name):
-    return f"https://itsyourbirthday.today/#{quote_plus(name)}"
+import asyncio
+import aiohttp
 
 
-def now():
-    return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
+def birthday_link(name):
+    return f"https://itsyourbirthday.today/#{quote(name)}"
 
 
 async def log(bot, msg: str):
@@ -22,56 +17,76 @@ async def log(bot, msg: str):
     await channel.send(content=msg)
 
 
-def b(x):
-    if x > 104:
-        return "To Much Bro"
-    else:
-        return f"""Bro.... Liking {'"Liking ' * x}Things {'Is Cringe" ' * x}is Cringe...."""
+async def get_verse(verse):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"https://bible-api.com/{quote(verse)}?translation=kjv") as resp:
+            respuesta = await resp.json()
+
+            text = ""
+            # remove all instances of \n from the verse(s) and make into a list
+            try:
+                word_list = respuesta["text"].replace("\n", " ").split(" ")
+            except KeyError as e:
+                return {
+                    "heading": f"KeyError: {e}",
+                    "text": "did you perhaps not write the verse correctly ?",
+                    "url": None
+                }
+
+            for index, word in enumerate(word_list):
+                # append a word & add a new line if twelfth word in a row
+                text += f"{word} "
+                if (index+1) % 12 == 0:
+                    text += "\n"
+
+            return {
+                "heading": respuesta["reference"],
+                "text": text,
+                "url": f"https://www.biblegateway.com/passage/?search={quote(respuesta['reference'])}&version=NIV"
+            }
 
 
 class Fun(commands.Cog):
+    """Miscellaneous drivellous commands"""
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["bM", "bm"])
-    async def bM_meter(self, ctx, *, option: Optional[str]):
-        """decides Based or Cringe"""
-        BC_decision = choice(["Based", "Cringe"]) if option else "Cringe"
-        punctuation_ending = choice([choice(("!", ".")) * x for x in range(1, 8)])
-        option = option.replace("```", "Armenium") if option else 'Your'
-
-        await ctx.send(content=(f"**{option}** are **{BC_decision}**{punctuation_ending}"))
-        await log(self.bot, "```"
-                            f"{option}, {BC_decision}{punctuation_ending}   [{ctx.message.created_at}]"
-                            "```")
-
-    @commands.command(aliases=["time", "now", "EST", "est"])
-    async def based_time(self, ctx):
-        """Tells the Ernie Standard Time"""
-        await ctx.send(f"it\'s {now()} in EST (Ernie Standard Time)")
-        return
+    @commands.command()
+    @commands.is_owner()
+    async def everyone(self, ctx):
+        await ctx.channel.send("@everyone", allowed_mentions=discord.AllowedMentions(everyone=True))
 
     @commands.command(aliases=["CC", "cc"])
     async def cringecount(self, ctx, iteration: int = 1):
         """\"Liking liking things is cringe is cringe\""""
-        try:
-            await ctx.send(b(iteration))
-        except:
-            await ctx.send("Yo Did it Wrong Bro")
+        if iteration < 105:
+            await ctx.channel.send("""Bro.... Liking {'"Liking ' * int}Things {'Is Cringe" ' * int}is Cringe....""")
+        else:
+            await ctx.channel.send("no")
 
     @commands.command(aliases=["bd"])
     async def birthday(self, ctx, recipient: Union[discord.Member, str], *, name: Optional[str]):
-        if not name:
-            await ctx.channel.send("Cringe?")
-            return
+        """returns a link to the rat "it's your birthday today" site with a given recipient/name"""
         if not isinstance(recipient, str) and not name:  # if the person is mentioned without additional name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(recipient.display_name)}")
+            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(recipient.display_name)}")
         elif not isinstance(recipient, str) and name:  # if the person is mentioned with name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthdaylink(name)}")
+            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(name)}")
         elif isinstance(recipient, str) and not name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(recipient)}")
+            await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(recipient)}")
         elif isinstance(recipient, str) and name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthdaylink(name)}")
+            await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(name)}")
+
+    @commands.command(aliases=["bible", "verse", "v", "🙏"])
+    async def bible_verse(self, ctx, *, verse):
+        """returns a bible verse or passage from the format book chapter:verse(s)"""
+        verse = await get_verse(verse)
+        embed = discord.Embed(title=verse["heading"], description=verse["text"],
+                              url=verse["url"],
+                              timestamp=ctx.message.created_at)
+        try:
+            await ctx.channel.send(embed=embed)
+        except discord.errors.HTTPException as e:
+            await ctx.channel.send(f"discord.errors.HTTPException: {e}")
 
 
 def setup(bot):

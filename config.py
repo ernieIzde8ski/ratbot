@@ -1,41 +1,31 @@
-shutUp = ['shut up liberal', 'what do you want', 'i am your god who the hell do you think you are', 'wot', 'wut',
-          'WHAT DO YOU WANT', 'wot you want, pathetic mortal',
-          'lower your shields and surrender your ships because this is the end for your civilization',
-          'death to capitalism & you', 'do you have nothing better with your life to do right now', 'what', 'что',
-          'look i don\'t know what you think is a productive use of time but this is not it',
-          'how HIGH do you even have to BE',
-          'do you ever think of the utterly meaningless impact your messages right here will ever have',
-          'couldn\'t you be out there being productive rn', 'I DONT CARE ABOUT YOU',
-          'you look your best away from the keyboard; never forget', 'https://en.wikipedia.org/wiki/Shut_up',
-          'https://www.youtube.com/watch?v=KRB-iHGHSqk', 'https://www.youtube.com/watch?v=RwC9CP_2YKE',
-          'this is explicitly a bot admin command what do you want from me', '']
+# guilds which have opted into tenor slaying
+# only relevant if you load cogs.on_message.respuestas
 guildOptIn = [488475203303768065, 526207286067068928, 534875827398246451]
-guildOptOut = [516604644793778177]
+# bot admin user id, mostly extant by now
 ratmin_id = 302956027656011776
+# channel where startup is logged
 statusChannel = 708882977202896957
+# channel where miscellaneous actions [i.e. dm messages to rat] are logged
 logChannel = 715297562613121084
-enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.on_message.dms", "cogs.on_message.PIPI",
-               "cogs.on_message.corrections"]
-# line when responding to my name
-adminname = "Ernie"
+# channel where based meter is stored
+bmChannel = 762166605458964510
+# cogs that load alongside the bot
+enabledcogs = ["cogs.admin", "cogs.misc", "cogs.star trek", "cogs.uncategorized", "cogs.random", "cogs.timekeeping",
+               "cogs.on_message.dms", "cogs.on_message.PIPI", "cogs.on_message.corrections",
+               "cogs.on_message.ratsponding", "cogs.on_message.ernie_censorship"]
+# bot admin name - must be lowercase
+adminname = "ernie"
+# line when responding to bot admin name
 spokesperson = "i am his spokesperson, what do you want of him"
-slursList = []  # message from myer: this doesn't exist for some reason
+# songs referenced in cogs.uncategorized via youtube url
+songs = ["i-mWU2JFvUU", "alQei8zVMyM", "dpZ0wK48qKY", "HaM69OVOf74", "ng8mh6JUIqY", "whhTjySxxYE", "tlYU8mxXGnY",
+         "U5w7tjrqDlo", "YEMEAxlYL04", "IoiaAA4vNaI", "9iHn_roIApY", "YZVJb1dyiV8", "MoN3zUJb6tA", "aXvG_Lx0Kp4",
+         "eLoMej34zvA", "OZuW6BH_Vak", "4v8KEbQA8kw", "O0PV0M6-j9w", "mJag19WoAe0", "j_JaDDcyIIU", "W-0qx0yf_Hg",
+         "BJhMjuza_1A", "W1LsRShUPtY", "Eq7-DsMhLaA", "AjZrV4wbdnQ", "VkuY33xb6v8", "MYKbQVw80mI", "4gNR7UDSLXo",
+         "bRLML36HnzU", "ha0icvcByDs", "j_nuOyxMrMQ", "S7Jw_v3F_Q0", "KXrgF30VplE", "hTkW8DLVpwA", "tKJwvQfraY8",
+         "j9BcQcFVcRM", "hCuMWrfXG4E", "oe2hdbft5-U", "Es5mh7pBeec", "aJfgHSUlr-s", "eYNMcolpHEM", "L3YwMmJgszI",
+         "PZc0Dd2n5Js", "u8rtCPEL79o", "IvVe-uHRD-U", "ZJJHeI5izHE", "cK3NMZAUKGw", "No08DrgSy0Y", "alQei8zVMyM",
+         "Jxj9w_7JasU", "jtgA0jvhp2A", "b73BI9eUkjM", "ha0icvcByDs", "He322O1JWgU", "IoiaAA4vNaI", "TRUZ0gB_xKY"]
 
 
-def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 384)
-
-
-def SlursExist(content: str):
-    content = removeStrangeChars(content)
-    for i in content.split(" "):
-        if i.lower() in slursList: return True
-    return False
-
-
-def cleantext(content: str):
-    content = removeStrangeChars(content)
-    if not content:
-        return False
-    for i in content.split(" "):
-        if i.lower() in slursList: return False
-    return str(content)
+def removeStrangeChars(s): return "".join(i for i in s if ord(i) < 128)

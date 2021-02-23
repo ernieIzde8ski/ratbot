@@ -1,7 +1,4 @@
-# this seems to like to generate a weird error a lot of the time:
-#   C:\Users\izdeb\AppData\Local\Programs\Python\Python39\lib\site-packages\hypixelaPY\objects\stats.py:57: RuntimeWarning: coroutine 'get_api_stats' was never awaited
-#     self.ratio = Ratio(self.kills, self.deaths)
-# it might be fixed now in the latest hypixelaPY ?
+# Error Gone I Ran 1.2.0 Instead Of 1.2.5
 from secrets import api_key
 
 import discord.ext.commands as commands
@@ -18,6 +15,7 @@ class HypixelBasedLevels(commands.Cog):
 
     @commands.command()
     async def bm_hypixel(self, ctx, player_name):
+        """Determines whether a person is based or cringe, judging by their total plays in bedwars"""
         player = await self.hypixel.player.get(name=player_name)
         await ctx.send("based" if player.bedwars.games_played < 10 else f"cringe ({player.bedwars.games_played} Cringegamecount)")
 
