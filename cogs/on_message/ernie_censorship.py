@@ -1,4 +1,3 @@
-from asyncio import sleep
 import discord
 import discord.ext.commands as commands
 
@@ -13,9 +12,10 @@ class Censorship(commands.Cog):
         if message.author.id != 232706427045543936 and message.channel.id == 811023978045898822:
             await message.delete()
             await message.channel.send(f"use reactions Idiot {message.author.mention}",
-                                   allowed_mentions=discord.AllowedMentions(users=True),
-                                   delete_after=3)
-        else: return
+                                       allowed_mentions=discord.AllowedMentions(users=True),
+                                       delete_after=3)
+        else:
+            return
 
 
 def setup(bot):

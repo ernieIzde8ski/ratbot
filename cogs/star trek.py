@@ -1,4 +1,3 @@
-import discord
 import discord.ext.commands as commands
 
 import modules.SentenceGenerator as SentenceGenerator
@@ -6,6 +5,7 @@ import modules.SentenceGenerator as SentenceGenerator
 
 class Startrek(commands.Cog):
     """Various Star Trek related commands"""
+
     def __init__(self, bot):
         self.bot = bot
         self.tos_generator = SentenceGenerator.loadGenerator("modules/StarTrek.txt")

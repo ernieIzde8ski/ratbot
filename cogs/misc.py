@@ -1,11 +1,9 @@
+from typing import Optional, Union
 from urllib.parse import quote
 
+import aiohttp
 import discord
 import discord.ext.commands as commands
-from typing import Optional, Union
-
-import asyncio
-import aiohttp
 
 
 def birthday_link(name):
@@ -36,7 +34,7 @@ async def get_verse(verse):
             for index, word in enumerate(word_list):
                 # append a word & add a new line if twelfth word in a row
                 text += f"{word} "
-                if (index+1) % 12 == 0:
+                if (index + 1) % 12 == 0:
                     text += "\n"
 
             return {
@@ -48,6 +46,7 @@ async def get_verse(verse):
 
 class Fun(commands.Cog):
     """Miscellaneous drivellous commands"""
+
     def __init__(self, bot):
         self.bot = bot
 

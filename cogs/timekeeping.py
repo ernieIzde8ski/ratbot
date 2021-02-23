@@ -1,7 +1,7 @@
-from pytz import timezone
 from datetime import datetime
 
 from discord.ext import commands
+from pytz import timezone
 
 
 async def now(armenium: bool):
@@ -13,6 +13,7 @@ async def now(armenium: bool):
 
 class Timekeeping(commands.Cog):
     """Keeps time"""
+
     def __init__(self, bot):
         self.bot = bot
 

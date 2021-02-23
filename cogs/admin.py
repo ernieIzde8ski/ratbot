@@ -1,31 +1,27 @@
 from datetime import datetime
-from typing import Union
 from sys import exit
-from pytz import timezone
+from typing import Union
 
 import discord
 import discord.ext.commands as commands
-
-
-from config import statusChannel
-
-
-def now():
-    return str(datetime.today().strftime("%d-%m-%Y %H:%M:%S"))
+from pytz import timezone
 
 
 class Administration(commands.Cog):
     """no run if not admin ok"""
+
     def __init__(self, bot):
         self.bot = bot
+        bot.loop.create_task(self.initialize())
 
-    @commands.Cog.listener()
-    async def on_ready(self):
+    async def initialize(self):
+        await self.bot.wait_until_ready()
+        self.bot.config.channels._get_channels(self.bot)
         print(f"{self.bot.user} has connected to Discord!")
-        log_channel = self.bot.get_channel(statusChannel)
-        await log_channel.send(embed=discord.Embed(title="<:online:708885917133176932> online!",
-                                                   timestamp=datetime.now(tz=timezone("America/New_York")),
-                                                   color=discord.Color.green()))
+        await self.bot.config.channels.log.send(embed=discord.Embed(title="<:online:708885917133176932> online!",
+                                                                    timestamp=datetime.now(
+                                                                        tz=timezone("America/New_York")),
+                                                                    color=discord.Color.green()))
 
     # i stole the following lines up until wessel Xd
     @commands.command()
@@ -75,10 +71,10 @@ class Administration(commands.Cog):
     async def shutdown(self, ctx):
         """Shut down the bot and whole script Lol"""
         await ctx.channel.send("Ok")
-        log_channel = self.bot.get_channel(statusChannel)
-        await log_channel.send(embed=discord.Embed(title="<:offline:708886391672537139> shutting Down.....",
-                                                   timestamp=ctx.message.created_at,
-                                                   color=discord.Color.dark_red()))
+        await ctx.bot.config.channels.log.send(
+            embed=discord.Embed(title="<:offline:708886391672537139> shutting Down.....",
+                                timestamp=ctx.message.created_at,
+                                color=discord.Color.dark_red()))
         exit()
 
 
