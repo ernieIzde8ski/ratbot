@@ -8,7 +8,7 @@ import random
 class Randomized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+        self.bm_channel = self.bot.get_channel(self.bot.config.)
     @commands.command(aliases=["bM", "bm"])
     async def bM_meter(self, ctx, *, option: Optional[str]):
         """decides Based or Cringe"""
