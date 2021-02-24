@@ -10,11 +10,6 @@ def birthday_link(name):
     return f"https://itsyourbirthday.today/#{quote(name)}"
 
 
-async def log(bot, msg: str):
-    channel = bot.get_channel(762166605458964510)
-    await channel.send(content=msg)
-
-
 async def get_verse(verse):
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://bible-api.com/{quote(verse)}?translation=kjv") as resp:
@@ -79,7 +74,8 @@ class Fun(commands.Cog):
     async def bible_verse(self, ctx, *, verse):
         """returns a bible verse or passage from the format book chapter:verse(s)"""
         verse = await get_verse(verse)
-        embed = discord.Embed(title=verse["heading"], description=verse["text"],
+        embed = discord.Embed(title=verse["heading"],
+                              description=verse["text"],
                               url=verse["url"],
                               timestamp=ctx.message.created_at)
         try:
