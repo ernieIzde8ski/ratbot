@@ -12,7 +12,8 @@ class HypixelBasedLevels(commands.Cog):
         """Determines whether a person is based or cringe, judging by their total plays in bedwars"""
         player = await self.bot.hypixel.player.get(name=player_name)
         await ctx.send(
-            "based" if player.bedwars.games_played < 10 else f"cringe ({player.bedwars.games_played} Cringegamecount)")
+            "based" if player.bedwars.games_played < 10 else f"cringe ({player.bedwars.games_played} Cringegamecount)"
+        )
 
 
 def setup(bot):
