@@ -8,7 +8,8 @@ import random
 class Randomized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bm_channel = self.bot.get_channel(self.bot.config.)
+        self.bm_channel = self.bot.config.channels.bm
+
     @commands.command(aliases=["bM", "bm"])
     async def bM_meter(self, ctx, *, option: Optional[str]):
         """decides Based or Cringe"""
@@ -17,9 +18,9 @@ class Randomized(commands.Cog):
         bc_decision = random.choice(["Based", "Cringe"])
         punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
         await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
-        await ctx.bot.channels.bm.send("```"
-                                       f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
-                                       "```")
+        await self.bm_channel.send("```"
+                                   f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
+                                   "```")
 
     @commands.command(aliases=["song", "rs"])
     async def random_song(self, ctx):
