@@ -8,6 +8,10 @@ import random
 class Randomized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        bot.loop.create_task(self.initialize())
+
+    async def initialize(self):
+        await self.bot.wait_until_ready()
         self.bm_channel = self.bot.config.channels.bm
 
     @commands.command(aliases=["bM", "bm"])
