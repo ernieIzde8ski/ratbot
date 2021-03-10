@@ -3,3 +3,4 @@ secrets.py
 __pycache__/
 *.pyc
 cogs/testing.py
+*.cpython-39.pyc
