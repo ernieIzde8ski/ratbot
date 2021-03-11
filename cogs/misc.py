@@ -27,9 +27,9 @@ async def get_verse(verse):
                 }
 
             for index, word in enumerate(word_list):
-                # append a word & add a new line if twelfth word in a row
+                # append a word & add a new line if eighth word in a row
                 text += f"{word} "
-                if (index + 1) % 12 == 0:
+                if (index + 1) % 8 == 0:
                     text += "\n"
 
             return {
