@@ -10,9 +10,9 @@ def birthday_link(name):
     return f"https://itsyourbirthday.today/#{quote(name)}"
 
 
-async def get_verse(verse):
+async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV", link_translation: str = "NIV"):
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://bible-api.com/{quote(verse)}?translation=kjv") as resp:
+        async with session.get(f"https://bible-api.com/{quote(verse)}?translation={text_translation}") as resp:
             respuesta = await resp.json()
 
             text = ""
@@ -27,15 +27,17 @@ async def get_verse(verse):
                 }
 
             for index, word in enumerate(word_list):
-                # append a word & add a new line if eighth word in a row
+                # append a word & add a new line if xth word in a row
                 text += f"{word} "
-                if (index + 1) % 8 == 0:
+                if (index + 1) % words_per_line == 0:
                     text += "\n"
 
             return {
                 "heading": respuesta["reference"],
                 "text": text,
-                "url": f"https://www.biblegateway.com/passage/?search={quote(respuesta['reference'])}&version=NIV"
+                "url": f"https://www.biblegateway.com/passage/"
+                       f"?search={quote(respuesta['reference'])}"
+                       f"&version={link_translation}"
             }
 
 
