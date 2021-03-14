@@ -10,7 +10,7 @@ class Config:
             "cogs.misc",
             "cogs.star trek",
             "cogs.uncategorized",
-            "cogs.random",
+            "cogs.randomized",
             "cogs.timekeeping",
             "cogs.on_message.dms",
             "cogs.on_message.PIPI",
