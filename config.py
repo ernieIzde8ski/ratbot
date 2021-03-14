@@ -21,6 +21,7 @@ class Config:
         self.adminname = "ernie"  # bot admin name - must be lowercase
         self.spokesperson = "i am his spokesperson, what do you want of him"  # line when responding to bot admin name
         self.songs = [  # songs referenced in cogs.uncategorized via youtube url
+            "fjp4thii1WY",
             "i-mWU2JFvUU",
             "alQei8zVMyM",
             "dpZ0wK48qKY",
