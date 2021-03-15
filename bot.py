@@ -4,6 +4,7 @@
 from secrets import token, api_key
 
 from hypixelaPY import Hypixel
+import hypixelaPY.exceptions as hypixele
 import asyncio
 import discord
 import discord.ext.commands as commands
@@ -30,7 +31,10 @@ for extension in bot.config.enabledcogs:
 
 async def start():
     try:
-        bot.hypixel = await Hypixel(api_key)
+        try:
+            bot.hypixel = await Hypixel(api_key)
+        except hypixele.InvalidAPIKeyError as e:
+            print(f"hypixelaPY.exceptions.InvalidAPIKeyError: {e}")
         await bot.start(token)
     except KeyboardInterrupt:
         await bot.logout()
