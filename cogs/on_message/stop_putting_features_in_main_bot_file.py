@@ -20,5 +20,6 @@ class StopPuttingFeaturesInMainBotFile(commands.Cog):
         elif "ernie does not read star trek fanfics" in message.content.lower():
             await message.channel.send("True")
 
+
 def setup(bot):
     bot.add_cog(StopPuttingFeaturesInMainBotFile(bot))

@@ -27,6 +27,8 @@ for extension in bot.config.enabledcogs:
         bot.load_extension(extension)
     except commands.ExtensionError as e:
         print(f"{e.__class__.__name__}: {e}")
+    except ModuleNotFoundError as e:
+        print(f"{e.__class__.__name__}: {e}")
 
 
 async def start():

@@ -16,7 +16,7 @@ class Config:
             "cogs.on_message.PIPI",
             "cogs.on_message.corrections",
             "cogs.on_message.ratsponding",
-            "cogs.on_message.ernie_censorship"
+            "cogs.on_message.ernie_censorship",
             "cogs.on_message.stop_putting_features_in_main_bot_file"
         ]
         self.adminname = "ernie"  # bot admin name - must be lowercase
