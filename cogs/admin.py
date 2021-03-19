@@ -1,6 +1,5 @@
 from datetime import datetime
 from sys import exit
-from typing import Union
 
 import discord
 import discord.ext.commands as commands

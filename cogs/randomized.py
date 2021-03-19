@@ -1,8 +1,7 @@
+import random
 from typing import Optional
 
 import discord.ext.commands as commands
-
-import random
 
 
 class Randomized(commands.Cog):

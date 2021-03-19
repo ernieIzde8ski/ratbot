@@ -1,9 +1,8 @@
+import random
 from typing import Optional
 
 import discord
 from discord.ext import commands
-
-import random
 
 replacements = {
     "s": ["ś", "ṥ", "ŝ", "š", "ṧ", "s̈", "ṡ", "ş", "ṣ", "ṩ", "ș", "ꞩ", "ȿ", "ᶊ", "ß", "с"],

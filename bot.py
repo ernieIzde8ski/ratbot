@@ -1,16 +1,16 @@
 # legible ?
 # good luck
 # here's all the necessary imports
-from secrets import token, api_key
-
-from hypixelaPY import Hypixel
-import hypixelaPY.exceptions as hypixele
 import asyncio
+
 import discord
 import discord.ext.commands as commands
+import hypixelaPY.exceptions as hypixele
+from hypixelaPY import Hypixel
 
-from static import Static
 from config import Config
+from secrets import token, api_key
+from static import Static
 
 intentions = discord.Intents.all()
 intentions.presences = False  # why ? - myer

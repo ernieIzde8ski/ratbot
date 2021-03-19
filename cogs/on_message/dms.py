@@ -50,10 +50,10 @@ class DM(commands.Cog):
     @commands.is_owner()
     async def reply(self, ctx, *, text: str):
         if not self.latest:
-            return await ctx.channel.send("There's no Latest Mesage Bro...................")
+            await ctx.channel.send("There's no Latest Mesage Bro...................")
         else:
             await self.latest.channel.send(text)
-            return await ctx.message.delete()
+            await ctx.message.delete()
 
 
 def setup(bot):
