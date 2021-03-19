@@ -71,7 +71,7 @@ def loadGenerator(filename):
                 raise ValueError("Token %s is defined multiple times" % TOKEN)
             else:
                 defined_tokens.append(TOKEN)
-            if not TOKEN in tokens:
+            if TOKEN not in tokens:
                 tokens.append(TOKEN)
             define_key = tokens.index(TOKEN)
             options = []
