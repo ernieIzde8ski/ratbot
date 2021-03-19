@@ -1,6 +1,8 @@
+from asyncio import sleep
+from typing import Union
+
 import discord
 from discord.ext import commands
-from typing import Union
 
 
 class DM(commands.Cog):
@@ -22,9 +24,17 @@ class DM(commands.Cog):
         else:
             embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
                                   description=msg.content, timestamp=msg.created_at, color=discord.Color.dark_blue())
-            # also save for later
-            self.latest = msg
+
             await self.bot.config.channels.log.send(embed=embed)
+            # also save for later
+            if self.latest_task:
+                self.latest_task.cancel()
+            self.latest_task = self.bot.loop.create_task(self.latest_message(msg))
+
+    async def latest_message(self, msg):
+        self.latest = msg
+        await sleep((60*5))
+        self.latest = None
 
     @commands.command(aliases=["vessel", "wessel"])
     @commands.is_owner()
@@ -34,6 +44,14 @@ class DM(commands.Cog):
         if type(messageable) is int or not messageable:
             messageable = self.bot.get_channel(messageable) if (type(messageable) is int) else ctx.channel
         await messageable.send(text)
+
+    @commands.command(aliases=["r"])
+    @commands.is_owner()
+    async def reply(self, ctx, *, text: str):
+        if not self.latest:
+            await ctx.channel.send("There's no Latest Mesage Bro...................")
+        else:
+            await self.latest.channel.send(text)
 
 
 def setup(bot):
