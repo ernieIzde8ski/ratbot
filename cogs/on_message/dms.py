@@ -21,7 +21,8 @@ class DM(commands.Cog):
                                   description=msg.content, timestamp=msg.created_at, color=discord.Color.orange())
             return await self.bot.config.channels.log.send(embed=embed)
         # log message only if is not bot user
-        elif msg.author.bot: return
+        elif msg.author.bot:
+            return
         else:
             embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
                                   description=msg.content, timestamp=msg.created_at, color=discord.Color.dark_blue())
@@ -34,7 +35,7 @@ class DM(commands.Cog):
 
     async def latest_message(self, msg):
         self.latest = msg
-        await sleep((60*5))
+        await sleep((60 * 5))
         self.latest = None
 
     @commands.command(aliases=["vessel", "wessel"])
