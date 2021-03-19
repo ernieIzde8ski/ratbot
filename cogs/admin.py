@@ -60,15 +60,6 @@ class Administration(commands.Cog):
         else:
             await ctx.send('\N{OK HAND SIGN}')
 
-    @commands.command(aliases=['echo', 'wessel'])
-    @commands.is_owner()
-    async def vessel(self, ctx, messageable: Union[commands.TextChannelConverter, commands.UserConverter, int, None], *,
-                     text: str):
-        """Standard echo command"""
-        if type(messageable) is int or not messageable:
-            messageable = self.bot.get_channel(messageable) if (type(messageable) is int) else ctx.channel
-        await messageable.send(text)
-
     @commands.command(aliases=["die", "off"])
     @commands.is_owner()
     async def shutdown(self, ctx):
