@@ -43,8 +43,8 @@ class DM(commands.Cog):
     async def echo(self, ctx, messageable: Union[commands.TextChannelConverter, commands.UserConverter, int, None], *,
                    text: str):
         """Bogstandard echo command"""
-        if type(messageable) is int or not messageable:
-            messageable = self.bot.get_channel(messageable) if (type(messageable) is int) else ctx.channel
+        if not messageable:
+            messageable = ctx.channel
         await messageable.send(text)
 
     @commands.command(aliases=["r"])
