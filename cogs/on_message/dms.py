@@ -9,6 +9,7 @@ class DM(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.latest = None
+        self.latest_task = None
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -20,7 +21,7 @@ class DM(commands.Cog):
                                   description=msg.content, timestamp=msg.created_at, color=discord.Color.orange())
             return await self.bot.config.channels.log.send(embed=embed)
         # log message only if is not bot user
-        elif msg.bot.user: return
+        elif msg.author.bot: return
         else:
             embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
                                   description=msg.content, timestamp=msg.created_at, color=discord.Color.dark_blue())
