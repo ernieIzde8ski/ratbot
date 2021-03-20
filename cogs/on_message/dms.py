@@ -11,8 +11,8 @@ class DM(commands.Cog):
         self.latest = None
         self.latest_task = None
 
-    @commands.Cog.listener()
-    async def on_message(self, msg):
+    @commands.Cog.listener("on_message")
+    async def log_message(self, msg):
         # pass only if in direct messages
         if msg.guild: return
         # log own messages as an embed in the proper channel
@@ -37,6 +37,17 @@ class DM(commands.Cog):
         self.latest = msg
         await sleep((60 * 5))
         self.latest = None
+
+    @commands.Cog.listener("on_message")
+    async def respond_to_message(self, msg):
+        if not self.latest or msg.channel != self.bot.config.channels.log:
+            return
+        if msg.author.bot:
+            return
+        if msg.content.startswith("r."):
+            return
+        await self.latest.channel.send(f"[{msg.author}] {msg.content}")
+        await msg.delete()
 
     @commands.command(aliases=["vessel", "wessel"])
     @commands.is_owner()
