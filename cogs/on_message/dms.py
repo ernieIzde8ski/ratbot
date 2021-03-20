@@ -61,11 +61,21 @@ class DM(commands.Cog):
     @commands.command(aliases=["r"])
     @commands.is_owner()
     async def reply(self, ctx, *, text: str):
-        if not self.latest:
-            await ctx.channel.send("There's no Latest Mesage Bro...................")
-        else:
+        if self.latest:
             await self.latest.channel.send(text)
             await ctx.message.delete()
+        else:
+            await ctx.channel.send("There's no Latest Mesage Bro...................")
+
+    @commands.command(aliases=["clear"])
+    @commands.is_owner()
+    async def clear_latest(self, ctx):
+        if self.latest:
+            self.latest_task.cancel()
+            self.latest = None
+            await ctx.channel.send("Delted")
+        else:
+            await ctx.channel.send("There Dont Be Anything To Clear Doe .")
 
 
 def setup(bot):
