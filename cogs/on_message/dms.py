@@ -17,15 +17,23 @@ class DM(commands.Cog):
         if msg.guild: return
         # log own messages as an embed in the proper channel
         if msg.author == self.bot.user:
-            embed = discord.Embed(title=f"Direct Message → {msg.channel.recipient} ({msg.channel.recipient.id})",
-                                  description=msg.content, timestamp=msg.created_at, color=discord.Color.orange())
+            embed = discord.Embed(
+                title=f"Direct Message → {msg.channel.recipient} ({msg.channel.recipient.id})",
+                description=msg.content,
+                timestamp=msg.created_at, color=discord.Color.orange()
+            )
             return await self.bot.config.channels.log.send(embed=embed)
         # log message only if is not bot user
         elif msg.author.bot:
             return
         else:
-            embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
-                                  description=msg.content, timestamp=msg.created_at, color=discord.Color.dark_blue())
+            embed = discord.Embed(
+                title=f"Direct Message — {msg.author} ({msg.author.id})",
+                description=msg.content,
+                timestamp=msg.created_at, color=discord.Color.dark_blue()
+            )
+            if msg.attachments:
+                embed.set_image(url=msg.attachments[0].url)
             await self.bot.config.channels.log.send(embed=embed)
             # also save for later
             if self.latest_task:
