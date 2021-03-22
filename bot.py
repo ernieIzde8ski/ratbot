@@ -14,6 +14,7 @@ from static import Static
 
 intentions = discord.Intents.all()
 intentions.presences = False  # why ? - myer
+# Because i dont want presences
 
 bot = commands.Bot(command_prefix=["r.", "rat! "],
                    allowed_mentions=discord.AllowedMentions.none(),
