@@ -50,6 +50,7 @@ class Fun(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def everyone(self, ctx):
+        """Mentions @everyone"""
         await ctx.channel.send("@everyone", allowed_mentions=discord.AllowedMentions(everyone=True))
 
     @commands.command(aliases=["CC", "cc"])

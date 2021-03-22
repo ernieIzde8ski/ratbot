@@ -68,6 +68,7 @@ class DM(commands.Cog):
     @commands.command(aliases=["r"])
     @commands.is_owner()
     async def reply(self, ctx, *, text: str):
+        """Replies to the latest direct message from within 5 minutes"""
         if self.latest:
             await self.latest.channel.send(text)
             await ctx.message.delete()
@@ -77,6 +78,7 @@ class DM(commands.Cog):
     @commands.command(aliases=["clear"])
     @commands.is_owner()
     async def clear_latest(self, ctx):
+        """Clears the latest message from replying"""
         if self.latest:
             self.latest_task.cancel()
             self.latest = None
