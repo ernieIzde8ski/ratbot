@@ -26,7 +26,6 @@ class DM(commands.Cog):
         else:
             embed = discord.Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
                                   description=msg.content, timestamp=msg.created_at, color=discord.Color.dark_blue())
-
             await self.bot.config.channels.log.send(embed=embed)
             # also save for later
             if self.latest_task:
