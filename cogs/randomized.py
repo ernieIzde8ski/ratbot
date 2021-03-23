@@ -17,8 +17,8 @@ class Randomized(commands.Cog):
     async def bM_meter(self, ctx, *, option: Optional[str]):
         """decides Based or Cringe"""
         option = option.replace("```", "Armenium") if option else "Your"
-        random.seed(self.bot.static.remove_strange_chars(option.lower()))
         option = option[:1500]
+        random.seed(self.bot.static.remove_strange_chars(option.lower()))
         bc_decision = random.choice(["Based", "Cringe"])
         punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
         await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
