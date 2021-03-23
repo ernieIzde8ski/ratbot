@@ -22,7 +22,7 @@ class Randomized(commands.Cog):
         bc_decision = random.choice(["Based", "Cringe"])
         punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
         await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
-        option = option[:250] + (option[250:] and "…")
+        option = option[:250] + (option[250:] and "[…]")
         try:
             await self.bm_channel.send("```"
                                        f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
