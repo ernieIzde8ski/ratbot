@@ -17,13 +17,19 @@ class Randomized(commands.Cog):
     async def bM_meter(self, ctx, *, option: Optional[str]):
         """decides Based or Cringe"""
         option = option.replace("```", "Armenium") if option else "Your"
-        random.seed(option.lower())
+        random.seed(self.bot.static.remove_strange_chars(option.lower()))
+        option = option[:1500]
         bc_decision = random.choice(["Based", "Cringe"])
         punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
         await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
-        await self.bm_channel.send("```"
-                                   f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
-                                   "```")
+        option = option[:250] + (option[250:] and "…")
+        try:
+            await self.bm_channel.send("```"
+                                       f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
+                                       "```")
+        except commands.errors.CommandInvokeError as e:
+            await self.bm_channel.send(e)
+            await self.bm_channel.send()
 
     @commands.command(aliases=["song", "rs"])
     async def random_song(self, ctx):
