@@ -5,6 +5,9 @@ import discord
 from discord.ext import commands
 
 
+async def is_log_channel(ctx):  # check for log channel
+    return ctx.channel.id == 715297562613121084
+
 class DM(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
