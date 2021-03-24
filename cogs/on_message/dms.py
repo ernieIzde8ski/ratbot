@@ -8,6 +8,7 @@ from discord.ext import commands
 async def is_log_channel(ctx):  # check for log channel
     return ctx.channel.id == 715297562613121084
 
+
 class DM(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -50,11 +51,9 @@ class DM(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def respond_to_message(self, msg):
-        if not self.latest or msg.channel != self.bot.config.channels.log:
+        if msg.channel != self.bot.config.channels.log or not self.latest:
             return
-        if msg.author.bot:
-            return
-        if msg.content.startswith("r."):
+        if msg.author.bot or msg.content.startswith("r."):
             return
         await self.latest.channel.send(f"[{msg.author}] {msg.content}")
         await msg.delete()
@@ -79,7 +78,7 @@ class DM(commands.Cog):
             await ctx.channel.send("There's no Latest Mesage Bro...................")
 
     @commands.command(aliases=["clear"])
-    @commands.is_owner()
+    @commands.check(is_log_channel)
     async def clear_latest(self, ctx):
         """Clears the latest message from replying"""
         if self.latest:
