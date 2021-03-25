@@ -13,6 +13,7 @@ class Config:
             "cogs.randomized",
             "cogs.timekeeping",
             "cogs.on_message.dms",
+            "cogs.on_message.dumb_cogicular",
             "cogs.on_message.PIPI",
             "cogs.on_message.corrections",
             "cogs.on_message.ratsponding",
