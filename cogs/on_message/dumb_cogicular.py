@@ -10,7 +10,7 @@ class NicoInforming(commands.Cog):
         if msg.channel.id != 758373055918899216 or msg.author.id != 544274326002860033:
             return
         if msg.content == "frick":
-            nico = self.bot.get_member(251792286260658196)
+            nico = self.bot.get_user(251792286260658196)
             await nico.send(msg.channel.mention)
 
 
