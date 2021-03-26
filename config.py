@@ -9,9 +9,10 @@ class Config:
             "cogs.admin",
             "cogs.misc",
             "cogs.star trek",
+            "cogs.temperature"
+            "cogs.timekeeping",
             "cogs.uncategorized",
             "cogs.randomized",
-            "cogs.timekeeping",
             "cogs.on_message.dms",
             "cogs.on_message.dumb_cogicular",
             "cogs.on_message.PIPI",
