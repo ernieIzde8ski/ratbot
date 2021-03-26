@@ -9,7 +9,7 @@ class Config:
             "cogs.admin",
             "cogs.misc",
             "cogs.star trek",
-            "cogs.temperature"
+            "cogs.temperature",
             "cogs.timekeeping",
             "cogs.uncategorized",
             "cogs.randomized",
