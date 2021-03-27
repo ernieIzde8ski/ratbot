@@ -31,6 +31,12 @@ class Randomized(commands.Cog):
             await self.bm_channel.send(e)
             await self.bm_channel.send()
 
+    @commands.command(aliases=["gm", "gobi"])
+    async def gobi_meter(self, ctx, phrase: str):
+        random.seed(self.bot.static.remove_strange_chars(phrase.lower()))
+        percent = round(random.random()*100, 1)
+        await ctx.channel.send(f"\"{phrase}\" is {percent}% Gobi")
+
     @commands.command(aliases=["song", "rs"])
     async def random_song(self, ctx):
         """Pulls a random song from the configuration file"""
