@@ -16,20 +16,24 @@ def match_temp(temperature: float):
         return "post35"
 
 
-async def get_temperature(city: str = "Irvine"):
-    url = f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q="
-
 class Armenium(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         with open("cogs/on_member_update/Armenium.json") as file:
             self.data = json.load(file)
 
+    async def get_temperature(self, city: str = self.data["default_city"]):
+        url = f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}" # url for data
+        weather_data = requests.get(url).json() # get data as json
+        temperature = round(weather_data['main']['temp'] - 273.15) # get temperature and convert from Kelvin
+        return temperature
+
     async def message(self):
+        temperature = await get_temperature()
         message = (
             f"__**Zdavstuy**__ \n\n"
             f"{choice(self.data['msg']['greeting'])}, {choice(self.data['msg']['nickname'])}, hope you have Exciting Day. (Just kidding your Stupid) \n\n"
-            f"It is currently {WEATHER} degrees Celsius outside for you. {self.data['temp'][match_temp(WEATHER)]} \n\n"
+            f"It is currently {temperature} degrees Celsius outside for you. {self.data['temp'][match_temp(temperature)]} \n\n"
             f"{choice(self.data['russian'])}"
         )
         return message
