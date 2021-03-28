@@ -7,3 +7,4 @@ cogs/testing_*.py
 *.cpython-39.pyc
 temporary/*
 temporary/*.*
+cogs/on_member_update/Armenium.json
