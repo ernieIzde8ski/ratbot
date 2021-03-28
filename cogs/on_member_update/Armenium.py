@@ -23,9 +23,9 @@ class Armenium(commands.Cog):
             self.data = json.load(file)
 
     async def get_temperature(self, city: str = self.data["default_city"]):
-        url = f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}" # url for data
-        weather_data = requests.get(url).json() # get data as json
-        temperature = round(weather_data['main']['temp'] - 273.15) # get temperature and convert from Kelvin
+        url = f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}"  # url for data
+        weather_data = requests.get(url).json()  # get data as json
+        temperature = round(weather_data['main']['temp'] - 273.15)  # get temperature and convert from Kelvin
         return temperature
 
     async def message(self):
