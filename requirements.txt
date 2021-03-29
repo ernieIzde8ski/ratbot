@@ -1,0 +1,4 @@
+###### Requirements with Version Specifiers ######
+discord.py >= 1.5.1
+hypixelaPY >= 1.2.5
+pytz >= 2020.5
