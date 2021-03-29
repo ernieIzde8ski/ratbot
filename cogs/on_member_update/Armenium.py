@@ -1,14 +1,18 @@
-import discord.ext.commands as commands
-import discord
 import json
-from random import choice
-from datetime import datetime
-from pytz import timezone
 import secrets
+from datetime import datetime
+import random
+from typing import Optional
+
+import aiohttp
+import discord
+import discord.ext.commands as commands
+from pytz import timezone
 
 
 def match_temp(temperature: float):
-    temperatures = [[-40, "siberia"], [-20, "subuntwenty"], [-10, "subunten"], [0, "subzero"], [10, "subten"], [20, "subtwenty"], [25, "sub25"], [30, "subthirty"], [35, "sub35"]]
+    temperatures = [[-40, "siberia"], [-20, "subuntwenty"], [-10, "subunten"], [0, "subzero"], [10, "subten"],
+                    [20, "subtwenty"], [25, "sub25"], [30, "subthirty"], [35, "sub35"]]
     for temp, name in temperatures:
         if temperature <= temp:
             return name
@@ -19,22 +23,24 @@ def match_temp(temperature: float):
 class Armenium(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open("cogs/on_member_update/Armenium.json") as file:
+        with open("cogs/on_member_update/Armenium.json", "r", encoding='utf-8') as file:
             self.data = json.load(file)
 
-    async def get_temperature(self, city: str = self.data["default_city"]):
-        url = f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}"  # url for data
-        weather_data = requests.get(url).json()  # get data as json
-        temperature = round(weather_data['main']['temp'] - 273.15)  # get temperature and convert from Kelvin
-        return temperature
+    async def get_temperature(self, city):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
+                weather_data = await resp.json()  # get data as json
+                temperature = round(weather_data['main']['temp'] - 273.15)  # get temperature & convert from Kelvin
+                return temperature
 
     async def message(self):
-        temperature = await get_temperature()
+        temperature = await self.get_temperature(self.data["default_city"])
         message = (
             f"__**Zdavstuy**__ \n\n"
-            f"{choice(self.data['msg']['greeting'])}, {choice(self.data['msg']['nickname'])}, hope you have Exciting Day. (Just kidding your Stupid) \n\n"
+            f"{random.choice(self.data['msg']['greeting'])}, {random.choice(self.data['msg']['nickname'])}, hope you have Exciting Day. (Just kidding your Stupid) \n\n"
             f"It is currently {temperature} degrees Celsius outside for you. {self.data['temp'][match_temp(temperature)]} \n\n"
-            f"{choice(self.data['russian'])}"
+            f"**{''.join(f'{sentence}. ' for sentence in random.sample(self.data['russian'], random.randint(4, 8)))}**"
         )
         return message
 
@@ -45,13 +51,15 @@ class Armenium(commands.Cog):
         elif before.raw_status != "offline" or after.raw_status == "offline":
             return
         elif self.data["reset_time"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
-            return print(f"{after} online, but already sent the message today")
+            print(f"{after} online, but already sent the message today")
+            return
         else:
             self.data["reset_time"] = str(datetime.now(tz=timezone("US/Hawaii")))[:10]
-            with open("cogs/on_member_update/Armenium.json") as file:
+            with open("cogs/on_member_update/Armenium.json", "w") as file:
                 json.dump(self.data, file, indent=2)
             message = await self.message()
             await after.send(message)
+            return
 
 
 def setup(bot):

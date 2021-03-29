@@ -19,7 +19,8 @@ class Config:
             "cogs.on_message.corrections",
             "cogs.on_message.ratsponding",
             "cogs.on_message.ernie_censorship",
-            "cogs.on_message.stop_putting_features_in_main_bot_file"
+            "cogs.on_message.stop_putting_features_in_main_bot_file",
+            "cogs.on_member_update.Armenium"
         ]
         self.adminname = "ernie"  # bot admin name - must be lowercase
         self.spokesperson = "i am his spokesperson, what do you want of him"  # line when responding to bot admin name
