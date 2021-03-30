@@ -40,7 +40,7 @@ class Armenium(commands.Cog):
             f"__**Zdavstuy**__ \n\n"
             f"{random.choice(self.data['msg']['greeting'])}, {random.choice(self.data['msg']['nickname'])}, hope you have Exciting Day. (Just kidding your Stupid) \n\n"
             f"It is currently {temperature} degrees Celsius outside for you. {self.data['temp'][match_temp(temperature)]} \n\n"
-            f"**{''.join(f'{sentence}. ' for sentence in random.sample(self.data['russian'], random.randint(4, 8)))}**"
+            f"**{''.join(f'{sentence}. ' for sentence in random.sample(self.data['russian'], random.randint(3, 5))}**"
         )
         return message
 
