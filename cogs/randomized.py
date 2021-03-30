@@ -28,8 +28,7 @@ class Randomized(commands.Cog):
                                        f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
                                        "```")
         except commands.errors.CommandInvokeError as e:
-            await self.bm_channel.send(e)
-            await self.bm_channel.send()
+            await ctx.channel.send(f"CommandInvokeError: {e}")
 
     @commands.command(aliases=["gm", "gobi"])
     async def gobi_meter(self, ctx, *, phrase: str):
