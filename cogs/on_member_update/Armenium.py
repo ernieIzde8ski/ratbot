@@ -54,7 +54,7 @@ class Armenium(commands.Cog):
             print(f"{after} online, but already sent the message today")
             return
         else:
-            self.data["reset_time"] = str(datetime.now(tz=timezone("US/Hawaii")))[:10]
+            self.data["reset_time"] = f"{datetime.now(tz=timezone('US/Hawaii')):%Y-%m-%d}"
             with open("cogs/on_member_update/Armenium.json", "w") as file:
                 json.dump(self.data, file, indent=2)
             message = await self.message()

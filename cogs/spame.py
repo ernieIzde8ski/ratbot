@@ -40,7 +40,7 @@ class Spame(commands.Cog):
             return
         msg = generate_spame()
         if count != 1:
-            for i in range(1, (count - 1)):
+            for i in range(0, count):
                 msg += f", {generate_spame()}"
         await ctx.channel.send(msg)
 
