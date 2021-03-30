@@ -35,10 +35,10 @@ class Armenium(commands.Cog):
                 return temperature
 
     async def message(self, auth_id: int):
-        temperature = await self.get_temperature(self.data[str(auth_id)]["city"])
+        temperature = await self.get_temperature(self.data['ids'][str(auth_id)]["city"])
         message = (
             f"__**Zdavstuy**__ \n\n" 
-            f"{random.choice(self.data['msg']['greeting'])}, {random.choice(self.data[str(auth_id)]['nicknames'])}, "
+            f"{random.choice(self.data['msg']['greeting'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
             "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
             f"It is currently {temperature} degrees Celsius outside for you. "
             f"{self.data['msg']['temp'][match_temp(temperature)]} \n\n"
@@ -52,11 +52,11 @@ class Armenium(commands.Cog):
             return
         elif before.raw_status != "offline" or after.raw_status == "offline":
             return
-        elif self.data[str(after.id)]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
+        elif self.data["ids"][str(after.id)]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
             print(f"{after} online, but already sent the message today")
             return
         else:
-            self.data[str(after.id)]["reset_date"] = f"{datetime.now(tz=timezone('US/Hawaii')):%Y-%m-%d}"
+            self.data["ids"][str(after.id)]["reset_date"] = f"{datetime.now(tz=timezone('US/Hawaii')):%Y-%m-%d}"
             with open("cogs/on_member_update/Armenium.json", "w") as file:
                 json.dump(self.data, file, indent=2)
             message = await self.message(after.id)
