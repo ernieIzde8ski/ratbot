@@ -68,9 +68,9 @@ class Armenium(commands.Cog):
             await after.send(message)
             return
 
-    @commands.command()
+    @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
-    async def add_brogle(self, ctx, user: discord.User, *, user_dict: str):
+    async def add_user_to_Armenium(self, ctx, user: discord.User, *, user_dict: str):
         """Command to add user to the list of weather updates
         Parameters:
             user: a discord user (id, mention, username, etc)
