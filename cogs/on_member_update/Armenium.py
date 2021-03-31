@@ -83,7 +83,8 @@ class Armenium(commands.Cog):
                 }
             """
         user_dict = json.loads(user_dict)
-        self.data["ids"]["raw_ids"].append(user.id)
+        if user.id not in self.data["ids"]["raw_ids"]:
+            self.data["ids"]["raw_ids"].append(user.id)
         self.data["ids"][str(user.id)] = user_dict
         with open("cogs/on_member_update/Armenium.json", "w") as file:
             json.dump(self.data, file, indent=2)
