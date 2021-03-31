@@ -71,6 +71,17 @@ class Armenium(commands.Cog):
     @commands.Cog()
     @commands.is_owner()
     async def add_brogle(self, ctx, user: discord.User, user_dict: dict):
+        """Command to add user to the list of weather updates
+        Parameters:
+            user: a discord user (id, mention, username, etc)
+            user_dict: information on the user, in the format:
+                {
+                    "city": "a city",
+                    "tz": "a timezone a few hours before the real one",
+                    "reset_date": "None",
+                    "nicknames": ["a", "list", "of", "nicknames"]
+                }
+            """
         self.data["ids"]["raw_ids"] = self.data["ids"]["raw_ids"].append(user.id)
         self.data["ids"][str(user.id)] = user_dict
         with open("cogs/on_member_update/Armenium.json", "w") as file:
