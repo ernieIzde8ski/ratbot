@@ -68,7 +68,7 @@ class Armenium(commands.Cog):
             await after.send(message)
             return
 
-    @commands.Cog()
+    @commands.command()
     @commands.is_owner()
     async def add_brogle(self, ctx, user: discord.User, user_dict: dict):
         """Command to add user to the list of weather updates
@@ -77,7 +77,7 @@ class Armenium(commands.Cog):
             user_dict: information on the user, in the format:
                 {
                     "city": "a city",
-                    "tz": "a timezone a few hours before the real one",
+                    "tz": "a timezone from pytz",
                     "reset_date": "None",
                     "nicknames": ["a", "list", "of", "nicknames"]
                 }
