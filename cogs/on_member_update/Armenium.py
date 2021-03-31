@@ -52,6 +52,10 @@ class Armenium(commands.Cog):
             return
         elif before.raw_status != "offline" or after.raw_status == "offline":
             return
+        # Fair warning:
+        # due to the nature of on_member_update and the following few lines,
+        # the bot is guaranteed to spam your console logs if your client
+        # has a few mutual servers with the bot || you leave this unmodified
         elif self.data["ids"][str(after.id)]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
             print(f"{after} online, but already sent the message today")
             return
