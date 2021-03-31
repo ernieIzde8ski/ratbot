@@ -70,7 +70,7 @@ class Armenium(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def add_brogle(self, ctx, user: discord.User, user_dict: dict):
+    async def add_brogle(self, ctx, user: discord.User, *, user_dict: dict):
         """Command to add user to the list of weather updates
         Parameters:
             user: a discord user (id, mention, username, etc)
