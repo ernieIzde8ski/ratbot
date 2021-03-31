@@ -70,7 +70,7 @@ class Armenium(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def add_brogle(self, ctx, user: discord.User, *, user_dict: dict):
+    async def add_brogle(self, ctx, user: discord.User, *, user_dict: str):
         """Command to add user to the list of weather updates
         Parameters:
             user: a discord user (id, mention, username, etc)
@@ -82,8 +82,9 @@ class Armenium(commands.Cog):
                     "nicknames": ["a", "list", "of", "nicknames"]
                 }
             """
+        user_dict = json.loads(user_dict)
         self.data["ids"]["raw_ids"] = self.data["ids"]["raw_ids"].append(user.id)
-        self.data["ids"][str(user.id)] = user_dict
+        self.data["ids"][str(user.id)] = user_dic
         with open("cogs/on_member_update/Armenium.json", "w") as file:
             json.dump(self.data, file, indent=2)
         await ctx.channel.send("Hopefully done")
