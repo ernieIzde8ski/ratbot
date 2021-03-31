@@ -3,7 +3,6 @@ class Config:
         self.guild_opt_in = [488475203303768065, 526207286067068928, 534875827398246451]
         # guilds which have opted into tenor slaying
         # only relevant if you load cogs.on_message.respuestas
-        self.ratmin_id = 302956027656011776  # bot admin user id, mostly extant by now
         self.channels = Channels()  # the channels lol
         self.enabledcogs = [  # cogs that load alongside the bot
             "cogs.admin",
@@ -81,7 +80,14 @@ class Config:
             "ha0icvcByDs",
             "He322O1JWgU",
             "IoiaAA4vNaI",
-            "TRUZ0gB_xKY"
+            "TRUZ0gB_xKY",
+            "M0TcB5lxfuY",
+            "lrNnMNrKqQc",
+            "2KxwqyM7k2s",
+            "fYTgJVDYWNs",
+            "uGrb-6Vb9Bw",
+            "RgsnSg29tBo",
+            "E9PHKAV3ATQ"
         ]
 
 

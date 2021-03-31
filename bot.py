@@ -9,7 +9,7 @@ import hypixelaPY.exceptions as hypixele
 from hypixelaPY import Hypixel
 
 from config import Config
-from secrets import token, api_key
+from secrets import token, hypixel_api_key
 from static import Static
 
 intentions = discord.Intents.all()
@@ -33,7 +33,7 @@ for extension in bot.config.enabledcogs:
 async def start():
     try:
         try:
-            bot.hypixel = await Hypixel(api_key)
+            bot.hypixel = await Hypixel(hypixel_api_key)
         except hypixele.InvalidAPIKeyError as e:
             print(f"hypixelaPY.exceptions.InvalidAPIKeyError: {e}")
         await bot.start(token)
