@@ -48,7 +48,7 @@ class Armenium(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        id = str(after.id)
+        _id = str(after.id)
         if after.id not in self.data["ids"]["raw_ids"]:
             return
         elif before.raw_status != "offline" or after.raw_status == "offline":
@@ -57,16 +57,25 @@ class Armenium(commands.Cog):
         # due to the nature of on_member_update and the following few lines,
         # the bot is guaranteed to spam your console logs if your client
         # has a few mutual servers with the bot || you leave this unmodified
-        elif self.data["ids"][id]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
+        elif self.data["ids"][_id]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
             print(f"{after} online, but already sent the message today")
             return
         else:
-            self.data["ids"][id]["reset_date"] = f"{datetime.now(tz=timezone(self.data['ids'][id]['tz'])):%Y-%m-%d}"
+            self.data["ids"][_id]["reset_date"] = f"{datetime.now(tz=timezone(self.data['ids'][id]['tz'])):%Y-%m-%d}"
             with open("cogs/on_member_update/Armenium.json", "w") as file:
                 json.dump(self.data, file, indent=2)
             message = await self.message(after.id)
             await after.send(message)
             return
+
+    @commands.Cog()
+    @commands.is_owner()
+    async def add_brogle(self, ctx, user: discord.User, user_dict: dict):
+        self.data["ids"]["raw_ids"] = self.data["ids"]["raw_ids"].append(user.id)
+        self.data["ids"][str(user.id)] = user_dict
+        with open("cogs/on_member_update/Armenium.json", "w") as file:
+            json.dump(self.data, file, indent=2)
+        await ctx.channel.send("Hopefully done")
 
 
 def setup(bot):
