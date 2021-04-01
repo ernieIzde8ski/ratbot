@@ -12,10 +12,7 @@ class StopPuttingFeaturesInMainBotFile(commands.Cog):
                 await message.delete()
         if message.author.bot: return
         # respond when anyone says my name
-        if message.content.lower() == self.bot.config.adminname and message.author.id != self.bot.config.ratmin_id:
-            await message.channel.send(self.bot.config.spokesperson)
-            return
-        elif "ernie reads star trek fanfics" in message.content.lower():
+        if "ernie reads star trek fanfics" in message.content.lower():
             await message.delete()
         elif "ernie does not read star trek fanfics" in message.content.lower():
             await message.channel.send("True")
