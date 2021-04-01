@@ -2,14 +2,14 @@
 # good luck
 # here's all the necessary imports
 import asyncio
-from enabled_cogs import enabled_cogs
+from configs.enabled_cogs import enabled_cogs
 import discord
 import discord.ext.commands as commands
 import hypixelaPY.exceptions as hypixele
 from hypixelaPY import Hypixel
 
-from config import Config
-from secrets import token, hypixel_api_key
+from configs.config import Config
+from configs.secrets import token, hypixel_api_key
 from static import Static
 
 intentions = discord.Intents.all()
