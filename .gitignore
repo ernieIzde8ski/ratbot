@@ -1,10 +1,10 @@
-secrets.py
 .idea/
 __pycache__/
+temporary/
 *.pyc
+*.cpython-39.pyc
 cogs/testing.py
 cogs/testing_*.py
-*.cpython-39.pyc
-temporary/
-cogs/on_member_update/Armenium.json
 enabled_cogs.py
+secrets.py
+cogs/on_member_update/Armenium.json
