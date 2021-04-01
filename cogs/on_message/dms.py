@@ -60,7 +60,7 @@ class DM(commands.Cog):
 
     @commands.command(aliases=["vessel", "wessel"])
     @commands.is_owner()
-    async def echo(self, ctx, messageable: Union[commands.TextChannelConverter, commands.UserConverter, int, None], *,
+    async def echo(self, ctx, messageable: Union[commands.TextChannelConverter, commands.UserConverter, None], *,
                    text: str):
         """Bogstandard echo command"""
         if not messageable:
