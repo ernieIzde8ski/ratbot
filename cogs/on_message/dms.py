@@ -1,5 +1,6 @@
+import json
 from asyncio import sleep
-from typing import Union
+from typing import Union, Optional
 
 import discord
 from discord.ext import commands
@@ -14,11 +15,14 @@ class DM(commands.Cog):
         self.bot = bot
         self.latest = None
         self.latest_task = None
+        with open("configs/blocked.json", "r") as f:
+            self.blocked_list = json.load(f)
 
     @commands.Cog.listener("on_message")
     async def log_message(self, msg):
         # pass only if in direct messages
         if msg.guild: return
+        if msg.author.id in self.blocked_list["ids"]: return
         # log own messages as an embed in the proper channel
         if msg.author == self.bot.user:
             embed = discord.Embed(
@@ -87,6 +91,26 @@ class DM(commands.Cog):
             await ctx.channel.send("Delted")
         else:
             await ctx.channel.send("There Dont Be Anything To Clear Doe .")
+
+    @commands.command(aliases=["b", "block"])
+    @commands.check(is_log_channel)
+    @commands.is_owner()
+    async def block_recipient(self, ctx, blockee: Optional[discord.User]):
+        if not blockee and not self.latest:
+            return await ctx.channel.send("You aint given me no input")
+        elif not blockee:
+            blockee = self.latest.author
+
+        if blockee.id in self.blocked_list["ids"]:
+            await ctx.channel.send("User already blocked")
+        else:
+            self.blocked_list["ids"].append(blockee.id)
+            with open("configs/blocked.json", "w") as f:
+                json.dump(self.blocked_list, f, indent=2)
+            if self.latest:
+                self.latest_task.cancel()
+                self.latest = None
+            await blockee.send("Blocked")
 
 
 def setup(bot):
