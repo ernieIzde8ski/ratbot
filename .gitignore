@@ -5,6 +5,7 @@ temporary/
 *.cpython-39.pyc
 cogs/testing.py
 cogs/testing_*.py
+configs/blocked.json
 configs/enabled_cogs.py
 configs/secrets.py
 cogs/on_member_update/Armenium.json
