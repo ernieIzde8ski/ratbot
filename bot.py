@@ -2,7 +2,7 @@
 # good luck
 # here's all the necessary imports
 import asyncio
-
+from enabled_cogs import enabled_cogs
 import discord
 import discord.ext.commands as commands
 import hypixelaPY.exceptions as hypixele
@@ -21,7 +21,7 @@ bot.static = Static()
 bot.config = Config()
 
 # Cog ?
-for extension in bot.config.enabledcogs:
+for extension in enabled_cogs:
     try:
         bot.load_extension(extension)
     except commands.ExtensionError as e:

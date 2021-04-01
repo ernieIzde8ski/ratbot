@@ -4,23 +4,6 @@ class Config:
         # guilds which have opted into tenor slaying
         # only relevant if you load cogs.on_message.respuestas
         self.channels = Channels()  # the channels lol
-        self.enabledcogs = [  # cogs that load alongside the bot
-            "cogs.admin",
-            "cogs.misc",
-            "cogs.star trek",
-            "cogs.temperature",
-            "cogs.timekeeping",
-            "cogs.uncategorized",
-            "cogs.randomized",
-            "cogs.on_message.dms",
-            "cogs.on_message.dumb_cogicular",
-            "cogs.on_message.PIPI",
-            "cogs.on_message.corrections",
-            "cogs.on_message.ratsponding",
-            "cogs.on_message.ernie_censorship",
-            "cogs.on_message.stop_putting_features_in_main_bot_file",
-            "cogs.on_member_update.Armenium"
-        ]
         self.adminname = "ernie"  # bot admin name - must be lowercase
         self.songs = [  # songs referenced in cogs.uncategorized via youtube url
             "fjp4thii1WY",
