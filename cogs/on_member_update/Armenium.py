@@ -23,8 +23,8 @@ def match_temp(temperature: float):
 class Armenium(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open("cogs/on_member_update/Armenium.json", "r", encoding='utf-8') as file:
-            self.data = json.load(file)
+        with open("cogs/on_member_update/Armenium.json", "r", encoding='utf-8') as f:
+            self.data = json.load(f)
 
     async def get_temperature(self, city):
         async with aiohttp.ClientSession() as session:
@@ -62,8 +62,8 @@ class Armenium(commands.Cog):
             return
         else:
             self.data["ids"][ID]["reset_date"] = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
-            with open("cogs/on_member_update/Armenium.json", "w") as file:
-                json.dump(self.data, file, indent=2)
+            with open("cogs/on_member_update/Armenium.json", "w") as f:
+                json.dump(self.data, f, indent=2)
             message = await self.message(after.id)
             await after.send(message)
             return
