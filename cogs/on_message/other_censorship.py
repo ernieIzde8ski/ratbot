@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 
-class StopPuttingFeaturesInMainBotFile(commands.Cog):
+class GoingToPutMoreFeaturesInMainBotFile(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -19,4 +19,4 @@ class StopPuttingFeaturesInMainBotFile(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(StopPuttingFeaturesInMainBotFile(bot))
+    bot.add_cog(GoingToPutMoreFeaturesInMainBotFile(bot))
