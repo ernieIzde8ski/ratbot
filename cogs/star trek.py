@@ -45,7 +45,8 @@ class Startrek(commands.Cog):
         """Generates a borg phrase dependent on your input."""
         await ctx.send(
             f"We are the {item}. Lower your shields and surrender your ships. We will add your biological and "
-            f"technological distinctiveness to our own. Your culture will adapt to service us. Resistance is futile.")
+            f"technological distinctiveness to our own. Your culture will adapt to service us. Resistance is futile."
+        )
 
 
 def setup(bot):
