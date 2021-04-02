@@ -14,6 +14,7 @@ class Ratsponding(commands.Cog):
         if message.author.bot:
             return
         elif message.content.startswith("rat"):
+            if message.content.startswith("rather"): return
             await message.channel.send("rat")
             log = f"[{self.bot.static.now()}] rat from {message.author} in "
             log += "dms" if not message.guild else str(message.guild)
