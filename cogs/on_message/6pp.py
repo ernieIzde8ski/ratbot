@@ -1,7 +1,8 @@
 import random
+from asyncio import sleep
+
 import discord.ext.commands as commands
 from discord import errors
-from asyncio import sleep
 
 
 class Banned(commands.Cog):

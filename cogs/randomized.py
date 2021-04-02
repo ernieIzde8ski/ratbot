@@ -33,7 +33,7 @@ class Randomized(commands.Cog):
     @commands.command(aliases=["gm", "gobi"])
     async def gobi_meter(self, ctx, *, phrase: str):
         random.seed(self.bot.static.remove_strange_chars(phrase.lower()))
-        percent = round(random.random()*100, 1)
+        percent = round(random.random() * 100, 1)
         await ctx.channel.send(f"\"{phrase}\" is {percent}% Gobi")
 
     @commands.command(aliases=["song", "rs"])
