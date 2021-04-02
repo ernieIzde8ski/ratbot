@@ -1,5 +1,5 @@
 import json
-import secrets
+from configs import secrets
 from datetime import datetime
 import random
 from typing import Optional
