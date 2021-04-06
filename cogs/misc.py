@@ -78,10 +78,13 @@ class Fun(commands.Cog):
     async def bible_verse(self, ctx, *, verse):
         """returns a bible verse or passage from the format book chapter:verse(s)"""
         verse = await get_verse(verse)
-        embed = discord.Embed(title=verse["heading"],
-                              description=verse["text"],
-                              url=verse["url"],
-                              timestamp=ctx.message.created_at)
+        embed = discord.Embed(
+            title=verse["heading"],
+            description=verse["text"],
+            url=verse["url"],
+            timestamp=ctx.message.created_at,
+            color=discord.Color.dark_orange()
+        )
         try:
             await ctx.channel.send(embed=embed)
         except discord.errors.HTTPException as e:
