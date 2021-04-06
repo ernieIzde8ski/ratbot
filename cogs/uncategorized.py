@@ -11,8 +11,8 @@ class Uncategorized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["support", "info", "invite"])
-    async def information(self, ctx):
+    @commands.group(invoke_without_subcommand=True)
+    async def help(self, ctx):
         """Provides general/support information"""
         bot_owner = (await commands.Bot.application_info(self.bot)).owner
         embed = Embed(
@@ -30,6 +30,11 @@ class Uncategorized(commands.Cog):
             text="do `r.help command` for information on commands"
         )
         await ctx.send(embed=embed)
+        return
+
+    @help.command(aliases=["cmd", "cmds"])
+    async def commands(self, ctx):
+        await ctx.send(commands.HelpCommand)
 
 
 def setup(bot):
