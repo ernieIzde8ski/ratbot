@@ -15,7 +15,7 @@ from static import Static
 
 intentions = discord.Intents.all()
 
-bot = commands.Bot(command_prefix=["r.", "rat! "],
+bot = commands.Bot(command_prefix=Config().prefix,
                    allowed_mentions=discord.AllowedMentions.none(),
                    intents=intentions)
 bot.static = Static()

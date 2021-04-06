@@ -1,5 +1,6 @@
 class Config:
     def __init__(self):
+        self.prefix = ["r.", "р."]
         self.guild_opt_in = [488475203303768065, 526207286067068928, 534875827398246451]
         # guilds which have opted into tenor slaying
         self.SixPP_guilds = [488475203303768065]
