@@ -29,6 +29,8 @@ for extension in enabled_cogs:
         print(f"{e.__class__.__name__}: {e}")
     except ModuleNotFoundError as e:
         print(f"{e.__class__.__name__}: {e}")
+    else:
+        print(f"loaded {extension}")
 
 
 async def start():

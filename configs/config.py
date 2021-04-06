@@ -2,7 +2,9 @@ class Config:
     def __init__(self):
         self.guild_opt_in = [488475203303768065, 526207286067068928, 534875827398246451]
         # guilds which have opted into tenor slaying
-        # only relevant if you load cogs.on_message.respuestas
+        self.SixPP_guilds = [488475203303768065]
+        # cogs.on_message.6pp
+        # ↓ only relevant if you load cogs.on_message.respuestas
         self.channels = Channels()  # the channels lol
         self.adminname = "ernie"  # bot admin name - must be lowercase
         self.songs = [  # songs referenced in cogs.uncategorized via youtube url

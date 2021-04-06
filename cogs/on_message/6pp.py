@@ -14,7 +14,7 @@ class Banned(commands.Cog):
         if ctx.author.bot or ctx.channel.id != 825067717106466916:
             return
         else:
-            value = random.randint(0, 200)
+            value = random.randint(0, 50000)
             if value == 0:
                 await ctx.channel.send(f"{ctx.author.mention} Uh Oh")
                 await sleep(3)
