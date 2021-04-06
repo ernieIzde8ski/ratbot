@@ -15,11 +15,12 @@ from static import Static
 
 intentions = discord.Intents.all()
 
-bot = commands.Bot(command_prefix=Config().prefix,
+Config = Config()
+bot = commands.Bot(command_prefix=Config.prefix,
                    allowed_mentions=discord.AllowedMentions.none(),
                    intents=intentions)
 bot.static = Static()
-bot.config = Config()
+bot.config = Config
 
 # Cog ?
 for extension in enabled_cogs:
@@ -37,8 +38,8 @@ async def start():
     try:
         try:
             bot.hypixel = await Hypixel(hypixel_api_key)
-        except hypixele.InvalidAPIKeyError as e:
-            print(f"hypixelaPY.exceptions.InvalidAPIKeyError: {e}")
+        except hypixele.InvalidAPIKeyError as error:
+            print(f"hypixelaPY.exceptions.InvalidAPIKeyError: {error}")
         await bot.start(token)
     except KeyboardInterrupt:
         await bot.logout()
