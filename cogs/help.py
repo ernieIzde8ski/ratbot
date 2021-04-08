@@ -4,7 +4,7 @@ from discord import Embed, Permissions, utils, errors
 from discord.ext import commands
 
 
-class Uncategorized(commands.Cog):
+class Help(commands.Cog):
     """There is only one command here Doe?
     Yea"""
 
@@ -44,7 +44,7 @@ class Uncategorized(commands.Cog):
 
     @help.command(aliases=["cmd", "cmds", "command"])
     async def commands(self, ctx):
-        """built-in """
+        """built-in help command"""
         ayuda = self.bot.help_command
         ayuda.context = ctx
         await ctx.channel.send(await ayuda.command_callback(ctx))
@@ -53,4 +53,4 @@ class Uncategorized(commands.Cog):
 def setup(bot):
     bot.remove_command("help")
     print("Saying the Bye-Bye to Help Command")
-    bot.add_cog(Uncategorized(bot))
+    bot.add_cog(Help(bot))
