@@ -57,8 +57,12 @@ class Fun(commands.Cog):
     async def cringecount(self, ctx, iteration: int = 1):
         """\"Liking liking things is cringe is cringe\""""
         if iteration < 105:
-            await ctx.channel.send(
-                f"Bro.... Liking {'“Liking ' * iteration}Things {'Is Cringe” ' * iteration}is Cringe....")
+            try:
+                await ctx.channel.send(
+                    f"Bro.... Liking {'“Liking ' * iteration}Things {'Is Cringe” ' * iteration}is Cringe...."
+                )
+            except commands.errors.CommandInvokeError as e:
+                await ctx.channel.send(f"CommandInvokeError: {e}")
         else:
             await ctx.channel.send("no")
 
