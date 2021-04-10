@@ -26,15 +26,13 @@ class XKCD(commands.Cog):
             url=data['img']
         )
 
-
     @commands.command()
     async def xkcd(self, ctx, *, xkcd_id: Union[int, str, None]):
-        idtype = xkcd_id.__class__.__name__
-        if idtype == "int":
+        if isinstance(xkcd_id, int):
             xkcd_json = await self.get_xkcd(xkcd_id)
             embed = await self.embed_constructor(xkcd_json, ctx.author.color)
             await ctx.channel.send(embed=embed)
-        elif idtype == "str":
+        elif isinstance(xkcd_id, str):
             await ctx.send(f"Sorry I Don't know how to handle looking for `{xkcd_id}` ( Yet)")
         else:
             await ctx.send("Please provide Input")
