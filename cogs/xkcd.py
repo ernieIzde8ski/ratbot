@@ -18,7 +18,7 @@ class XKCD(commands.Cog):
     async def embed_constructor(data, color):
         return Embed(
             title=data['title'],
-            url=f"https://xckd.com/{data['num']}",
+            url=f"https://xkcd.com/{data['num']}/",
             color=color
         ).set_footer(
             text=data['alt']
