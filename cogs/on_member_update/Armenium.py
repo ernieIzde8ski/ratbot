@@ -42,7 +42,7 @@ class Armenium(commands.Cog):
             "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
             f"It is currently {temperature} degrees Celsius outside for you. "
             f"{self.data['msg']['temp'][match_temp(temperature)]} \n\n"
-            f"**{''.join(f'{sentence}. ' for sentence in random.sample(self.data['msg']['russian'], random.randint(2, 4)))}**"
+            f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['msg']['russian'], random.randint(2, 4)))}**"
         )
         return message
 
@@ -56,7 +56,7 @@ class Armenium(commands.Cog):
         # Fair warning:
         # due to the nature of on_member_update and the following few lines,
         # the bot is guaranteed to spam your console logs if your client
-        # has a few mutual servers with the bot || you leave this unmodified
+        # has a few mutual servers with the bot, or you leave this unmodified
         elif self.data["ids"][ID]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
             print(f"{after} online, but already sent the message today")
             return
