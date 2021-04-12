@@ -26,7 +26,7 @@ class Help(commands.Cog):
             name=f"— {bot_owner}",
             icon_url=bot_owner.avatar_url
         ).set_footer(
-            text=f"For specific command information, do {self.bot.config.prefix[0]}help commands [command/category/None]"
+            text=f"Bitch command No extra help for you beyond '{self.bot.config.prefix[0]}help commands'"
         )
 
     @commands.group(invoke_without_command=True)
