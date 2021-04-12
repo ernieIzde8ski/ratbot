@@ -36,6 +36,7 @@ class Administration(commands.Cog):
             await ctx.send(f'{e.__class__.__name__}: {e}')
         else:
             await ctx.send('\N{OK HAND SIGN}')
+            print(f"loaded {module}")
 
     @commands.command()
     @commands.is_owner()
@@ -47,6 +48,7 @@ class Administration(commands.Cog):
             await ctx.send(f'{e.__class__.__name__}: {e}')
         else:
             await ctx.send('\N{OK HAND SIGN}')
+            print(f"unloaded {module}")
 
     @commands.command()
     @commands.is_owner()
@@ -58,6 +60,7 @@ class Administration(commands.Cog):
             await ctx.send(f'{e.__class__.__name__}: {e}')
         else:
             await ctx.send('\N{OK HAND SIGN}')
+            print(f"reloaded {module}")
 
     @commands.command(aliases=["die", "off"])
     @commands.is_owner()
