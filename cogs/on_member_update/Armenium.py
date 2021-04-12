@@ -26,7 +26,8 @@ class Armenium(commands.Cog):
         with open("cogs/on_member_update/Armenium.json", "r", encoding='utf-8') as f:
             self.data = json.load(f)
 
-    async def get_temperature(self, city):
+    @staticmethod
+    async def get_temperature(city):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                     f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
