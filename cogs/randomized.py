@@ -31,11 +31,11 @@ class Randomized(commands.Cog):
         # truncate response again
         parameter = parameter[:250] + (parameter[250:] and "[…]")
         # log response if not already logged
-        if parameter in self.logged:
+        if parameter.lower() in self.logged:
             return
         await self.bm_channel.send(f"```\n{parameter}, {bc_decision}{punctuation_ending}\n```")
         with open("configs/randomized.json", mode="w") as f:
-            self.logged.append(parameter)
+            self.logged.append(parameter.lower())
             json.dump(self.logged, f)
 
     @commands.command(aliases=["gm", "gobi"])
