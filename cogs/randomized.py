@@ -14,18 +14,24 @@ class Randomized(commands.Cog):
         self.bm_channel = self.bot.config.channels.bm
 
     @commands.command(aliases=["bM", "bm"])
-    async def bM_meter(self, ctx, *, option: Optional[str]):
+    async def bM_meter(self, ctx, *, parameter: Optional[str]):
         """decides Based or Cringe"""
-        option = option.replace("```", "Armenium") if option else "Your"
-        option = option[:1500]
-        random.seed(self.bot.static.remove_strange_chars(option.lower()))
+        # filter and truncate parameter
+        parameter = parameter.replace("```", "Armenium") if parameter else "Your"
+        parameter = parameter[:1000] + (parameter[250:] and "[…]")
+        # set seed so that bot decides consistently
+        random.seed(self.bot.static.remove_strange_chars(parameter.lower()))
+        # decide if based or cringe
         bc_decision = random.choice(["Based", "Cringe"])
-        punctuation_ending = random.choice([random.choice(("!", ".")) * x for x in range(1, 8)])
-        await ctx.send(f"**{option}** are **{bc_decision}**{punctuation_ending}")
-        option = option[:250] + (option[250:] and "[…]")
+        punctuation_ending = random.choice(["!", "."]) * random.randint(1, 8)
+        # send response
+        await ctx.send(f"**{parameter}** are **{bc_decision}**{punctuation_ending}")
+        # truncate response again
+        parameter = parameter[:250] + (parameter[250:] and "[…]")
+        # log response
         try:
             await self.bm_channel.send("```"
-                                       f"{option}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
+                                       f"{parameter}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
                                        "```")
         except commands.errors.CommandInvokeError as e:
             await ctx.channel.send(f"CommandInvokeError: {e}")
