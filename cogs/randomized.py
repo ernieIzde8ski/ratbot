@@ -1,4 +1,5 @@
 import random
+import json
 from typing import Optional
 
 import discord.ext.commands as commands
@@ -8,6 +9,8 @@ class Randomized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         bot.loop.create_task(self.initialize())
+        async with open("configs/randomized.json", "r") as file:
+            self.logged = json.load(file)
 
     async def initialize(self):
         await self.bot.wait_until_ready()
@@ -28,13 +31,15 @@ class Randomized(commands.Cog):
         await ctx.send(f"**{parameter}** are **{bc_decision}**{punctuation_ending}")
         # truncate response again
         parameter = parameter[:250] + (parameter[250:] and "[…]")
-        # log response
-        try:
-            await self.bm_channel.send("```"
-                                       f"{parameter}, {bc_decision}{punctuation_ending}   [{ctx.message.created_at}]"
-                                       "```")
-        except commands.errors.CommandInvokeError as e:
-            await ctx.channel.send(f"CommandInvokeError: {e}")
+        # log response if not already logged
+        if parameter in self.logged:
+            return
+        await self.bm_channel.send(f"```\n{parameter}, {bc_decision}{punctuation_ending}\n```")
+        async with open("configs/randomized.json", "w") as file:
+            self.logged.append(parameter)
+            json.dump(self.logged, file)
+
+
 
     @commands.command(aliases=["gm", "gobi"])
     async def gobi_meter(self, ctx, *, phrase: str):
