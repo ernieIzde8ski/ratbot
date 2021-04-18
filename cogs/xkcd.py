@@ -1,7 +1,8 @@
 from typing import Union
+
 import aiohttp
-from discord.ext import commands
 from discord import Embed
+from discord.ext import commands
 
 
 class XKCD(commands.Cog):
