@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from discord.ext import commands
+import discord.ext.commands as commands
 from pytz import timezone
 
 

@@ -1,7 +1,7 @@
 from random import choice
 
+import discord.ext.commands as commands
 from discord import Embed, Permissions, utils, errors
-from discord.ext import commands
 
 
 class Help(commands.Cog):

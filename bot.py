@@ -3,9 +3,9 @@
 # here's all the necessary imports
 import asyncio
 
-import discord
 import discord.ext.commands as commands
 import hypixelaPY.exceptions as hypixele
+from discord import AllowedMentions, Intents
 from hypixelaPY import Hypixel
 
 from configs.config import Config
@@ -13,11 +13,11 @@ from configs.enabled_cogs import enabled_cogs
 from configs.secrets import token, hypixel_api_key
 from static import Static
 
-intentions = discord.Intents.all()
+intentions = Intents.all()
 
 Config = Config()
 bot = commands.Bot(command_prefix=Config.prefix,
-                   allowed_mentions=discord.AllowedMentions.none(),
+                   allowed_mentions=AllowedMentions.none(),
                    intents=intentions)
 bot.static = Static()
 bot.config = Config

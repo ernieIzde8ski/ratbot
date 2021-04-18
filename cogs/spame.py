@@ -1,8 +1,8 @@
-import random
+from random import random, choice
 from typing import Optional
 
-import discord
-from discord.ext import commands
+import discord.ext.commands as commands
+from discord import Forbidden, HTTPException
 
 replacements = {
     "s": ["ś", "ṥ", "ŝ", "š", "ṧ", "s̈", "ṡ", "ş", "ṣ", "ṩ", "ș", "ꞩ", "ȿ", "ᶊ", "ß", "с"],
@@ -17,8 +17,8 @@ def generate_spame():
     out_str = ""
     while True:
         for letter in "spame":
-            if random.random() < 0.2:
-                out_str += random.choice(replacements[letter])
+            if random() < 0.2:
+                out_str += choice(replacements[letter])
             else:
                 out_str += letter
         if out_str == "spame":
@@ -62,9 +62,9 @@ class Spame(commands.Cog):
             new_name = generate_spame()
             try:
                 await member.edit(nick=new_name)
-            except discord.Forbidden:
+            except Forbidden:
                 successes[1] += 1
-            except discord.HTTPException:
+            except HTTPException:
                 successes[2] += 1
             else:
                 successes[0] += 1

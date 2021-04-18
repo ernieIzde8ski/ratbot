@@ -2,8 +2,8 @@ import json
 from asyncio import sleep
 from typing import Union, Optional
 
-import discord
-from discord.ext import commands
+import discord.ext.commands as commands
+from discord import Color, Embed, User
 
 
 async def is_log_channel(ctx):  # check for log channel
@@ -25,20 +25,20 @@ class DM(commands.Cog):
         if msg.author.id in self.blocked_list["ids"]: return
         # log own messages as an embed in the proper channel
         if msg.author == self.bot.user:
-            embed = discord.Embed(
+            embed = Embed(
                 title=f"Direct Message → {msg.channel.recipient} ({msg.channel.recipient.id})",
                 description=msg.content,
-                timestamp=msg.created_at, color=discord.Color.orange()
+                timestamp=msg.created_at, color=Color.orange()
             )
             return await self.bot.config.channels.log.send(embed=embed)
         # log message only if is not bot user
         elif msg.author.bot:
             return
         else:
-            embed = discord.Embed(
+            embed = Embed(
                 title=f"Direct Message — {msg.author} ({msg.author.id})",
                 description=msg.content,
-                timestamp=msg.created_at, color=discord.Color.dark_blue()
+                timestamp=msg.created_at, color=Color.dark_blue()
             )
             if msg.attachments:
                 embed.set_image(url=msg.attachments[0].url)
@@ -95,7 +95,7 @@ class DM(commands.Cog):
     @commands.command(aliases=["b", "block"])
     @commands.check(is_log_channel)
     @commands.is_owner()
-    async def block_recipient(self, ctx, blockee: Optional[discord.User]):
+    async def block_recipient(self, ctx, blockee: Optional[User]):
         if not blockee and not self.latest:
             return await ctx.channel.send("You aint given me no input")
         elif not blockee:

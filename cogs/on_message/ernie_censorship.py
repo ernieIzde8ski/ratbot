@@ -1,5 +1,5 @@
+import discord.ext.commands as commands
 from discord import AllowedMentions
-from discord.ext import commands
 
 
 class Censorship(commands.Cog):

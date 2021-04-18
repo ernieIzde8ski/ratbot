@@ -1,5 +1,5 @@
-import discord
 import discord.ext.commands as commands
+from discord import utils, AllowedMentions
 
 
 class PIPI(commands.Cog):
@@ -12,7 +12,7 @@ class PIPI(commands.Cog):
         msgcont = self.bot.static.remove_strange_chars(msg.content.lower())
         if "pipi" in msgcont:
             await msg.author.send(
-                discord.utils.escape_markdown(
+                utils.escape_markdown(
                     f"Are you kidding ??? What the **** are you talking about {msg.author.mention} ? You are a biggest "
                     f"looser i ever seen in my life ! You was doing PIPI in your pampers when i was beating players "
                     f"much more stronger then you! You are not proffesional, because proffesionals knew how to lose and "
@@ -28,7 +28,7 @@ class PIPI(commands.Cog):
                     f"continue Officially talk about me like that, we will meet in Court! God bless with true! True "
                     f"will never die ! Liers will kicked off..."
                 ),
-                allowed_mentions=discord.AllowedMentions.all()
+                allowed_mentions=AllowedMentions.all()
             )
 
 

@@ -1,8 +1,8 @@
 from urllib.parse import quote
 
-import aiohttp
-import discord
 import discord.ext.commands as commands
+from aiohttp import ClientSession
+from discord import AllowedMentions, Color, Embed, errors
 
 
 def birthday_link(name):
@@ -10,7 +10,7 @@ def birthday_link(name):
 
 
 async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV", link_translation: str = "NIV"):
-    async with aiohttp.ClientSession() as session:
+    async with ClientSession() as session:
         async with session.get(f"https://bible-api.com/{quote(verse)}?translation={text_translation}") as resp:
             respuesta = await resp.json()
 
@@ -50,7 +50,7 @@ class Fun(commands.Cog):
     @commands.is_owner()
     async def everyone(self, ctx):
         """Mentions @everyone"""
-        await ctx.channel.send("@everyone", allowed_mentions=discord.AllowedMentions(everyone=True))
+        await ctx.channel.send("@everyone", allowed_mentions=AllowedMentions(everyone=True))
 
     @commands.command(aliases=["CC", "cc"])
     async def cringecount(self, ctx, iteration: int = 1):
@@ -69,16 +69,16 @@ class Fun(commands.Cog):
     async def bible_verse(self, ctx, *, verse):
         """returns a bible verse or passage from the format book chapter:verse(s)"""
         verse = await get_verse(verse)
-        embed = discord.Embed(
+        embed = Embed(
             title=verse["heading"],
             description=verse["text"],
             url=verse["url"],
             timestamp=ctx.message.created_at,
-            color=discord.Color.dark_orange()
+            color=Color.dark_orange()
         )
         try:
             await ctx.channel.send(embed=embed)
-        except discord.errors.HTTPException as e:
+        except errors.HTTPException as e:
             await ctx.channel.send(f"discord.errors.HTTPException: {e}")
 
 

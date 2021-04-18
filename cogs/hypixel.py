@@ -1,5 +1,3 @@
-# Error Gone I Ran 1.2.0 Instead Of 1.2.5
-
 import discord.ext.commands as commands
 
 

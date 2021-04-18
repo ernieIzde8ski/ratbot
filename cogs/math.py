@@ -1,6 +1,6 @@
 from typing import Union
 
-from discord.ext import commands
+import discord.ext.commands as commands
 
 
 class Math(commands.Cog):

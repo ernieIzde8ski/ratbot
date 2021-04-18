@@ -1,4 +1,4 @@
-from discord.ext import commands
+import discord.ext.commands as commands
 
 
 class GoingToPutMoreFeaturesInMainBotFile(commands.Cog):

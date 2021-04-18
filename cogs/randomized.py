@@ -1,5 +1,5 @@
 import json
-import random
+from random import choice, randint, random, seed
 from typing import Optional
 
 import discord.ext.commands as commands
@@ -23,10 +23,10 @@ class Randomized(commands.Cog):
         parameter = parameter.replace("```", "Armenium") if parameter else "Your"
         parameter = parameter[:1000] + (parameter[250:] and "[…]")
         # set seed so that bot decides consistently
-        random.seed(self.bot.static.remove_strange_chars(parameter.lower()))
+        seed(self.bot.static.remove_strange_chars(parameter.lower()))
         # decide if based or cringe
-        bc_decision = random.choice(["Based", "Cringe"])
-        punctuation_ending = random.choice(["!", "."]) * random.randint(1, 8)
+        bc_decision = choice(["Based", "Cringe"])
+        punctuation_ending = choice(["!", "."]) * randint(1, 8)
         # send response
         await ctx.send(f"**{parameter}** are **{bc_decision}**{punctuation_ending}")
         # truncate response again
@@ -41,19 +41,19 @@ class Randomized(commands.Cog):
 
     @commands.command(aliases=["gm", "gobi"])
     async def gobi_meter(self, ctx, *, phrase: str):
-        random.seed(self.bot.static.remove_strange_chars(phrase.lower()))
-        percent = round(random.random() * 100, 1)
+        seed(self.bot.static.remove_strange_chars(phrase.lower()))
+        percent = round(random() * 100, 1)
         await ctx.channel.send(f"\"{phrase}\" is {percent}% Gobi")
 
     @commands.command(aliases=["song", "rs"])
     async def random_song(self, ctx):
         """Pulls a random song from the configuration file"""
-        await ctx.channel.send(f"https://youtu.be/{random.choice(ctx.bot.config.songs)}")
+        await ctx.channel.send(f"https://youtu.be/{choice(ctx.bot.config.songs)}")
 
     @commands.command()
     async def decide(self, ctx, *, _list: str):
         """choose item from a list separated by forward slashes"""
-        await ctx.channel.send(f"i Choose `{random.choice(_list.split(' / '))}`")
+        await ctx.channel.send(f"i Choose `{choice(_list.split(' / '))}`")
 
 
 def setup(bot):

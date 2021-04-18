@@ -1,8 +1,8 @@
 from typing import Union
 
-import aiohttp
+import discord.ext.commands as commands
+from aiohttp import ClientSession
 from discord import Embed
-from discord.ext import commands
 
 
 class XKCD(commands.Cog):
@@ -11,7 +11,7 @@ class XKCD(commands.Cog):
 
     @staticmethod
     async def get_xkcd(xkcd_id: int):
-        async with aiohttp.ClientSession() as session:
+        async with ClientSession() as session:
             async with session.get(f"http://xkcd.com/{xkcd_id}/info.0.json") as resp:
                 return await resp.json()
 
