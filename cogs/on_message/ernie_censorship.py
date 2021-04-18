@@ -1,5 +1,5 @@
-import discord
-import discord.ext.commands as commands
+from discord import AllowedMentions
+from discord.ext import commands
 
 
 class Censorship(commands.Cog):
@@ -13,7 +13,7 @@ class Censorship(commands.Cog):
             await message.delete()
             await message.channel.send(
                 f"use reactions Idiot {message.author.mention}",
-                allowed_mentions=discord.AllowedMentions(users=True),
+                allowed_mentions=AllowedMentions(users=True),
                 delete_after=3
             )
 
