@@ -1,6 +1,7 @@
-import random
 import json
+import random
 from typing import Optional
+
 import discord.ext.commands as commands
 
 

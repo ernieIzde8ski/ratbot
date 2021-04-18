@@ -1,14 +1,18 @@
 class Config:
     def __init__(self):
         self.prefix = ["r."]
+        # relevant to cogs.on_message.respuestas
         self.guild_opt_in = [488475203303768065, 526207286067068928, 534875827398246451]
         # guilds which have opted into tenor slaying
-        self.SixPP_guilds = [488475203303768065]
-        # cogs.on_message.6pp
-        # ↓ only relevant if you load cogs.on_message.respuestas
+        self.SixPP_guilds = [488475203303768065]  # guilds with random bans
+        self.SixPP_Chance = 0.0001                # chance of random bans
+        # this value defaults to 0.0001,
+        # which gives you about a 4.9% chance of getting banned within 500 messages,
+        # or 39.3% chance within 5000 messages
+        # P(banned in N messages) = 100(1-(1-SixPP_Chance))^N
         self.channels = Channels()  # the channels lol
         self.adminname = "ernie"  # bot admin name - must be lowercase
-        self.songs = [  # songs referenced in cogs.uncategorized via youtube url
+        self.songs = [  # songs referenced in cogs.help & cogs.randomized via youtube url
             "fjp4thii1WY",
             "i-mWU2JFvUU",
             "alQei8zVMyM",
