@@ -11,7 +11,6 @@ class GoingToPutMoreFeaturesInMainBotFile(commands.Cog):
             if "you just advanced" in message.content:
                 await message.delete()
         if message.author.bot: return
-        # respond when anyone says my name
         if "ernie reads star trek fanfics" in message.content.lower():
             await message.delete()
         elif "ernie does not read star trek fanfics" in message.content.lower():

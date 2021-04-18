@@ -11,7 +11,9 @@ class Banned(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, ctx):
-        if ctx.author.bot or ctx.guild.id not in self.bot.config.SixPP_guilds:
+        if ctx.author.bot or not ctx.guild:
+            return
+        elif ctx.guild.id not in self.bot.config.SixPP_guilds:
             return
         else:
             if random() <= self.bot.config.SixPP_Chance:

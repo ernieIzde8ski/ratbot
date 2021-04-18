@@ -21,7 +21,7 @@ class Randomized(commands.Cog):
         """decides Based or Cringe"""
         # filter and truncate parameter
         parameter = parameter.replace("```", "Armenium") if parameter else "Your"
-        parameter = parameter[:1000] + (parameter[250:] and "[…]")
+        parameter = parameter[:1000] + (parameter[1000:] and "[…]")
         # set seed so that bot decides consistently
         seed(self.bot.static.remove_strange_chars(parameter.lower()))
         # decide if based or cringe
@@ -50,10 +50,10 @@ class Randomized(commands.Cog):
         """Pulls a random song from the configuration file"""
         await ctx.channel.send(f"https://youtu.be/{choice(ctx.bot.config.songs)}")
 
-    @commands.command()
+    @commands.command(aliases=["choose"])
     async def decide(self, ctx, *, _list: str):
         """choose item from a list separated by forward slashes"""
-        await ctx.channel.send(f"i Choose `{choice(_list.split(' / '))}`")
+        await ctx.channel.send(f"i Choose `{choice(_list.split(', '))}`")
 
 
 def setup(bot):

@@ -1,9 +1,7 @@
-from datetime import datetime
 from sys import exit
 
 import discord.ext.commands as commands
 from discord import Color, Embed
-from pytz import timezone
 
 
 class Administration(commands.Cog):
@@ -19,9 +17,6 @@ class Administration(commands.Cog):
         print(f"{self.bot.user} has connected to Discord!")
         await self.bot.config.channels.status.send(embed=Embed(
             title="<:online:708885917133176932> online!",
-            timestamp=datetime.now(
-                tz=timezone("America/New_York")
-            ),
             color=Color.green())
         )
 

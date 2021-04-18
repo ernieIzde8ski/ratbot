@@ -41,7 +41,7 @@ class Startrek(commands.Cog):
             await ctx.send(self.tng_generator.generate())
 
     @commands.command()
-    async def borg(self, ctx, *, item: str):
+    async def borg(self, ctx, *, item: str = "rats"):
         """Generates a borg phrase dependent on your input."""
         await ctx.send(
             f"We are the {item}. Lower your shields and surrender your ships. We will add your biological and "

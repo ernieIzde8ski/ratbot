@@ -1,4 +1,5 @@
 import discord.ext.commands as commands
+from discord import AllowedMentions
 
 
 class Respuestas(commands.Cog):
@@ -12,7 +13,7 @@ class Respuestas(commands.Cog):
         if msg.channel.name != "rat":
             # kill tenor links lmao
             if msg.guild.id in self.bot.config.guild_opt_in and msg.content.startswith(self.tenor):
-                await msg.channel.send(f"loser {msg.author.mention}")
+                await msg.channel.send(f"loser {msg.author.mention}", allowed_mentions=AllowedMentions(users=True))
                 await msg.delete()
 
 

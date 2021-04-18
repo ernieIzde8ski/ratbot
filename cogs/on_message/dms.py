@@ -57,7 +57,7 @@ class DM(commands.Cog):
     async def respond_to_message(self, msg):
         if msg.channel != self.bot.config.channels.log or not self.latest:
             return
-        if msg.author.bot or msg.content.startswith("r."):
+        if msg.author.bot or msg.content.startswith(self.bot.config.prefix):
             return
         await self.latest.channel.send(f"[{msg.author}] {msg.content}")
         await msg.delete()

@@ -1,6 +1,6 @@
 class Config:
     def __init__(self):
-        self.prefix = ["r."]
+        self.prefix = "r;"  # prefix that bot uses; accepts multiple inputs as tuple of str
         # relevant to cogs.on_message.respuestas
         self.guild_opt_in = [488475203303768065, 526207286067068928, 534875827398246451]
         # guilds which have opted into tenor slaying

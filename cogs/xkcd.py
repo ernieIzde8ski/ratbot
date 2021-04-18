@@ -10,9 +10,9 @@ class XKCD(commands.Cog):
         self.bot = bot
 
     @staticmethod
-    async def get_xkcd(xkcd_id: int):
+    async def get_xkcd(xkcd_id: Union[int, None]):
         async with ClientSession() as session:
-            async with session.get(f"http://xkcd.com/{xkcd_id}/info.0.json") as resp:
+            async with session.get("http://xkcd.com{}info.0.json".format(f"/{xkcd_id}/" if xkcd_id else "/")) as resp:
                 return await resp.json()
 
     @staticmethod
@@ -27,7 +27,7 @@ class XKCD(commands.Cog):
             url=data['img']
         )
 
-    @commands.command()
+    @commands.group(invoke_without_command=True)
     async def xkcd(self, ctx, *, xkcd_id: Union[int, str, None]):
         if isinstance(xkcd_id, int):
             xkcd_json = await self.get_xkcd(xkcd_id)
@@ -37,6 +37,12 @@ class XKCD(commands.Cog):
             await ctx.send(f"Sorry I Don't know how to handle looking for `{xkcd_id}` ( Yet)")
         else:
             await ctx.send("Please provide Input")
+
+    @xkcd.command()
+    async def latest(self, ctx):
+        xkcd_json = await self.get_xkcd(xkcd_id=None)
+        embed = await self.embed_constructor(xkcd_json, ctx.author.color)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
