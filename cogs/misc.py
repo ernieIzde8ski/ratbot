@@ -1,4 +1,3 @@
-from typing import Optional, Union
 from urllib.parse import quote
 
 import aiohttp
@@ -65,18 +64,6 @@ class Fun(commands.Cog):
                 await ctx.channel.send(f"CommandInvokeError: {e}")
         else:
             await ctx.channel.send("no")
-
-    @commands.command(aliases=["bd"])
-    async def birthday(self, ctx, recipient: Union[discord.Member, str], *, name: Optional[str]):
-        """returns a link to the rat "it's your birthday today" site with a given recipient/name"""
-        if not isinstance(recipient, str) and not name:  # if the person is mentioned without additional name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(recipient.display_name)}")
-        elif not isinstance(recipient, str) and name:  # if the person is mentioned with name
-            await ctx.channel.send(f"happy birthday {recipient.mention}! \n{birthday_link(name)}")
-        elif isinstance(recipient, str) and not name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(recipient)}")
-        elif isinstance(recipient, str) and name:
-            await ctx.channel.send(f"happy birthday {recipient}! \n{birthday_link(name)}")
 
     @commands.command(aliases=["bible", "verse", "v", "🙏"])
     async def bible_verse(self, ctx, *, verse):
