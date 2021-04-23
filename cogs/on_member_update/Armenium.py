@@ -32,17 +32,18 @@ class Armenium(commands.Cog):
             async with session.get(
                     f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
                 weather_data = await resp.json()  # get data as json
-                temperature = round(weather_data['main']['temp'] - 273.15)  # get temperature & convert from Kelvin
-                return temperature
+                true_temperature = round(weather_data['main']['temp'] - 273.15)       # get temperature & convert from Kelvin
+                felt_temperature = round(weather_data['main']['feels_like'] - 273.15) # get felt temperature
+                return true_temperature, felt_temperature
 
     async def message(self, auth_id: int):
-        temperature = await self.get_temperature(self.data['ids'][str(auth_id)]["city"])
+        temperatures = await self.get_temperature(self.data['ids'][str(auth_id)]['city'])
         message = (
             f"__**Zdavstuy**__ \n\n" 
             f"{random.choice(self.data['msg']['greeting'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
             "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
-            f"It is currently {temperature} degrees Celsius outside for you. "
-            f"{self.data['msg']['temp'][match_temp(temperature)]} \n\n"
+            f"It is currently {temperatures[0]} degrees Celsius outside for you (and it feel like {temperatures[1]}). "
+            f"{self.data['msg']['temp'][match_temp(temperatures[1])]} \n\n"
             f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['msg']['russian'], random.randint(2, 4)))}**"
         )
         return message
