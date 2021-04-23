@@ -12,6 +12,16 @@ class Config:
         # P(banned in N messages) = 100(1-(1-SixPP_Chance))^N
         self.channels = Channels()  # the channels lol
         self.adminname = "ernie"  # bot admin name - must be lowercase
+        self.corrections = { # cogs.on_message.corrections
+            "bano": "Baño",
+            "senor": "Señor",
+            "senora": "Señora",
+            "jalapeno": "Jalapeño",
+            "canada": "Cañada",
+            "canadian": "Cañadian",
+            "retard": "Ratard",
+            "ExampleSlur": "Armenium"
+        }
         self.songs = [  # songs referenced in cogs.help & cogs.randomized via youtube url
             "fjp4thii1WY",
             "i-mWU2JFvUU",
