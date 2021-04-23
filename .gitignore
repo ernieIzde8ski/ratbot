@@ -9,4 +9,5 @@ configs/blocked.json
 configs/randomized.json
 configs/enabled_cogs.py
 configs/secrets.py
+modules/xkcd_cache.json
 cogs/on_member_update/Armenium.json
