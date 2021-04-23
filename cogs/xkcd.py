@@ -2,7 +2,9 @@ from typing import Union
 
 import discord.ext.commands as commands
 from aiohttp import ClientSession
+from aiohttp.client_exceptions import ContentTypeError
 from discord import Embed
+from random import randint
 
 
 class XKCD(commands.Cog):
@@ -12,7 +14,7 @@ class XKCD(commands.Cog):
     @staticmethod
     async def get_xkcd(xkcd_id: Union[int, None]):
         async with ClientSession() as session:
-            async with session.get("http://xkcd.com{}info.0.json".format(f"/{xkcd_id}/" if xkcd_id else "/")) as resp:
+            async with session.get("https://xkcd.com{}info.0.json".format(f"/{xkcd_id}/" if xkcd_id else "/")) as resp:
                 return await resp.json()
 
     @staticmethod
@@ -28,19 +30,35 @@ class XKCD(commands.Cog):
         )
 
     @commands.group(invoke_without_command=True)
-    async def xkcd(self, ctx, *, xkcd_id: Union[int, str, None]):
+    async def xkcd(self, ctx, *, xkcd_id: Union[int, str] = 221):
+        """get xkcd command from id"""
         if isinstance(xkcd_id, int):
-            xkcd_json = await self.get_xkcd(xkcd_id)
+            try:
+                xkcd_json = await self.get_xkcd(xkcd_id)
+            except ContentTypeError as e:
+                await ctx.send(f"`ContentTypeError: {e}`")
+                await ctx.send(f"was your input valid?")
+                return
             embed = await self.embed_constructor(xkcd_json, ctx.author.color)
-            await ctx.channel.send(embed=embed)
+            await ctx.send(embed=embed)
         elif isinstance(xkcd_id, str):
-            await ctx.send(f"Sorry I Don't know how to handle looking for `{xkcd_id}` ( Yet)")
-        else:
-            await ctx.send("Please provide Input")
+            await ctx.send(f"Sorry I Don't know how to handle string lookup ( Yet)")
 
     @xkcd.command()
     async def latest(self, ctx):
+        """get the latest xkcd"""
         xkcd_json = await self.get_xkcd(xkcd_id=None)
+        embed = await self.embed_constructor(xkcd_json, ctx.author.color)
+        await ctx.send(embed=embed)
+
+    @xkcd.command()
+    async def random(self, ctx):
+        """get random xkcd"""
+        latest_xkcd = (await self.get_xkcd(None))['num']
+        while True:
+            num = randint(1, latest_xkcd)
+            if num != 404: break
+        xkcd_json = await self.get_xkcd(num)
         embed = await self.embed_constructor(xkcd_json, ctx.author.color)
         await ctx.send(embed=embed)
 
