@@ -52,7 +52,7 @@ class Randomized(commands.Cog):
 
     @commands.command(aliases=["choose"])
     async def decide(self, ctx, *, _list: str):
-        """choose item from a list separated by forward slashes"""
+        """choose item from a list separated by commas"""
         await ctx.channel.send(f"i Choose `{choice(_list.split(', '))}`")
 
 
