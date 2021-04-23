@@ -58,7 +58,6 @@ class Administration(commands.Cog):
             print(f"reloaded {module}")
 
     @commands.command(aliases=["die", "off"])
-    @commands.is_owner()
     async def shutdown(self, ctx):
         """Shut down the bot and whole script Lol"""
         await ctx.channel.send("Ok")
