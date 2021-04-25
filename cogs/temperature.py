@@ -1,40 +1,53 @@
 import discord.ext.commands as commands
 
 
-async def fahrenheit_to_celsius(degrees_f: float):
+async def f_to_c(degrees_f: float):
     return (degrees_f - 32) * 5 / 9
 
 
-async def celsius_to_kelvin(degrees_c: float):
+async def c_to_k(degrees_c: float):
     return degrees_c + 273.15
 
 
-async def fahrenheit_to_kelvin(degrees_f: float):
-    degrees_c = await fahrenheit_to_celsius(degrees_f)
-    return await celsius_to_kelvin(degrees_c)
+async def f_to_k(degrees_f: float):
+    degrees_c = await f_to_c(degrees_f)
+    return await c_to_k(degrees_c)
 
+async def r_to_k(degrees_r: float):
+    return degrees_r * 5 / 9
 
 class Temperature(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.fahrenheit_list = ["f", "fahrenheit", "cringe"]
-        self.celsius_list = ["c", "celsius", "centigrade", "based"]
-        self.kelvin_list = ["k", "kelvin", "plusbased"]
+        self.temps = {"fahrenheit": ["f", "fahrenheit", "cringe"],
+                      "celsius": ["c", "celsius", "centigrade", "based"],
+                      "kelvin": ["k", "kelvin", "plusbased"],
+                      "rankine": ['r', 'rankine', 'doubleplusbased']}
+        self.temps_list = []
+        for iter_1 in self.temps:
+            for iter_2 in self.temps.get(iter_1):
+                self.temps_list.append(iter_2)
 
-    @commands.command()
-    async def convert(self, ctx, degree: float, original_unit: str):
+    @commands.command(aliases=["conv", "temp", "temperature"])
+    async def convert(self, ctx, degree: float, unit: str):
         """Converts from celsius and fahrenheit temperatures
         Parameters:
-            original_unit: fahrenheit, celsius
+            unit: fahrenheit, celsius
             degree: degree in respective unit"""
-        if original_unit.lower() in self.fahrenheit_list:
-            return await ctx.channel.send(f"{round(await fahrenheit_to_kelvin(degree), 2)}°")
-        elif original_unit.lower() in self.celsius_list:
-            return await ctx.channel.send(f"{round(await celsius_to_kelvin(degree), 2)}°")
-        elif original_unit.lower() in self.kelvin_list:
-            return await ctx.channel.send("This is already in plusbasedform Bupid")
-        else:
-            return await ctx.channel.send("please enter a Unit parameter Correctly")
+        unit = unit.lower()
+        if unit not in self.temps_list:
+            return await ctx.send("please enter a Unit parameter Correctly")
+
+        if unit in self.temps['fahrenheit']:
+            await ctx.send(f"{round(await f_to_k(degree), 2)}°")
+        elif unit in self.temps['celsius']:
+            await ctx.send(f"{round(await c_to_k(degree), 2)}°")
+        elif unit in self.temps['kelvin']:
+            await ctx.send("This is already in plusbasedform Bupid\n"
+                           f"{round(degree, 2)}°")
+        elif unit in self.temps['rankine']:
+            await ctx.send("Ok Lowering from doubleplusbased to plusbased\n"
+                           f"{round(await r_to_k(degree), 2)}°")
 
 
 def setup(bot):

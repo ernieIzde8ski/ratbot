@@ -8,6 +8,7 @@ class Ratsponding(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild:
+            # prune non rat messages in #rat channels
             if message.channel.name == "rat" and message.content != "rat":
                 await message.delete()
                 return

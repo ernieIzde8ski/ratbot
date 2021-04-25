@@ -63,9 +63,7 @@ class Administration(commands.Cog):
         """Shut down the bot and whole script Lol"""
         await ctx.channel.send("Ok")
         await ctx.bot.config.channels.status.send(
-            embed=Embed(title="<:offline:708886391672537139> shutting Down.....",
-                        timestamp=ctx.message.created_at,
-                        color=Color.dark_red())
+            embed=Embed(title="<:offline:708886391672537139> shutting Down.....", color=Color.dark_red())
         )
         exit()
 
