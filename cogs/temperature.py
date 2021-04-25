@@ -13,8 +13,10 @@ async def f_to_k(degrees_f: float):
     degrees_c = await f_to_c(degrees_f)
     return await c_to_k(degrees_c)
 
+
 async def r_to_k(degrees_r: float):
     return degrees_r * 5 / 9
+
 
 class Temperature(commands.Cog):
     def __init__(self, bot):
