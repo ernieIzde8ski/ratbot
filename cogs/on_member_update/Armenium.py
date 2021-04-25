@@ -5,7 +5,7 @@ import random
 from typing import Optional
 
 import aiohttp
-import discord
+from discord import User
 import discord.ext.commands as commands
 from pytz import timezone
 
@@ -30,10 +30,10 @@ class Armenium(commands.Cog):
     async def get_temperature(city):
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                    f"http://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
+                    f"https://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
                 weather_data = await resp.json()  # get data as json
-                true_temperature = round(weather_data['main']['temp'] - 273.15)       # get temperature & convert from Kelvin
-                felt_temperature = round(weather_data['main']['feels_like'] - 273.15) # get felt temperature
+                true_temperature = round(weather_data['main']['temp'] - 273.15)        # get temperature & convert from Kelvin
+                felt_temperature = round(weather_data['main']['feels_like'] - 273.15)  # get felt temperature
                 return true_temperature, felt_temperature
 
     async def message(self, auth_id: int):
@@ -48,31 +48,41 @@ class Armenium(commands.Cog):
         )
         return message
 
+    def checks(self, ID, before, after):
+        # fail check if not the right server
+        if after.guild.id != self.data['ids']['guild_id']:
+            return True
+        # fail check if not a user
+        if after.id not in self.data['ids']['raw_ids']:
+            return True
+        # fail check if not going from offline to online
+        if before.raw_status != "offline" or after.raw_status == "offline":
+            print(f"{after} failed online check")
+            return True
+        # fail check if message has already been sent
+        today = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
+        if self.data["ids"][ID]["reset_date"] == today:
+            return True
+        # succeed check if all other conditions pass
+        return False
+
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         ID = str(after.id)
-        if after.id not in self.data["ids"]["raw_ids"]:
+        # makes sure that it only will send given a certain set of conditions
+        if self.checks(ID, before, after):
             return
-        elif before.raw_status != "offline" or after.raw_status == "offline":
-            return
-        # Fair warning:
-        # due to the nature of on_member_update and the following few lines,
-        # the bot is guaranteed to spam your console logs if your client
-        # has a few mutual servers with the bot, or you leave this unmodified
-        elif self.data["ids"][ID]["reset_date"] == str(datetime.now(tz=timezone("US/Hawaii")))[:10]:
-            print(f"{after} online, but already sent the message today")
-            return
-        else:
-            self.data["ids"][ID]["reset_date"] = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
-            with open("cogs/on_member_update/Armenium.json", "w") as f:
-                json.dump(self.data, f, indent=2)
-            message = await self.message(after.id)
-            await after.send(message)
-            return
+        # log message being sent today
+        today = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
+        self.data["ids"][ID]["reset_date"] = today
+        with open("cogs/on_member_update/Armenium.json", "w") as f:
+            json.dump(self.data, f, indent=2)
+        message = await self.message(after.id)
+        await after.send(message)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
-    async def add_user_to_Armenium(self, ctx, user: discord.User, *, user_dict: str):
+    async def add_user_to_Armenium(self, ctx, user: User, *, user_dict: str):
         """Command to add user to the list of weather updates
         Parameters:
             user: a discord user (id, mention, username, etc)
