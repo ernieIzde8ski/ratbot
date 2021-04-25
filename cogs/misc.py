@@ -5,14 +5,25 @@ from aiohttp import ClientSession
 from discord import AllowedMentions, Color, Embed, errors
 
 
-def birthday_link(name):
-    return f"https://itsyourbirthday.today/#{quote(name)}"
+def get_bg_link(reference: str, translation: str = "NIV"):
+    return (f"https://www.biblegateway.com/passage/"
+            f"?search={quote(reference)}"
+            f"&version={quote(translation)}")
 
 
 async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV", link_translation: str = "NIV"):
     async with ClientSession() as session:
-        async with session.get(f"https://bible-api.com/{quote(verse)}?translation={text_translation}") as resp:
+        async with session.get(f"https://bible-api.com/{verse}?translation={text_translation}") as resp:
             respuesta = await resp.json()
+
+            if len(respuesta["text"]) > 1000:
+                return {
+                    "heading": "error: text is too long",
+                    "text": "click [here]({}) for NKJV, [here]({}) for NIV".format(
+                        get_bg_link(verse, "NKJV"), get_bg_link(verse, "NIV")
+                    ),
+                    "url": get_bg_link(verse, "KJV")
+                }
 
             text = ""
             # remove all instances of \n from the verse(s) and make into a list
