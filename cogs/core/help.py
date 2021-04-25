@@ -1,3 +1,8 @@
+# implements info command, plus default help command as subcommand
+# run on startup
+# do NOT attempt to run at same time as info.py, not designed to work together
+# likewise, loading/unloading may or may not have unintended effects
+
 from random import choice
 
 import discord.ext.commands as commands
