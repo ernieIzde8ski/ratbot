@@ -14,9 +14,12 @@ def get_bg_link(reference: str, translation: str = "NIV"):
 async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV", link_translation: str = "NIV"):
     async with ClientSession() as session:
         async with session.get(f"https://bible-api.com/{verse}?translation={text_translation}") as resp:
-            respuesta = await resp.json()
+            resp = await resp.json()
 
-            if len(respuesta["text"]) > 1000:
+            if resp.get("error"):
+                return {"heading": None, "text": f"error: {resp['error']}", "url": None}
+
+            if len(resp["text"]) > 1000:
                 return {
                     "heading": "error: text is too long",
                     "text": "click [here]({}) for NKJV, [here]({}) for NIV".format(
@@ -28,7 +31,7 @@ async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV
             text = ""
             # remove all instances of \n from the verse(s) and make into a list
             try:
-                word_list = respuesta["text"].replace("\n", " ").split(" ")
+                word_list = resp["text"].replace("\n", " ").split(" ")
             except KeyError as e:
                 return {
                     "heading": f"KeyError: {e}",
@@ -43,7 +46,7 @@ async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV
                     text += "\n"
 
             return {
-                "heading": respuesta["reference"],
+                "heading": resp["reference"],
                 "text": text,
                 "url": get_bg_link(verse, link_translation)
             }
