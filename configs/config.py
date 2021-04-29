@@ -9,7 +9,7 @@ class Config:
         # this value defaults to 0.0001,
         # which gives you about a 4.9% chance of getting banned within 500 messages,
         # or 39.3% chance within 5000 messages
-        # P(banned in N messages) = 100(1-(1-SixPP_Chance))^N
+        # P(banned in N messages) = 1 - (1-SixPP_Chance) ^ N
         self.channels = Channels()  # the channels lol
         self.adminname = "ernie"  # bot admin name - must be lowercase
         self.corrections = { # cogs.on_message.corrections
