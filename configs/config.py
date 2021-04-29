@@ -5,10 +5,10 @@ class Config:
         self.guild_opt_in = [488475203303768065, 526207286067068928, 534875827398246451]
         # guilds which have opted into tenor slaying
         self.SixPP_guilds = [488475203303768065]  # guilds with random bans
-        self.SixPP_Chance = 0.0001  # chance of random bans
-        # this value defaults to 0.0001,
-        # which gives you about a 4.9% chance of getting banned within 500 messages,
-        # or 39.3% chance within 5000 messages
+        self.SixPP_Chance = 0.00002  # chance of random bans
+        # this value defaults to 0.00002,
+        # which gives you about a 0.1% chance of getting banned within 500 messages,
+        # or 9.5% chance within 5000 messages
         # P(banned in N messages) = 1 - (1-SixPP_Chance) ^ N
         self.channels = Channels()  # the channels lol
         self.adminname = "ernie"  # bot admin name - must be lowercase
