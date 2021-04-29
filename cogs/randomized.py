@@ -39,8 +39,9 @@ class Randomized(commands.Cog):
             self.logged.append(parameter.lower())
             json.dump(self.logged, f)
 
-    @commands.command(aliases=["gm", "gobi"])
+    @commands.command(aliases=["gm", "gobi", "choochie"])
     async def gobi_meter(self, ctx, *, phrase: str):
+        """Determines what percent gobi something is"""
         seed(self.bot.static.remove_strange_chars(phrase.lower()))
         percent = round(random() * 100, 1)
         await ctx.channel.send(f"\"{phrase}\" is {percent}% Gobi")
