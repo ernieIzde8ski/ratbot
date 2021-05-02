@@ -65,7 +65,7 @@ class XKCD(commands.Cog):
         embed = await self.embed_constructor(xkcd_dict, ctx.author.color)
         await ctx.send(embed=embed)
 
-    @xkcd.group(invoke_without_subcommand=False)
+    @xkcd.group(invoke_without_command=True)
     async def explain(self, ctx, *, xkcd_id: Union[int, str] = 221):
         """links to an xkcd explanation"""
         try:
