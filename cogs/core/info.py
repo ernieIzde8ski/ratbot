@@ -13,10 +13,10 @@ class Help(commands.Cog):
         return Embed(
             name="Lol?", color=ctx.author.color,
             description=f"[GitHub](https://github.com/ernieIzde8ski/ratbot)\n"
-            f"[Invitame]({utils.oauth_url(self.bot.user.id, permissions=Permissions(8))})\n"
-            f"[invitación pero necesitas pensar]({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n"
-            f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
-            f"[Good song](https://www.youtube.com/watch?v={choice(self.bot.config.songs)})",
+                        f"[Invitame]({utils.oauth_url(self.bot.user.id, permissions=Permissions(8))})\n"
+                        f"[invitación pero necesitas pensar]({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n"
+                        f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
+                        f"[Good song](https://www.youtube.com/watch?v={choice(self.bot.config.songs)})",
         ).set_author(
             name=f"— {bot_owner}",
             icon_url=bot_owner.avatar_url

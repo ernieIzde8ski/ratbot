@@ -27,7 +27,6 @@ for i in range(oldest, latest):
     _dict['title_correspondences'][data['safe_title'].lower()] = data['num']
     _dict['alt_correspondences'][data['alt'].lower()] = data['num']
 
-
 with open("xkcd_cache.json", "w") as f:
     try:
         json.dump(_dict, f, indent=2)

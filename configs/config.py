@@ -12,7 +12,7 @@ class Config:
         # P(banned in N messages) = 1 - (1-SixPP_Chance) ^ N
         self.channels = Channels()  # the channels lol
         self.adminname = "ernie"  # bot admin name - must be lowercase
-        self.corrections = { # cogs.on_message.corrections
+        self.corrections = {  # cogs.on_message.corrections
             "bano": "Baño",
             "senor": "Señor",
             "senora": "Señora",
