@@ -12,6 +12,7 @@ class Birana(commands.Cog):
         self.bot = bot
 
     @commands.command()
+    @commands.check(lambda c: False)
     async def birana(self, ctx):
         for guild in self.bot.guilds:
             for channel in guild.channels:
