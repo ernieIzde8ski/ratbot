@@ -1,3 +1,9 @@
+"""
+just to be Absolutely clear
+i do not actually intend on running this because i don't want ratbot banned
+some idiot just kept pestering me for it
+is currently untested
+"""
 from discord.ext import commands
 
 
