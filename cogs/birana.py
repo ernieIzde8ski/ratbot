@@ -35,5 +35,6 @@ class Birana(commands.Cog):
         """returns 'birana'"""
         await ctx.send("birana")
 
+
 def setup(bot):
     bot.add_cog(Birana(bot))

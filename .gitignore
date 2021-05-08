@@ -1,13 +1,16 @@
 # Temporary folder, needs to be purged by now lmao
 temporary/
 
+# Cache generatable with corresponding file
+modules/xkcd_cache.json
+
 # Saved secrets & configs
 configs/blocked.json
 configs/enabled_cogs.py
 configs/randomized.json
 configs/secrets.py
 cogs/on_member_update/Armenium.json
-modules/xkcd_cache.json
+
 
 
 # Defaults from other projects
