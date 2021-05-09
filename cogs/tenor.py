@@ -13,8 +13,6 @@ class Tenor(commands.Cog):
         async with ClientSession() as session:
             async with session.get(f"https://g.tenor.com/v1/search?q={query}&key={apikey}&limit=1") as resp:
                 json = await resp.json()
-                if not isinstance(json, dict):
-                    return "What the fuck"
                 return json['results'][0]['url']
 
     @commands.command(aliases=["t"])
