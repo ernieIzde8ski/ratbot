@@ -61,7 +61,6 @@ class Armenium(commands.Cog):
             return True
         # fail check if not going from offline to online
         if before.raw_status != "offline" or after.raw_status == "offline":
-            print(f"{after} failed online check")
             return True
         # fail check if message has already been sent
         today = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
