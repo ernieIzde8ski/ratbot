@@ -38,13 +38,17 @@ class Armenium(commands.Cog):
 
     async def message(self, auth_id: int):
         temperatures = await self.get_temperature(self.data['ids'][str(auth_id)]['city'])
+        true_temp = temperatures[0]
+        felt_temp = temperatures[1]
+
         message = (
             f"__**Zdavstuy**__ \n\n" 
-            f"{random.choice(self.data['msg']['greeting'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
+            f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
             "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
-            f"It is currently {temperatures[0]} degrees Celsius outside for you (and it feel like {temperatures[1]}). "
-            f"{self.data['msg']['temp'][match_temp(temperatures[1])]} \n\n"
-            f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['msg']['russian'], random.randint(2, 4)))}**"
+            f"It is currently {true_temp} degrees Celsius outside for you"
+            + (f" (and it feels like {felt_temp})" if felt_temp != true_temp else "")
+            + f". {self.data['temps'][match_temp(felt_temp)]} \n\n"
+            f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['russian'], random.randint(2, 4)))}**"
         )
         return message
 
