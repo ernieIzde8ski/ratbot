@@ -24,7 +24,7 @@ class Help(commands.Cog):
                         f"[Invitame]({utils.oauth_url(self.bot.user.id, permissions=Permissions(8))})\n"
                         f"[invitación pero necesitas pensar]({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n"
                         f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
-                        f"[Good song](https://www.youtube.com/watch?v={choice(self.bot.config.songs)})",
+                        f"[Good song](https://www.youtube.com/watch?v={choice(list(self.bot.config.songs.keys()))})",
             color=ctx.author.color,
             timestamp=ctx.message.created_at
         ).set_author(
