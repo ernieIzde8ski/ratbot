@@ -25,23 +25,21 @@ class DM(commands.Cog):
         if msg.author.id in self.blocked_list["ids"]: return
         # log own messages as an embed in the proper channel
         if msg.author == self.bot.user:
-            embed = Embed(
-                title=f"Direct Message → {msg.channel.recipient} ({msg.channel.recipient.id})",
-                description=msg.content,
-                timestamp=msg.created_at, color=Color.orange()
-            )
+            embed = Embed(title=f"Direct Message → {msg.channel.recipient} ({msg.channel.recipient.id})",
+                          description=msg.content, color=Color.orange())
             return await self.bot.config.channels.log.send(embed=embed)
         # log message only if is not bot user
         elif msg.author.bot:
             return
         else:
-            embed = Embed(
-                title=f"Direct Message — {msg.author} ({msg.author.id})",
-                description=msg.content,
-                timestamp=msg.created_at, color=Color.dark_blue()
-            )
+            embed = Embed(title=f"Direct Message — {msg.author} ({msg.author.id})",
+                          description=msg.content, color=Color.dark_blue())
             if msg.attachments:
                 embed.set_image(url=msg.attachments[0].url)
+                if len(msg.attachments) > 1:
+                    embed.set_footer(text=f"{len(msg.attachments) - 1} attachment(s) not shown")
+                else:
+                    embed.set_footer(text="1 attachment")
             await self.bot.config.channels.log.send(embed=embed)
             # also save for later
             if self.latest_task:
