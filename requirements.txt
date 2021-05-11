@@ -2,3 +2,4 @@
 discord.py >= 1.7.1
 hypixelaPY >= 1.2.5
 pytz >= 2020.5
+aiohttp >= 3.6.3
