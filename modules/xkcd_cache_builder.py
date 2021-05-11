@@ -28,9 +28,5 @@ for i in range(oldest, latest):
     _dict['alt_correspondences'][data['alt'].lower()] = data['num']
 
 with open("xkcd_cache.json", "w") as f:
-    try:
-        json.dump(_dict, f, indent=2)
-    except:
-        print(_dict)
-    else:
-        print(f"Dumpbed {_dict} \n (Dumped) ")
+    json.dump(_dict, f, indent=2)
+    print(f"Dumpbed {_dict} \n (Dumped) ")
