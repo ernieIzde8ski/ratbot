@@ -27,6 +27,15 @@ class GuildUpdate(commands.Cog):
         embed = await self.embed_constructor(Color.red(), guild, "Left")
         await self.bot.config.channels.guilds.send(embed=embed)
 
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def list_guilds(self, ctx):
+        guilds = ""
+        for guild in self.bot.guilds:
+            guilds += f"{guild}\n"
+        embed = Embed(description=guilds).set_footer(text=f"total guilds: {len(self.bot.guilds)}")
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(GuildUpdate(bot))
