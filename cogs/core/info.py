@@ -10,7 +10,6 @@ class Help(commands.Cog):
 
     async def embed_constructor(self, ctx):
         bot_owner = (await commands.Bot.application_info(self.bot)).owner
-        print(self.bot.config.songs.keys())
         return Embed(
             name="Lol?", color=ctx.author.color,
             description=f"[GitHub](https://github.com/ernieIzde8ski/ratbot)\n"
