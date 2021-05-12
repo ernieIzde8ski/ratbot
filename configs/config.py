@@ -108,8 +108,10 @@ class Channels:
         self.status = 708882977202896957  # channel where startup is logged
         self.log = 715297562613121084  # channel where miscellaneous actions [i.e. dm messages to rat] are logged
         self.bm = 762166605458964510  # channel where based meter is stored
+        self.guilds = 841863106996338699  # channel where guild updates are logged
 
     def _get_channels(self, bot):
         self.status = bot.get_channel(self.status)
         self.log = bot.get_channel(self.log)
         self.bm = bot.get_channel(self.bm)
+        self.guilds = bot.get_channel(self.guilds)
