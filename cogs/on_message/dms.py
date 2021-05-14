@@ -6,7 +6,7 @@ import discord.ext.commands as commands
 from discord import Color, Embed, User
 
 
-async def is_log_channel(ctx):  # check for log channel
+async def is_log_channel(ctx) -> bool:  # check for log channel
     return ctx.channel.id == 715297562613121084
 
 

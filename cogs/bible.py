@@ -5,13 +5,14 @@ from aiohttp import ClientSession
 from discord import Color, Embed
 
 
-def get_bg_link(reference: str, translation: str = "NIV"):
+def get_bg_link(reference: str, translation: str = "NIV") -> str:
     return (f"https://www.biblegateway.com/passage/"
             f"?search={quote(reference)}"
             f"&version={quote(translation)}")
 
 
-async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV", link_translation: str = "NIV"):
+async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV",
+                    link_translation: str = "NIV") -> dict:
     async with ClientSession() as session:
         async with session.get(f"https://bible-api.com/{verse}?translation={text_translation}") as resp:
             resp = await resp.json()

@@ -4,11 +4,11 @@ import discord.ext.commands as commands
 from pytz import timezone
 
 
-async def now(armenium: bool):
+async def now(armenium: bool) -> str:
     if armenium:
-        return str(datetime.now(tz=timezone("America/Los_Angeles")).strftime("%m-%d-%Y %H:%M:%S"))
+        return datetime.now(tz=timezone("America/Los_Angeles")).strftime("%m-%d-%Y %H:%M:%S")
     else:
-        return str(datetime.now(tz=timezone("America/New_York")).strftime("%d-%m-%Y %H:%M:%S"))
+        return datetime.now(tz=timezone("America/New_York")).strftime("%d-%m-%Y %H:%M:%S")
 
 
 class Timekeeping(commands.Cog):

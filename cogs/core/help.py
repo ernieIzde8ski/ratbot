@@ -16,7 +16,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def embed_constructor(self, ctx):
+    async def embed_constructor(self, ctx) -> Embed:
         bot_owner = (await commands.Bot.application_info(self.bot)).owner
         return Embed(
             name="Lol?",

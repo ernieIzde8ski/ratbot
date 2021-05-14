@@ -13,7 +13,7 @@ replacements = {
 }
 
 
-def generate_spame():
+def generate_spame() -> str:
     out_str = ""
     while True:
         for letter in "spame":

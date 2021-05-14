@@ -10,7 +10,7 @@ from discord import User
 from pytz import timezone
 
 
-def match_temp(temperature: float):
+def match_temp(temperature: float) -> str:
     temperatures = (
         [-40, "siberia"], [-30, "sub-30"],  [-20, "sub-20"], [-15, "sub-15"], [-10, "sub-10"], [-5, "sub5"], [0, "sub0"], [5, "sub5"],
         [10, "sub10"], [15, "sub15"], [20, "sub20"], [25, "sub25"], [30, "sub30"], [35, "sub35"], [40, "sub40"]
@@ -29,7 +29,7 @@ class Armenium(commands.Cog):
             self.data = json.load(f)
 
     @staticmethod
-    async def get_temperature(city):
+    async def get_temperature(city) -> tuple:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                     f"https://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
@@ -38,7 +38,7 @@ class Armenium(commands.Cog):
                 felt_temperature = round(weather_data['main']['feels_like'] - 273.15)  # get felt temperature
                 return true_temperature, felt_temperature
 
-    async def message(self, auth_id: Union[int, str]):
+    async def message(self, auth_id: Union[int, str]) -> str:
         auth_id = str(auth_id)
         temperatures = await self.get_temperature(self.data['ids'][auth_id]['city'])
         true_temp = temperatures[0]
@@ -55,7 +55,7 @@ class Armenium(commands.Cog):
         )
         return message
 
-    def checks(self, ID, before, after):
+    def checks(self, ID, before, after) -> bool:
         # fail check if not the right server
         if after.guild.id != self.data['ids']['guild_id']:
             return True
