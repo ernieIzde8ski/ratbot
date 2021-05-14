@@ -38,14 +38,15 @@ class Armenium(commands.Cog):
                 felt_temperature = round(weather_data['main']['feels_like'] - 273.15)  # get felt temperature
                 return true_temperature, felt_temperature
 
-    async def message(self, auth_id: int):
-        temperatures = await self.get_temperature(self.data['ids'][str(auth_id)]['city'])
+    async def message(self, auth_id: Union[int, str]):
+        auth_id = str(auth_id)
+        temperatures = await self.get_temperature(self.data['ids'][auth_id]['city'])
         true_temp = temperatures[0]
         felt_temp = temperatures[1]
 
         message = (
                 f"__**Zdavstuy**__ \n\n"
-                f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
+                f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][auth_id]['nicknames'])}, "
                 "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
                 f"It is currently {true_temp} degrees Celsius outside for you"
                 + (f" (and it feels like {felt_temp})" if felt_temp != true_temp else "")
