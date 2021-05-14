@@ -1,23 +1,25 @@
 import json
-from configs import secrets
-from datetime import datetime
 import random
+from datetime import datetime
 from typing import Optional
 
 import aiohttp
-from discord import User
 import discord.ext.commands as commands
+from configs import secrets
+from discord import User
 from pytz import timezone
 
 
 def match_temp(temperature: float):
-    temperatures = [[-40, "siberia"], [-20, "subuntwenty"], [-10, "subunten"], [0, "subzero"], [10, "subten"],
-                    [20, "subtwenty"], [25, "sub25"], [30, "subthirty"], [35, "sub35"]]
+    temperatures = (
+        [-40, "siberia"], [-30, "sub-30"],  [-20, "sub-20"], [-15, "sub-15"], [-10, "sub-10"], [-5, "sub5"], [0, "sub0"], [5, "sub5"],
+        [10, "sub10"], [15, "sub15"], [20, "sub20"], [25, "sub25"], [30, "sub30"], [35, "sub35"], [40, "sub40"]
+    )
     for temp, name in temperatures:
         if temperature <= temp:
             return name
     else:
-        return "post35"
+        return "post40"
 
 
 class Armenium(commands.Cog):
@@ -32,7 +34,7 @@ class Armenium(commands.Cog):
             async with session.get(
                     f"https://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
                 weather_data = await resp.json()  # get data as json
-                true_temperature = round(weather_data['main']['temp'] - 273.15)        # get temperature & convert from Kelvin
+                true_temperature = round(weather_data['main']['temp'] - 273.15)  # get temperature & convert from Kelvin
                 felt_temperature = round(weather_data['main']['feels_like'] - 273.15)  # get felt temperature
                 return true_temperature, felt_temperature
 
@@ -42,13 +44,13 @@ class Armenium(commands.Cog):
         felt_temp = temperatures[1]
 
         message = (
-            f"__**Zdavstuy**__ \n\n" 
-            f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
-            "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
-            f"It is currently {true_temp} degrees Celsius outside for you"
-            + (f" (and it feels like {felt_temp})" if felt_temp != true_temp else "")
-            + f". {self.data['temps'][match_temp(felt_temp)]} \n\n"
-            f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['russian'], random.randint(2, 4)))}**"
+                f"__**Zdavstuy**__ \n\n"
+                f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][str(auth_id)]['nicknames'])}, "
+                "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
+                f"It is currently {true_temp} degrees Celsius outside for you"
+                + (f" (and it feels like {felt_temp})" if felt_temp != true_temp else "")
+                + f". {self.data['temps'][match_temp(felt_temp)]} \n\n"
+                  f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['russian'], random.randint(2, 4)))}**"
         )
         return message
 
