@@ -4,13 +4,11 @@
 import asyncio
 
 import discord.ext.commands as commands
-import hypixelaPY.exceptions as hypixele
 from discord import AllowedMentions, Intents
-from hypixelaPY import Hypixel
 
 from configs.config import Config
 from configs.enabled_cogs import enabled_cogs
-from configs.secrets import token, hypixel_api_key
+from configs.secrets import token
 from static import Static
 
 intentions = Intents.all()
@@ -36,10 +34,6 @@ for extension in enabled_cogs:
 
 async def start():
     try:
-        try:
-            bot.hypixel = await Hypixel(hypixel_api_key)
-        except hypixele.InvalidAPIKeyError as error:
-            print(f"hypixelaPY.exceptions.InvalidAPIKeyError: {error}")
         await bot.start(token)
     except KeyboardInterrupt:
         await bot.logout()
