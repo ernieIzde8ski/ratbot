@@ -1,7 +1,6 @@
 # ratbot
 
-Official source code for ratbot by ernieIzde8ski; contributions also made by myerfire, entire README.md format stolen
-from Armenium
+Official source code for ratbot by ernieIzde8ski; contributions also made by myerfire
 
 ## Support
 
