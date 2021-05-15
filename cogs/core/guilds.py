@@ -34,8 +34,8 @@ class GuildUpdate(commands.Cog):
         embed = await self.embed_constructor(Color.red(), guild, "Left")
         await self.bot.config.channels.guilds.send(embed=embed)
 
-    def sort_guilds(self, guilds: list, sort_method: str = "alphabetical", sort_order: Optional[bool] = False) -> Union[
-        list, bool]:
+    def sort_guilds(self, guilds: list, sort_method: str = "alphabetical", sort_order: Optional[bool] = False) -> \
+            Union[list, bool]:
         sort_method = sort_method.lower().replace(" ", "_")
         if sort_method in self.sorts['alphabetical']:
             guilds.sort(key=lambda g: g.name, reverse=sort_order)
