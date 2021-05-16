@@ -5,6 +5,7 @@ from discord import Embed, Permissions, utils
 
 
 class Help(commands.Cog):
+    """Provides help information"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -28,6 +29,7 @@ class Help(commands.Cog):
 
     @commands.command(aliases=["support", "ayuda", "eyy"])
     async def info(self, ctx):
+        """Returns basic information"""
         embed = await self.embed_constructor(ctx)
         await ctx.send(embed=embed)
 

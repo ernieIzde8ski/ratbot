@@ -5,6 +5,7 @@ from configs.secrets import tenor_api_key as apikey
 
 
 class Tenor(commands.Cog):
+    """Performs tenor functions"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -17,6 +18,7 @@ class Tenor(commands.Cog):
 
     @commands.command(aliases=["t"])
     async def tenor(self, ctx, *, query):
+        """Gets a tenor gif"""
         await ctx.send(await self.get_tenor(query))
 
 
