@@ -38,7 +38,7 @@ class GuildUpdate(commands.Cog):
             Union[list, bool]:
         sort_method = sort_method.lower().replace(" ", "_")
         if sort_method in self.sorts['alphabetical']:
-            guilds.sort(key=lambda g: g.name, reverse=sort_order)
+            guilds.sort(key=lambda g: g.name.lower(), reverse=sort_order)
         elif sort_method in self.sorts['length']:
             guilds.sort(key=lambda g: len(g.name), reverse=sort_order)
         elif sort_method in self.sorts['total_members']:
