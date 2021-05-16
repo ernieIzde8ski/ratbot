@@ -23,39 +23,45 @@ class Administration(commands.Cog):
     # i stole the following lines up until wessel Xd
     @commands.command()
     @commands.is_owner()
-    async def load(self, ctx, *, module):
+    async def load(self, ctx, *, modules):
         """Loads a module."""
-        try:
-            self.bot.load_extension(module)
-        except commands.ExtensionError as e:
-            await ctx.send(f'{e.__class__.__name__}: {e}')
-        else:
-            await ctx.send('\N{OK HAND SIGN}')
-            print(f"loaded {module}")
+        modules = modules.replace(" ", "").split(",")
+        for module in modules:
+            try:
+                self.bot.load_extension(module)
+            except commands.ExtensionError as e:
+                await ctx.send(f'{e.__class__.__name__}: {e}')
+            else:
+                await ctx.send('\N{OK HAND SIGN}')
+                print(f"loaded {module}")
 
     @commands.command()
     @commands.is_owner()
-    async def unload(self, ctx, *, module):
+    async def unload(self, ctx, *, modules):
         """Unloads a module."""
-        try:
-            self.bot.unload_extension(module)
-        except commands.ExtensionError as e:
-            await ctx.send(f'{e.__class__.__name__}: {e}')
-        else:
-            await ctx.send('\N{OK HAND SIGN}')
-            print(f"unloaded {module}")
+        modules = modules.replace(" ", "").split(",")
+        for module in modules:
+            try:
+                self.bot.unload_extension(module)
+            except commands.ExtensionError as e:
+                await ctx.send(f'{e.__class__.__name__}: {e}')
+            else:
+                await ctx.send('\N{OK HAND SIGN}')
+                print(f"unloaded {module}")
 
     @commands.command()
     @commands.is_owner()
-    async def reload(self, ctx, *, module):
+    async def reload(self, ctx, *, modules):
         """Reloads a module."""
-        try:
-            self.bot.reload_extension(module)
-        except commands.ExtensionError as e:
-            await ctx.send(f'{e.__class__.__name__}: {e}')
-        else:
-            await ctx.send('\N{OK HAND SIGN}')
-            print(f"reloaded {module}")
+        modules = modules.replace(" ", "").split(",")
+        for module in modules:
+            try:
+                self.bot.reload_extension(module)
+            except commands.ExtensionError as e:
+                await ctx.send(f'{e.__class__.__name__}: {e}')
+            else:
+                await ctx.send('\N{OK HAND SIGN}')
+                print(f"reloaded {module}")
 
     @commands.command(aliases=["die", "off"])
     @commands.is_owner()
