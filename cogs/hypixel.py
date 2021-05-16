@@ -7,6 +7,9 @@ from configs.secrets import hypixel_api_key
 class HypixelBasedLevels(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        bot.loop.create_task(self.initialize())
+
+    async def initialize(self):
         try:
             self.hypixel = await Hypixel(hypixel_api_key)
         except exceptions.InvalidAPIKeyError as error:

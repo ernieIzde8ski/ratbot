@@ -1,7 +1,7 @@
 import json
 import random
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 import aiohttp
 import discord.ext.commands as commands
