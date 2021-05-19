@@ -5,14 +5,15 @@ from typing import Optional, Union
 
 import aiohttp
 import discord.ext.commands as commands
-from configs import secrets
-from discord import User
+from configs.secrets import weather_api_key as apikey
+from discord import User, Embed
 from pytz import timezone
 
 
 def match_temp(temperature: float) -> str:
     temperatures = (
-        [-40, "siberia"], [-30, "sub-30"],  [-20, "sub-20"], [-15, "sub-15"], [-10, "sub-10"], [-5, "sub5"], [0, "sub0"], [5, "sub5"],
+        [-40, "siberia"], [-30, "sub-30"], [-20, "sub-20"], [-15, "sub-15"], [-10, "sub-10"], [-5, "sub5"], [0, "sub0"],
+        [5, "sub5"],
         [10, "sub10"], [15, "sub15"], [20, "sub20"], [25, "sub25"], [30, "sub30"], [35, "sub35"], [40, "sub40"]
     )
     for temp, name in temperatures:
@@ -29,38 +30,42 @@ class Armenium(commands.Cog):
             self.data = json.load(f)
 
     @staticmethod
-    async def get_temperature(city) -> tuple:
+    async def get_temperature(city) -> dict:
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                    f"https://api.openweathermap.org/data/2.5/weather?appid={secrets.weather_api_key}&q={city}") as resp:
+                    f"https://api.openweathermap.org/data/2.5/weather?appid={apikey}&q={city}&units=metric") as resp:
                 weather_data = await resp.json()  # get data as json
-                true_temperature = round(weather_data['main']['temp'] - 273.15)  # get temperature & convert from Kelvin
-                felt_temperature = round(weather_data['main']['feels_like'] - 273.15)  # get felt temperature
-                return true_temperature, felt_temperature
+                return {
+                    "true": round(weather_data['main']['temp']),
+                    "felt": round(weather_data['main']['feels_like']),
+                    "wind": weather_data["wind"]["speed"],
+                    "weather": weather_data["weather"][0]["description"].lower()
+                }
 
-    async def message(self, auth_id: Union[int, str]) -> str:
+    async def embed_constructor(self, auth_id: Union[int, str]) -> Embed:
         auth_id = str(auth_id)
-        temperatures = await self.get_temperature(self.data['ids'][auth_id]['city'])
-        true_temp = temperatures[0]
-        felt_temp = temperatures[1]
+        city = self.data['ids'][auth_id]['city']
+        temps = await self.get_temperature(city)
 
-        message = (
-                f"__**Zdavstuy**__ \n\n"
-                f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][auth_id]['nicknames'])}, "
-                "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
-                f"It is currently {true_temp} degrees Celsius outside for you"
-                + (f" (and it feels like {felt_temp})" if felt_temp != true_temp else "")
-                + f". {self.data['temps'][match_temp(felt_temp)]} \n\n"
-                  f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['russian'], random.randint(2, 4)))}**"
+        embed = Embed(
+            title="Zdavstuy",
+            description=f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][auth_id]['nicknames'])}, "
+                        "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
+        ).add_field(
+            name="Assessment",
+            value=f"It is currently {temps['true']} degrees Celsius outside"
+                  + (f" (and it feels like {temps['felt']}). " if temps['true'] != temps['felt'] else ". ")
+                  + f"The Wind is going at {temps['wind']} Meter per second & the weather is `{temps['weather']}`. "
+                  + f"{self.data['temps'][match_temp(temps['felt'])]}"
+        ).add_field(
+            name="Русиан",
+            value=f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['russian'], random.randint(3, 5)))}**"
         )
-        return message
+        return embed
 
     def checks(self, ID, before, after) -> bool:
-        # fail check if not the right server
-        if after.guild.id != self.data['ids']['guild_id']:
-            return True
-        # fail check if not a user
-        if after.id not in self.data['ids']['raw_ids']:
+        # fail check if not the right server or not a user
+        if after.guild.id != self.data['ids']['guild_id'] or after.id not in self.data['ids']['raw_ids']:
             return True
         # fail check if not going from offline to online
         if before.raw_status != "offline" or after.raw_status == "offline":
@@ -83,8 +88,16 @@ class Armenium(commands.Cog):
         self.data["ids"][ID]["reset_date"] = today
         with open("cogs/on_member_update/Armenium.json", "w") as f:
             json.dump(self.data, f, indent=2)
-        message = await self.message(after.id)
-        await after.send(message)
+        embed = await self.embed_constructor(after.id)
+        await after.send(embed=embed)
+
+    @commands.command(aliases=["sa", "s_a"])
+    @commands.is_owner()
+    async def send_Armenium(self, ctx, victim: Optional[User]):
+        """For testing"""
+        victim = victim if victim else ctx.author
+        embed = await self.embed_constructor(victim.id)
+        await victim.send(embed=embed)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
