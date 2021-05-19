@@ -26,8 +26,10 @@ def match_temp(temperature: float) -> str:
 class Armenium(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open("cogs/on_member_update/Armenium.json", "r", encoding='utf-8') as f:
+        with open("cogs/on_member_update/ids.json", "r", encoding="utf-8") as f:
             self.data = json.load(f)
+        with open("cogs/on_member_update/message_construction.json", "r", encoding="utf-8") as f:
+            self.msg = json.load(f)
 
     @staticmethod
     async def get_temperature(city) -> dict:
@@ -44,35 +46,35 @@ class Armenium(commands.Cog):
 
     async def embed_constructor(self, auth_id: Union[int, str]) -> Embed:
         auth_id = str(auth_id)
-        city = self.data['ids'][auth_id]['city']
+        city = self.data[auth_id]['city']
         temps = await self.get_temperature(city)
 
         embed = Embed(
             title="Zdavstuy",
-            description=f"{random.choice(self.data['greetings'])}, {random.choice(self.data['ids'][auth_id]['nicknames'])}, "
+            description=f"{random.choice(self.msg['greetings'])}, {random.choice(self.data[auth_id]['nicknames'])}, "
                         "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
         ).add_field(
             name="Assessment",
             value=f"It is currently {temps['true']} degrees Celsius outside"
                   + (f" (and it feels like {temps['felt']}). " if temps['true'] != temps['felt'] else ". ")
                   + f"The Wind is going at {temps['wind']} Meter per second & the weather is `{temps['weather']}`. "
-                  + f"{self.data['temps'][match_temp(temps['felt'])]}"
+                  + f"{self.msg['temps'][match_temp(temps['felt'])]}"
         ).add_field(
             name="Русиан",
-            value=f"**{''.join(f'{sentence} ' for sentence in random.sample(self.data['russian'], random.randint(3, 5)))}**"
+            value=f"**{''.join(f'{sentence} ' for sentence in random.sample(self.msg['russian'], random.randint(3, 5)))}**"
         )
         return embed
 
     def checks(self, ID, before, after) -> bool:
         # fail check if not the right server or not a user
-        if after.guild.id != self.data['ids']['guild_id'] or after.id not in self.data['ids']['raw_ids']:
+        if after.guild.id != self.data['guild_id'] or after.id not in self.data['raw_ids']:
             return True
         # fail check if not going from offline to online
         if before.raw_status != "offline" or after.raw_status == "offline":
             return True
         # fail check if message has already been sent
-        today = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
-        if self.data["ids"][ID]["reset_date"] == today:
+        today = f"{datetime.now(tz=timezone(self.data[ID]['tz'])):%Y-%m-%d}"
+        if self.data[ID]["reset_date"] == today:
             return True
         # succeed check if all other conditions pass
         return False
@@ -84,8 +86,8 @@ class Armenium(commands.Cog):
         if self.checks(ID, before, after):
             return
         # log message being sent today
-        today = f"{datetime.now(tz=timezone(self.data['ids'][ID]['tz'])):%Y-%m-%d}"
-        self.data["ids"][ID]["reset_date"] = today
+        today = f"{datetime.now(tz=timezone(self.data[ID]['tz'])):%Y-%m-%d}"
+        self.data[ID]['reset_date'] = today
         with open("cogs/on_member_update/Armenium.json", "w") as f:
             json.dump(self.data, f, indent=2)
         embed = await self.embed_constructor(after.id)
@@ -114,9 +116,9 @@ class Armenium(commands.Cog):
                 }
             """
         user_dict = json.loads(user_dict)
-        if user.id not in self.data["ids"]["raw_ids"]:
-            self.data["ids"]["raw_ids"].append(user.id)
-        self.data["ids"][str(user.id)] = user_dict
+        if user.id not in self.data['raw_ids']:
+            self.data['raw_ids'].append(user.id)
+        self.data[str(user.id)] = user_dict
         with open("cogs/on_member_update/Armenium.json", "w") as file:
             json.dump(self.data, file, indent=2)
         await ctx.channel.send("Hopefully done")
