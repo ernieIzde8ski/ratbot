@@ -6,7 +6,7 @@ from typing import Optional, Union
 import aiohttp
 import discord.ext.commands as commands
 from configs.secrets import weather_api_key as apikey
-from discord import User, Embed
+from discord import User, Embed, Colour
 from pytz import timezone
 
 
@@ -50,7 +50,7 @@ class Armenium(commands.Cog):
         temps = await self.get_temperature(city)
 
         embed = Embed(
-            title="Zdavstuy",
+            title="Zdavstuy", color=Colour.random(),
             description=f"{random.choice(self.msg['greetings'])}, {random.choice(self.data[auth_id]['nicknames'])}, "
                         "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
         ).add_field(
