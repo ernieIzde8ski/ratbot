@@ -102,18 +102,10 @@ class Armenium(commands.Cog):
         # log message being sent today
         today = f"{datetime.now(tz=timezone(self.data[ID]['tz'])):%Y-%m-%d}"
         self.data[ID]['reset_date'] = today
-        with open("cogs/on_member_update/Armenium.json", "w") as f:
-            json.dump(self.data, f, indent=2)
+        with open("cogs/on_member_update/ids.json", "w") as f:
+            json.dump(self.data, f)
         embed = await self.embed_constructor(after.id)
         await after.send(embed=embed)
-
-    @commands.command(aliases=["sa"])
-    @commands.is_owner()
-    async def send_Armenium(self, ctx, victim: Optional[User]):
-        """For testing"""
-        victim = victim if victim else ctx.author
-        message = await self.embed_constructor(victim.id)
-        await victim.send(message)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
@@ -133,9 +125,17 @@ class Armenium(commands.Cog):
         if user.id not in self.data['raw_ids']:
             self.data['raw_ids'].append(user.id)
         self.data[str(user.id)] = user_dict
-        with open("cogs/on_member_update/Armenium.json", "w") as file:
-            json.dump(self.data, file, indent=2)
+        with open("cogs/on_member_update/ids.json", "w") as file:
+            json.dump(self.data, file)
         await ctx.channel.send("Hopefully done")
+
+    @commands.command(aliases=["sa"])
+    @commands.is_owner()
+    async def send_Armenium(self, ctx, victim: Optional[User]):
+        """For testing"""
+        victim = victim if victim else ctx.author
+        message = await self.embed_constructor(victim.id)
+        await victim.send(message)
 
 
 def setup(bot):
