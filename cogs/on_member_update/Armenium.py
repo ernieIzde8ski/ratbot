@@ -49,21 +49,20 @@ class Armenium(commands.Cog):
         city = self.data[auth_id]['city']
         temps = await self.get_temperature(city)
 
-        embed = Embed(
-            title="Zdavstuy", color=Colour.random(),
-            description=f"{random.choice(self.msg['greetings'])}, {random.choice(self.data[auth_id]['nicknames'])}, "
-                        "hope you have Exciting Day. (Just kidding your Stupid) \n\n"
-        ).add_field(
-            name="Assessment",
-            value=f"It is currently {temps['true']} degrees Celsius outside"
-                  + (f" (and it feels like {temps['felt']}). " if temps['true'] != temps['felt'] else ". ")
-                  + f"The Wind is going at {temps['wind']} Meter per second & the weather is `{temps['weather']}`. "
-                  + f"{self.msg['temps'][match_temp(temps['felt'])]}"
-        ).add_field(
-            name="Русиан",
-            value=f"**{''.join(f'{sentence} ' for sentence in random.sample(self.msg['russian'], random.randint(3, 5)))}**"
-        )
-        return embed
+        title = "Zdavstuy"
+        greeting = random.choice(self.msg['greetings'])
+        nick = random.choice(self.data[auth_id]['nicknames'])
+        temperature = f"It is currently {temps['true']} degrees Celsius outside"
+        if temps['true'] != temps['felt']: temperature += f" (and it feels like {temps['felt']})"
+        weather = f"The Wind is going at {temps['wind']} Meter per second & the weather is `{temps['weather']}`"
+        temperature_analysis = self.msg['temps'][match_temp(temps['felt'])]
+        russian = " ".join(f'{sentence} ' for sentence in random.sample(self.msg['russian'], random.randint(3, 5)))
+
+        message = f"**{title}**\n\n" \
+                  f"{greeting}, {nick}, hope you have Exciting Day. (Just kidding your Stupid) \n\n" \
+                  f"{temperature}. {weather}. {temperature_analysis}\n\n" \
+                  f"**{russian}**"
+        return message
 
     def checks(self, ID, before, after) -> bool:
         # fail check if not the right server or not a user
@@ -93,13 +92,13 @@ class Armenium(commands.Cog):
         embed = await self.embed_constructor(after.id)
         await after.send(embed=embed)
 
-    @commands.command(aliases=["sa", "s_a"])
+    @commands.command(aliases=["sa"])
     @commands.is_owner()
     async def send_Armenium(self, ctx, victim: Optional[User]):
         """For testing"""
         victim = victim if victim else ctx.author
-        embed = await self.embed_constructor(victim.id)
-        await victim.send(embed=embed)
+        message = await self.embed_constructor(victim.id)
+        await victim.send(message)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
