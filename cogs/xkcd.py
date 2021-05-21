@@ -65,32 +65,6 @@ class XKCD(commands.Cog):
         embed = await self.embed_constructor(xkcd_dict, ctx.author.color)
         await ctx.send(embed=embed)
 
-    @xkcd.group(invoke_without_command=True)
-    async def explain(self, ctx, *, xkcd_id: Union[int, str] = 221):
-        """links to an xkcd explanation"""
-        try:
-            data = await self.get_xkcd(xkcd_id)
-        except ContentTypeError as e:
-            await ctx.send(f"`ContentTypeError: {e}`")
-            await ctx.send(f"was your input valid?")
-            return
-        link = f"https://explainxkcd.com/{data['num']}"
-        await ctx.send(link)
-
-    @explain.command()
-    async def latest(self, ctx):
-        """links to the latest xkcd explanation"""
-        data = await self.get_xkcd(xkcd_id=None)
-        link = f"https://explainxkcd.com/{data['num']}"
-        await ctx.send(link)
-
-    @explain.command()
-    async def random(self, ctx):
-        """links to random xkcd explanation"""
-        data = await self.get_random_xkcd()
-        link = f"https://explainxkcd.com/{data['num']}"
-        await ctx.send(link)
-
 
 def setup(bot):
     bot.add_cog(XKCD(bot))
