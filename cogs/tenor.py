@@ -6,6 +6,7 @@ from configs.secrets import tenor_api_key as apikey
 
 class Tenor(commands.Cog):
     """Performs tenor functions"""
+
     def __init__(self, bot):
         self.bot = bot
 

@@ -6,6 +6,7 @@ from discord import Embed, Permissions, utils
 
 class Help(commands.Cog):
     """Provides help information"""
+
     def __init__(self, bot):
         self.bot = bot
 

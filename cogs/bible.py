@@ -53,15 +53,34 @@ async def get_verse(verse, words_per_line: int = 8, text_translation: str = "KJV
             }
 
 
+async def get_random_verse() -> str:
+    async with ClientSession() as session:
+        async with session.get(f"https://labs.bible.org/api/?passage=random&type=json") as resp:
+            resp = (await resp.json(content_type="application/x-javascript"))[0]
+            return f"{resp['bookname']} {resp['chapter']}:{resp['verse']}"
+
+
 class Bible(commands.Cog):
     """Bible command"""
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["bible", "verse", "v", "🙏"])
+    @commands.group(aliases=["bible", "verse", "v", "🙏"], invoke_without_command=True)
     async def bible_verse(self, ctx, *, reference):
         """returns a bible verse or passage from the format 'book chapter:verse(s)'"""
+        verses = await get_verse(reference)
+        embed = Embed(
+            title=verses["heading"],
+            description=verses["text"],
+            url=verses["url"],
+            color=Color.dark_orange()
+        )
+        await ctx.channel.send(embed=embed)
+
+    @bible_verse.command(aliases=["r"])
+    async def random(self, ctx):
+        reference = await get_random_verse()
         verses = await get_verse(reference)
         embed = Embed(
             title=verses["heading"],
