@@ -27,6 +27,7 @@ weather_api_key = ""
 ```
 
 - `token` is a Discord bot token; required
+  - retrieve from discord developer panel, do not forget to enable all intents
 - `tenor_api_key` is a Tenor.com API key.
   - used only in cogs/tenor.py
 - `hypixel_api_key` is a Hypixel API key.
