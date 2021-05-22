@@ -1,13 +1,16 @@
 import json
 import random
+from asyncio import sleep
+from asyncio.exceptions import TimeoutError
 from datetime import datetime
 from typing import Optional, Union
 
 import aiohttp
 import discord.ext.commands as commands
-from configs.secrets import weather_api_key as apikey
-from discord import User, Embed, Colour
+from discord import User
 from pytz import timezone
+
+from configs.secrets import weather_api_key as apikey
 
 
 def match_temp(temperature: float) -> str:
@@ -73,7 +76,7 @@ class Armenium(commands.Cog):
         temperature_analysis = self.msg['temps'][match_temp(temps['felt'])]
         russian = " ".join(f'{sentence} ' for sentence in random.sample(self.msg['russian'], random.randint(3, 5)))
 
-        message = f"**{title}**\n\n" \
+        message = f"__**{title}**__\n\n" \
                   f"{greeting}, {nick}, hope you have Exciting Day. (Just kidding your Stupid) \n\n" \
                   f"{temperature}. {weather}. {temperature_analysis}\n\n" \
                   f"**{russian}**"
@@ -93,22 +96,53 @@ class Armenium(commands.Cog):
         # succeed check if all other conditions pass
         return False
 
+    async def send_song(self, victim: User):
+        if random.random() < 0.8: return
+        await sleep(1)
+        await victim.send("do you want Song ?")
+        try:
+            def check(msg):
+                # prevent errors for when msg.content is None or when not in direct messages
+                if not msg.content or msg.guild: return False
+                return msg.author == victim and msg.content[0].lower() in ["y", "n"]
+
+            message = await self.bot.wait_for("message", timeout=180, check=check)
+        except TimeoutError:
+            return await victim.send("Rude")
+        else:
+            if message.content[0].lower() == "n":
+                await victim.send(random.choice(("WTF.", "Dam", "Wered", "OK Lol", "Owned", "Yea")))
+            else:
+                await victim.send("Awsom")
+                await victim.send(f"https://youtu.be/{random.choice(list(self.bot.config.songs))}")
+
     @commands.Cog.listener()
-    async def on_member_update(self, before, after):
-        ID = str(after.id)
+    async def on_member_update(self, before, member):
+        ID = str(member.id)
         # makes sure that it only will send given a certain set of conditions
-        if self.checks(ID, before, after):
+        if self.checks(ID, before, member):
             return
 
         # send message
-        message = await self.message_constructor(after.id)
-        await after.send(message)
+        message = await self.message_constructor(member.id)
+        await member.send(message)
 
         # log message being sent today
         today = f"{datetime.now(tz=timezone(self.data[ID]['tz'])):%Y-%m-%d}"
         self.data[ID]['reset_date'] = today
         with open("cogs/on_member_update/ids.json", "w") as f:
             json.dump(self.data, f)
+
+        await self.send_song(member)
+
+    @commands.command(aliases=["sa"])
+    @commands.is_owner()
+    async def send_Armenium(self, ctx, victim: Optional[User]):
+        """For testing"""
+        victim = victim if victim else ctx.author
+        message = await self.message_constructor(victim.id)
+        await victim.send(message)
+        await self.send_song(victim)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
@@ -131,14 +165,6 @@ class Armenium(commands.Cog):
         with open("cogs/on_member_update/ids.json", "w") as file:
             json.dump(self.data, file)
         await ctx.channel.send("Hopefully done")
-
-    @commands.command(aliases=["sa"])
-    @commands.is_owner()
-    async def send_Armenium(self, ctx, victim: Optional[User]):
-        """For testing"""
-        victim = victim if victim else ctx.author
-        message = await self.message_constructor(victim.id)
-        await victim.send(message)
 
 
 def setup(bot):
