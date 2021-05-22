@@ -16,7 +16,8 @@ class Help(commands.Cog):
             name="Lol?", color=ctx.author.color,
             description=f"[GitHub](https://github.com/ernieIzde8ski/ratbot)\n"
                         f"[Invitame]({utils.oauth_url(self.bot.user.id, permissions=Permissions(8))})\n"
-                        f"[invitación pero necesitas pensar]({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n"
+                        f"[invitación pero necesitas pensar]"
+                        f"({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n"
                         f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
                         f"[Good song](https://www.youtube.com/watch?v={choice(list(self.bot.config.songs.keys()))})",
         ).set_author(

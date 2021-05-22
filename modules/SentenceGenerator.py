@@ -46,7 +46,7 @@ class Generator(object):
 def loadGenerator(filename):
     main_re = re.compile(r'^\s*([A-Z0-9_]+)\s*=\s*((?:[A-Z0-9_]+|\s+|\||"(?:[^\\"]|\\\\|\\")+")+)')
     expr_re = re.compile(r'(?:[A-Z0-9_]+|\s+|"(?:[^\\"]|\\\\|\\")+")+')
-    toke_re = re.compile(r'(?:[A-Z0-9_]+|"(?:[^\\"]|\\\\|\\")+")')
+    toke_re = re.compile(r'[A-Z0-9_]+|"(?:[^\\"]|\\\\|\\")+"')
 
     tokens = ["START"]
     needed_tokens = ["START"]
@@ -86,9 +86,9 @@ def loadGenerator(filename):
                     else:
                         if token == "NONE":
                             continue
-                        if not token in needed_tokens:
+                        if token not in needed_tokens:
                             needed_tokens.append(token)
-                        if not token in tokens:
+                        if token not in tokens:
                             tokens.append(token)
                         option.append(tokens.index(token))
                 options.append(option)
