@@ -25,7 +25,7 @@ class Help(commands.Cog):
                         f"[Invitation but you need to think about it]"
                         f"({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n "
                         f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
-                        f"[Good song](https://www.youtube.com/watch?v={choice(list(self.bot.config.songs.keys()))})",
+                        f"[Good song](https://www.youtube.com/watch?v={choice(list(self.bot.config.songs))})",
             color=ctx.author.color,
             timestamp=ctx.message.created_at
         ).set_author(

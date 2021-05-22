@@ -49,7 +49,7 @@ class Randomized(commands.Cog):
     @commands.command(aliases=["song", "rs"])
     async def random_song(self, ctx):
         """Pulls a random song from the configuration file"""
-        await ctx.channel.send(f"https://youtu.be/{choice(list(self.bot.config.songs.keys()))}")
+        await ctx.channel.send(f"https://youtu.be/{choice(list(self.bot.config.songs))}")
 
     @commands.command(aliases=["choose", "choice"])
     async def decide(self, ctx, *, _list: str):

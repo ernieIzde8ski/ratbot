@@ -19,7 +19,7 @@ class Help(commands.Cog):
                         f"[invitación pero necesitas pensar]"
                         f"({utils.oauth_url(self.bot.user.id, permissions=Permissions(201714752))})\n"
                         f"[\"Support Server\"](https://discord.gg/cHZYahK)\n"
-                        f"[Good song](https://www.youtube.com/watch?v={choice(list(self.bot.config.songs.keys()))})",
+                        f"[Good song](https://www.youtube.com/watch?v={choice(list(self.bot.config.songs))})",
         ).set_author(
             name=f"— {bot_owner}",
             icon_url=bot_owner.avatar_url
