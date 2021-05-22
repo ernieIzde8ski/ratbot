@@ -99,13 +99,16 @@ class Armenium(commands.Cog):
         # makes sure that it only will send given a certain set of conditions
         if self.checks(ID, before, after):
             return
+
+        # send message
+        message = await self.message_constructor(after.id)
+        await after.send(message)
+
         # log message being sent today
         today = f"{datetime.now(tz=timezone(self.data[ID]['tz'])):%Y-%m-%d}"
         self.data[ID]['reset_date'] = today
         with open("cogs/on_member_update/ids.json", "w") as f:
             json.dump(self.data, f)
-        message = await self.message_constructor(after.id)
-        await after.send(message)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
