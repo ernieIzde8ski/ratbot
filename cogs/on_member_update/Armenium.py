@@ -58,7 +58,7 @@ class Armenium(commands.Cog):
                     "weather": weather_data["weather"][0]["description"].lower()
                 }
 
-    async def embed_constructor(self, auth_id: Union[int, str]) -> Embed:
+    async def message_constructor(self, auth_id: Union[int, str]) -> str:
         auth_id = str(auth_id)
         city = self.data[auth_id]['city']
         temps = await self.get_temperature(city)
@@ -104,8 +104,8 @@ class Armenium(commands.Cog):
         self.data[ID]['reset_date'] = today
         with open("cogs/on_member_update/ids.json", "w") as f:
             json.dump(self.data, f)
-        embed = await self.embed_constructor(after.id)
-        await after.send(embed=embed)
+        message = await self.message_constructor(after.id)
+        await after.send(message)
 
     @commands.command(aliases=["add_brogle", "add_arm"])
     @commands.is_owner()
@@ -134,7 +134,7 @@ class Armenium(commands.Cog):
     async def send_Armenium(self, ctx, victim: Optional[User]):
         """For testing"""
         victim = victim if victim else ctx.author
-        message = await self.embed_constructor(victim.id)
+        message = await self.message_constructor(victim.id)
         await victim.send(message)
 
 
