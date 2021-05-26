@@ -97,7 +97,7 @@ class Armenium(commands.Cog):
         return False
 
     async def send_song(self, victim: User):
-        if random.random() < 0.8: return
+        if random.random() < 0.933: return
         await sleep(1)
         await victim.send("do you want Song ?")
         try:
