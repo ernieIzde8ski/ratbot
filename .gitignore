@@ -11,6 +11,7 @@ configs/randomized.json
 configs/secrets.py
 cogs/on_member_update/ids.json
 cogs/on_member_update/message_construction.json
+cogs/on_message/myer.json
 
 
 
