@@ -1,0 +1,17 @@
+{
+  "responses_given": 0,
+  "myer": 302956027656011776,
+  "responses": {
+    "0": "warning 1",
+    "1": "warning 2",
+    "2": "warning 3",
+    "4": "warning 5",
+    "9": "warning 10",
+    "24": "warning 25",
+    "49": "warning 50",
+    "99": "warning 100",
+    "generic": [
+      "Shut up"
+    ]
+  }
+}
