@@ -2,8 +2,7 @@ import json
 from random import choice
 
 import discord.ext.commands as commands
-from discord import AllowedMentions
-from discord import Forbidden
+from discord import AllowedMentions, Forbidden
 
 
 class Myer(commands.Cog):
@@ -22,25 +21,32 @@ class Myer(commands.Cog):
         # return response
         return response
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if not message.guild: return
-        if message.guild.id != 488475203303768065: return
+    async def respond(self, msg):
+        if not msg.guild: return
+        if msg.guild.id != 488475203303768065: return
         # check if the guild is 0413-Theta
 
         # check for twitter links from myer
-        if "https://twitter.com" in message.content and message.author.id == self.data['myer']:
+        if "https://twitter.com" in msg.content and msg.author.id == self.data['myer']:
             # Punishment.
             try:
-                await message.delete()
+                await msg.delete()
             except Forbidden:
-                return await message.channel.send("Hit me, nail me, make me God !!!!!!!!!!!")
-            await message.channel.send(
-                f"{message.author.mention} {self.response()}", allowed_mentions=AllowedMentions(users=True)
+                return await msg.channel.send("Hit me, nail me, make me God !!!!!!!!!!!")
+            await msg.channel.send(
+                f"{msg.author.mention} {self.response()}", allowed_mentions=AllowedMentions(users=True)
             )
             with open("cogs/on_message/myer.json", "w", encoding="utf-8") as f:
                 self.data["responses_given"] += 1
                 json.dump(self.data, f)
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        await self.respond(message)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        await self.respond(after)
 
 
 def setup(bot):
