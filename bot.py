@@ -4,7 +4,7 @@
 import asyncio
 
 import discord.ext.commands as commands
-from discord import AllowedMentions, Intents
+from discord import AllowedMentions, Intents, DMChannel
 
 from configs.config import Config
 from configs.enabled_cogs import enabled_cogs
@@ -13,8 +13,10 @@ from static import Static
 
 intentions = Intents.all()
 
+
 Config = Config()
-bot = commands.Bot(command_prefix=Config.prefix,
+
+bot = commands.Bot(command_prefix=lambda b, m: commands.when_mentioned(b, m) + Config.prefix,
                    allowed_mentions=AllowedMentions.none(),
                    intents=intentions)
 bot.static = Static()

@@ -9,7 +9,8 @@ class Stati(commands.Cog):
 
     async def initialize(self):
         await self.bot.wait_until_ready()
-        status = Game(f"prefix is {self.bot.config.prefix}")
+        prefix = self.bot.config.prefix[0]
+        status = Game(f"{prefix}help or {prefix}info")
         await self.bot.change_presence(activity=status)
 
     @commands.command(aliases=["status", "set_status"])
