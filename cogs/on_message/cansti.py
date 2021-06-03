@@ -3,6 +3,7 @@ from json import load
 from discord import Message
 from asyncio.exceptions import TimeoutError
 
+
 class Cansti(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -16,6 +17,13 @@ class Cansti(commands.Cog):
         if not ctx.guild:
             return False
         return ctx.guild.id == 271034455462772737
+
+    @commands.command()
+    @commands.check(isCansti)
+    async def haddaway(self, ctx):
+        """Gives information on haddaway responses"""
+        await ctx.send("type `What is love?` to initiate a haddaway sequence\n"
+                       "lyrics are sourced from <https://genius.com/Haddaway-what-is-love-lyrics>, by line, in order")
 
     @commands.Cog.listener('on_message')
     async def on_haddaway(self, msg):
@@ -34,14 +42,14 @@ class Cansti(commands.Cog):
             m = await msg.channel.send(resp.upper())
 
             def check(m: Message):
-                if m.channel != msg.channel or m.author.id != msg.author.id:
+                if m.channel != msg.channel:
                     return False
                 m.content = m.content.lower()
                 for p in punctuation:
                     m.content = m.content.replace(p, "")
                 content = m.content.replace("  ", " ").strip()
                 return content == expected or not expected
-            
+
             if expected:
                 try:
                     await self.bot.wait_for("message", timeout=30, check=check)
@@ -49,10 +57,11 @@ class Cansti(commands.Cog):
                     await msg.channel.send("Bitch")
                     self.haddaway_running = False
                     return
-        
+
         # Respond once complete
         await m.add_reaction("<:wackyZany:785734170612596748>")
         self.haddaway_running = False
+
 
 def setup(bot):
     bot.add_cog(Cansti(bot))
