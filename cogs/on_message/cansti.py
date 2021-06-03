@@ -4,6 +4,12 @@ from discord import Message
 from asyncio.exceptions import TimeoutError
 
 
+def isCansti(ctx):
+    if not ctx.guild:
+        return False
+    return ctx.guild.id == 271034455462772737
+
+
 class Cansti(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -11,12 +17,6 @@ class Cansti(commands.Cog):
         with open("modules/haddaway.json", "r", encoding="utf-8") as f:
             self.haddaway = load(f)
         self.haddaway_running = False
-
-    @staticmethod
-    def isCansti(ctx):
-        if not ctx.guild:
-            return False
-        return ctx.guild.id == 271034455462772737
 
     @commands.command()
     @commands.check(isCansti)
@@ -27,7 +27,7 @@ class Cansti(commands.Cog):
 
     @commands.Cog.listener('on_message')
     async def on_haddaway(self, msg):
-        if msg.author.bot or not self.isCansti(msg):
+        if msg.author.bot or not isCansti(msg):
             return
 
         punctuation = [',', "'", '?', '.', '-', '–', "(oooh)", "(uh, uh)"]
