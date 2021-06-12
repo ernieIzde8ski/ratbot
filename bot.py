@@ -38,11 +38,11 @@ async def start():
     try:
         await bot.start(token)
     except KeyboardInterrupt:
-        await bot.logout()
+        await bot.close()
 
 
 async def stop():
-    await bot.logout()
+    await bot.close()
 
 
 if __name__ == "__main__":
