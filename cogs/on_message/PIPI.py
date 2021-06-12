@@ -1,35 +1,44 @@
 import discord.ext.commands as commands
 from discord import utils, AllowedMentions
+from re import search
+from random import random
 
 
 class PIPI(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.regex = r'pipi|petrosian|petrosyan|petratsyan|"w"esley"s"o|abiggestlooser|lier|' \
+                     r'whatthe\*\*\*\*areyoutalkingabout|whatthe\\\*\\\*\\\*\\\*areyoutalkingabout'
+
+    def matchPipi(self, string) -> bool:
+        string = "".join(i for i in string.lower() if (32 < ord(i) < 128))
+        return search(self.regex, string)
 
     @commands.Cog.listener("on_message")
     async def on_pipi(self, msg):
-        if msg.author.bot: return
-        msgcont = self.bot.static.remove_strange_chars(msg.content.lower())
-        if "pipi" in msgcont:
-            await msg.author.send(
-                utils.escape_markdown(
-                    f"Are you kidding ??? What the **** are you talking about {msg.author.mention} ? You are a biggest "
-                    f"looser i ever seen in my life ! You was doing PIPI in your pampers when i was beating players "
-                    f"much more stronger then you! You are not proffesional, because proffesionals knew how to lose "
-                    f"and congratulate opponents, you are like a girl crying after i beat you! Be brave, be honest to "
-                    f"yourself and stop this trush talkings!!! Everybody know that i am very good blitz player, i can "
-                    f'win anyone in the world in single game! And "w"esley "s"o is nobody for me, just a player who '
-                    f"are crying every single time when loosing, ( remember what you say about Firouzja ) !!! Stop "
-                    f"playing with my name, i deserve to have a good name during whole my chess carrier, I am "
-                    f"Officially inviting you to OTB blitz match with the Prize fund! Both of us will invest 5000$ and "
-                    f"winner takes it all! I suggest all other people who's intrested in this situation, just take a "
-                    f"look at my results in 2016 and 2017 Blitz World championships, and that should be enough... No "
-                    f"need to listen for every crying babe, Tigran Petratsyan is always play Fair ! And if someone "
-                    f"will continue Officially talk about me like that, we will meet in Court! God bless with true! "
-                    f"True will never die ! Liers will kicked off..."
-                ),
-                allowed_mentions=AllowedMentions.all()
-            )
+        if not self.matchPipi(msg.content) or msg.author.bot:
+            return
+        if random() > 0.25:
+            return
+        await msg.author.send(
+            utils.escape_markdown(
+                f"Are you kidding ??? What the **** are you talking about {msg.author.mention} ? You are a biggest "
+                f"looser i ever seen in my life ! You was doing PIPI in your pampers when i was beating players "
+                f"much more stronger then you! You are not proffesional, because proffesionals knew how to lose "
+                f"and congratulate opponents, you are like a girl crying after i beat you! Be brave, be honest to "
+                f"yourself and stop this trush talkings!!! Everybody know that i am very good blitz player, i can "
+                f'win anyone in the world in single game! And "w"esley "s"o is nobody for me, just a player who '
+                f"are crying every single time when loosing, ( remember what you say about Firouzja ) !!! Stop "
+                f"playing with my name, i deserve to have a good name during whole my chess carrier, I am "
+                f"Officially inviting you to OTB blitz match with the Prize fund! Both of us will invest 5000$ and "
+                f"winner takes it all! I suggest all other people who's intrested in this situation, just take a "
+                f"look at my results in 2016 and 2017 Blitz World championships, and that should be enough... No "
+                f"need to listen for every crying babe, Tigran Petratsyan is always play Fair ! And if someone "
+                f"will continue Officially talk about me like that, we will meet in Court! God bless with true! "
+                f"True will never die ! Liers will kicked off..."
+            ),
+            allowed_mentions=AllowedMentions.all()
+        )
 
 
 def setup(bot):
