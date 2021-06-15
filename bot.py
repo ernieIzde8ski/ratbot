@@ -4,7 +4,7 @@
 import asyncio
 
 import discord.ext.commands as commands
-from discord import AllowedMentions, Intents, DMChannel
+from discord import AllowedMentions, Intents
 
 from configs.config import Config
 from configs.enabled_cogs import enabled_cogs
