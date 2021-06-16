@@ -1,0 +1,3 @@
+# These versions are the ones that I'm testing 
+python-dotenv >= 0.17.1
+discord.py >= 1.7.3
