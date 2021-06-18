@@ -8,7 +8,7 @@ class Ping(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def ping(self, ctx, *, flags: Optional[FlagConverter]):
+    async def ping(self, ctx, *, flags: FlagConverter):
         if not flags:
             await ctx.send("No flags present")
         else:
