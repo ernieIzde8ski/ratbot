@@ -4,7 +4,7 @@ from json.decoder import JSONDecodeError
 
 
 class FlagConverter(commands.Converter):
-    async def convert(self, ctx: commands.Context, argument: str):
+    async def convert(self, ctx: commands.Context, argument: str) -> dict:
         """Converter largely following a discord.py model Lol"""
         dict_ = {}
         arguments = argument.replace(" ", "").split(",")
@@ -21,12 +21,13 @@ class FlagConverter(commands.Converter):
             if length > 2:
                 raise commands.BadArgument("Argument cannot have more than one value")
             elif length == 1:
-                argument.push(True)
+                argument.append(True)
 
             try:
                 argument[1] = loads(argument[1].lower())
-            except JSONDecodeError:
+            except JSONDecodeError or AttributeError:
                 pass
             finally:
+                argument[0] = argument[0].removeprefix("--").removeprefix("–").lower()
                 dict_[argument[0].lower()] = argument[1]
         return dict_
