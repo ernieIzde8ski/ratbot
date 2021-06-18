@@ -34,7 +34,7 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Loaded extension: {extension}\n"
         resp = resp.strip()
-        print(resp) ; await ctx.send(resp)
+        print(resp); await ctx.send(resp)
         await self.dump_extensions()
     
     @cogs.command()
@@ -52,7 +52,7 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Unloaded extension: {extension}\n"
         resp = resp.strip()
-        print(resp) ; await ctx.send(resp)
+        print(resp); await ctx.send(resp)
         await self.dump_extensions()
     
     @cogs.command()
@@ -70,7 +70,7 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Reloaded extension: {extension}\n"
         resp = resp.strip()
-        print(resp) ; await ctx.send(resp)
+        print(resp); await ctx.send(resp)
 
 def setup(bot):
     bot.add_cog(Cogs(bot))
