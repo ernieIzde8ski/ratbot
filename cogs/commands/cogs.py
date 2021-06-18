@@ -1,3 +1,4 @@
+from typing import Optional
 from discord.ext import commands
 
 
@@ -14,7 +15,8 @@ class Cogs(commands.Cog):
         await ctx.send(f"Loaded extensions: `{'`, `'.join(self.bot.extensions.keys())}`")
 
     @cogs.command()
-    async def load(self, ctx, *, extensions: str):
+    async def load(self, ctx, *, extensions: Optional[str]):
+        if not extensions: await ctx.send("No parameter was given") ; return
         extensions = self.trim_whitespace(extensions).split(",")
         resp = ""
         for extension in extensions:
@@ -30,7 +32,8 @@ class Cogs(commands.Cog):
         print(resp) ; await ctx.send(resp)
     
     @cogs.command()
-    async def unload(self, ctx, *, extensions: str):
+    async def unload(self, ctx, *, extensions: Optional[str]):
+        if not extensions: await ctx.send("No parameter was given") ; return
         extensions = self.trim_whitespace(extensions).split(",")
         resp = ""
         for extension in extensions:
@@ -46,7 +49,8 @@ class Cogs(commands.Cog):
         print(resp) ; await ctx.send(resp)
     
     @cogs.command()
-    async def reload(self, ctx, *, extensions: str):
+    async def reload(self, ctx, *, extensions: Optional[str]):
+        if not extensions: await ctx.send("No parameter was given") ; return
         extensions = self.trim_whitespace(extensions).split(",")
         resp = ""
         for extension in extensions:
