@@ -1,10 +1,15 @@
 from typing import Optional
+from json import dump
 from discord.ext import commands
 
 
 class Cogs(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    async def dump_extensions(self):
+        with open("enabled_extensions.json", "w", encoding="utf-8") as file:
+            dump(list(self.bot.extensions.keys()), file)
 
     @staticmethod
     def trim_whitespace(string: str):
@@ -30,6 +35,7 @@ class Cogs(commands.Cog):
                 resp += f"Loaded extension: {extension}\n"
         resp = resp.strip()
         print(resp) ; await ctx.send(resp)
+        await self.dump_extensions()
     
     @cogs.command()
     async def unload(self, ctx, *, extensions: Optional[str]):
@@ -47,6 +53,7 @@ class Cogs(commands.Cog):
                 resp += f"Unloaded extension: {extension}\n"
         resp = resp.strip()
         print(resp) ; await ctx.send(resp)
+        await self.dump_extensions()
     
     @cogs.command()
     async def reload(self, ctx, *, extensions: Optional[str]):
