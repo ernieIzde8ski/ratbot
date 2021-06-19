@@ -27,7 +27,7 @@ class Cogs(commands.Cog):
         await ctx.send(f"Loaded extensions: `{'`, `'.join(self.bot.extensions.keys())}`")
 
     @cogs.command(aliases=["l"])
-    async def load(self, ctx, tag: FlagConverter = {}, *, extensions: Optional[str]):
+    async def load(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = self.all_extensions
@@ -49,7 +49,7 @@ class Cogs(commands.Cog):
         await self.dump_extensions()
 
     @cogs.command(aliases=["u"])
-    async def unload(self, ctx, tag: FlagConverter = {}, *, extensions: Optional[str]):
+    async def unload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = self.all_extensions
