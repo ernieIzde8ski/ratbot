@@ -1,3 +1,4 @@
+from modules.converters import FlagConverter
 from typing import Optional
 from json import dump
 from discord.ext import commands
@@ -36,9 +37,9 @@ class Cogs(commands.Cog):
         resp = resp.strip()
         print(resp); await ctx.send(resp)
         await self.dump_extensions()
-    
+
     @cogs.command()
-    async def unload(self, ctx, *, extensions: Optional[str]):
+    async def unload(self, ctx, tag: FlagConverter = {}, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         extensions = self.trim_whitespace(extensions).split(",")
         resp = ""
@@ -53,6 +54,7 @@ class Cogs(commands.Cog):
                 resp += f"Unloaded extension: {extension}\n"
         resp = resp.strip()
         print(resp); await ctx.send(resp)
+        if tag.get("t") or tag.get("temporary"): return
         await self.dump_extensions()
     
     @cogs.command()

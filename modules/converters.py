@@ -2,13 +2,12 @@ from discord.ext import commands
 from json import loads
 from json.decoder import JSONDecodeError
 
-
 class FlagConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str) -> dict:
         """Converter largely following a discord.py model Lol"""
         # Initialize dict, arguments values
         dict_ = {}
-        arguments = argument.replace(" ", "").split(",")
+        arguments = argument.split()
         if not arguments:
             raise commands.BadArgument("No arguments exist")
 
@@ -36,7 +35,7 @@ class FlagConverter(commands.Converter):
             except AttributeError:
                 pass
 
-            # remove prefix in argument
+            # clean up argument name
             argument[0] = argument[0].removeprefix("--").removeprefix("–").lower()
 
             # add flag to dictionary
