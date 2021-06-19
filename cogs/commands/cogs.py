@@ -74,7 +74,7 @@ class Cogs(commands.Cog):
     async def reload(self, ctx, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
-            extensions = self.all_extensions
+            extensions = list(self.bot.extensions.keys())
         else:
             extensions = self.trim_whitespace(extensions).split(",")
         resp = ""
