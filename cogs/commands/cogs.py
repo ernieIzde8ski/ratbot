@@ -27,7 +27,7 @@ class Cogs(commands.Cog):
         await ctx.send(f"Loaded extensions: `{'`, `'.join(self.bot.extensions.keys())}`")
 
     @cogs.command(aliases=["l"])
-    @commands.check(commands.is_owner)
+    @commands.check(commands.is_owner())
     async def load(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
@@ -50,7 +50,7 @@ class Cogs(commands.Cog):
         await self.dump_extensions()
 
     @cogs.command(aliases=["u"])
-    @commands.check(commands.is_owner)
+    @commands.check(commands.is_owner())
     async def unload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
@@ -73,7 +73,7 @@ class Cogs(commands.Cog):
         await self.dump_extensions()
     
     @cogs.command(aliases=["r"])
-    @commands.check(commands.is_owner)
+    @commands.check(commands.is_owner())
     async def reload(self, ctx, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
