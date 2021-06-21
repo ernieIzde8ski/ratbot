@@ -5,8 +5,8 @@ class Settings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command()
-    @commands.check(commands.has_guild_permissions(manage_guild=True))
+    @commands.command(aliases=["prefix"])
+    @commands.has_permissions(manage_guild=True)
     async def set_prefix(self, ctx, prefix: Optional[str]):
         if not ctx.guild:
             return await ctx.send("You must be in a guild to run this command!")
