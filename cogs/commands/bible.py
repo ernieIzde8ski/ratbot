@@ -2,6 +2,7 @@ from textwrap import fill
 from aiohttp import ClientSession
 from discord.ext import commands
 from json import load, dump
+from modules.json import safe_load
 from discord import Embed
 from typing import Optional
 
@@ -13,13 +14,7 @@ class Bible(commands.Cog):
                                       "web": ["World English Bible", "English"], "clementine": ["Clementine Latin Vulgate", "Latine"],
                                       "almeida": ["João Ferreira de Almeida", "Português"], "rccv": ["Romanian Corrected Cornilescu Bible","Română"]}
         self.valid_translations = self.translation_languages.keys()
-        try:
-            with open("data/bible.json", "r") as file:
-                self.data = load(file)
-        except FileNotFoundError:
-            self.data = {}
-            with open("data/bible.json", "x") as file:
-                dump(self.data, file)
+        self.data = safe_load("data/bible.json", {})
 
     @staticmethod
     async def get_text(reference, translation, characters_per_line: int = 70) -> dict:

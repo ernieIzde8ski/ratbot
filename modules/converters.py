@@ -30,9 +30,7 @@ class FlagConverter(commands.Converter):
             # try and convert the value to another type like int or something
             try:
                 argument[1] = loads(argument[1].lower())
-            except JSONDecodeError:
-                pass
-            except AttributeError:
+            except (JSONDecodeError, AttributeError):
                 pass
 
             # clean up argument name
