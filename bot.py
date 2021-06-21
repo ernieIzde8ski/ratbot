@@ -26,14 +26,13 @@ bot = commands.Bot(
     intents=Intents.all()
 )
 bot.config = config
+bot.config["weather"] = getenv("WEATHER_TOKEN")
 
 with open("enabled_extensions.json", "r") as file:
     for extension in load(file):
         try:
             bot.load_extension(extension)
-        except commands.ExtensionError as error:
-            print(f"{error.__class__.__name__}: {error}")
-        except ModuleNotFoundError as error:
+        except (commands.ExtensionError, ModuleNotFoundError) as error:
             print(f"{error.__class__.__name__}: {error}")
         else:
             print(f"Loaded extension {extension}")

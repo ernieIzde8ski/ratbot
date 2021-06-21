@@ -1,5 +1,6 @@
 import json
 
+
 def safe_load(fp: str, backup):
     try:
         with open(fp, "r", encoding="utf-8") as file:

@@ -6,9 +6,10 @@ from modules.converters import FlagConverter
 class Ping(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.Ping = None
 
     @commands.command()
-    async def ping(self, ctx, *, flags: Optional[FlagConverter]):
+    async def flags(self, ctx, *, flags: Optional[FlagConverter]):
         if not flags:
             await ctx.send("No flags present")
         else:

@@ -11,6 +11,7 @@ class Cogs(commands.Cog):
         bot.loop.create_task(self.initialize())
     
     async def initialize(self):
+        await self.bot.wait_until_ready()
         self.all_extensions = list(self.bot.extensions.keys())
 
     async def dump_extensions(self):
@@ -38,9 +39,7 @@ class Cogs(commands.Cog):
         for extension in extensions:
             try:
                 self.bot.load_extension(extension)
-            except commands.ExtensionError as error:
-                resp += f"{error.__class__.__name__}: {error}\n"
-            except ModuleNotFoundError as error:
+            except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
                 resp += f"Loaded extension: {extension}\n"
@@ -61,9 +60,7 @@ class Cogs(commands.Cog):
         for extension in extensions:
             try:
                 self.bot.unload_extension(extension)
-            except commands.ExtensionError as error:
-                resp += f"{error.__class__.__name__}: {error}\n"
-            except ModuleNotFoundError as error:
+            except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
                 resp += f"Unloaded extension: {extension}\n"
@@ -84,9 +81,7 @@ class Cogs(commands.Cog):
         for extension in extensions:
             try:
                 self.bot.reload_extension(extension)
-            except commands.ExtensionError as error:
-                resp += f"{error.__class__.__name__}: {error}\n"
-            except ModuleNotFoundError as error:
+            except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
                 resp += f"Reloaded extension: {extension}\n"
