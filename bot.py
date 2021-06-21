@@ -1,3 +1,4 @@
+from modules.prefixes import Prefixes
 from modules.msg_check import reply
 
 from discord import AllowedMentions, Intents
@@ -12,14 +13,15 @@ load_dotenv()
 token = getenv("DISCORD_TOKEN")
 
 
-with open("config.json", "r") as file:
+with open("config.json", "r", encoding="utf-8") as file:
     config = load(file)
     if isinstance(config.get("prefix"), str):
         config["prefix"] = [config.get("prefix")]
 
+prefixes = Prefixes(config["prefix"])
+
 bot = commands.Bot(
-    command_prefix=lambda b, m: commands.when_mentioned(
-        b, m) + config.get("prefix"),
+    command_prefix=prefixes.get_prefix,
     allowed_mentions=AllowedMentions.none(),
     intents=Intents.all()
 )
@@ -46,5 +48,9 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+
+@bot.event
+async def on_prefix_update(id, new_prefix):
+    await prefixes.update_prefixes(id, new_prefix)
 
 bot.run(token)
