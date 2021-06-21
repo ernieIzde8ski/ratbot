@@ -2,8 +2,8 @@ async def reply(message) -> bool:
     """Returns whether or not a message is good for command parsing"""
     if message.author.bot:
         return False
-    elif message.channel.name == "rat":
-        if message.content != "rat" or message.attachments:
+    elif message.guild:
+        if message.channel.name == "rat" and (message.content != "rat" or message.attachments):
             await message.delete()
             return False
 
