@@ -32,6 +32,10 @@ class FlagConverter(commands.Converter):
                 argument[1] = loads(argument[1].lower())
             except (JSONDecodeError, AttributeError):
                 pass
+            
+            # replace underscores with spaces in string arguments
+            if isinstance(argument[1], str):
+                argument[1] = argument[1].replace("_", " ")
 
             # clean up argument name
             argument[0] = argument[0].removeprefix("--").removeprefix("–").lower()
