@@ -79,11 +79,12 @@ class Weather(commands.Cog):
             return await ctx.send(f"Error: {weather_data['error']}")
         await ctx.send(embed=await self.embed_constructor(weather_data=weather_data, color=ctx.me.color))
 
-    @weather.command()
+    @weather.group(invoke_without_command=True, aliases=["s"])
     async def set(self, ctx, *, location: Optional[FlagConverter] = {}):
         """
         Saves a default location
         The easiest usage is r;w set --city_name:city_name --units:metric [...]
+        Subcommands also exist if you don't feel like doing that
 
         Valid locations:
             - city_id
@@ -117,6 +118,52 @@ class Weather(commands.Cog):
             self.data[str(ctx.author.id)] = location
             self.bot.dispatch("weather_users_update", self.data)
             await ctx.send(f"{set} information, test the weather command to check")
+
+    @set.command()
+    async def city(self, ctx, *, city_name_or_id: Union[int, str]):
+        """Sets a city location"""
+        user = str(ctx.author.id)
+        if not self.data.get(user):
+            self.data[user] = {}
+        if isinstance(city_name_or_id, int):
+            type_ = "city_id"
+            self.data[user][type_] = city_name_or_id
+        elif isinstance(city_name_or_id, str):
+            city_name_or_id = city_name_or_id.replace(", ", ",").split(",")
+            list_ = list(city_name_or_id)
+            type_ = "city_name"
+            self.data[user][type_] = list_.pop(0)
+            if list_:
+                type_ = [type_, "state_code"]
+                self.data[user][type_[1]] = list_.pop(0)
+            if list_:
+                type_ += ["country_code"]
+                self.data[user][type_[1]] = list_.pop(0)
+            if list_:
+                return await ctx.send("Too many codes passed")
+        self.bot.dispatch("weather_users_update", self.data)
+        await ctx.send(f"Set `{type_}` to {city_name_or_id}")
+
+    @set.command(aliases=["lat-long"])
+    async def coords(self, ctx, lat: Union[int, float], long: Union[int, float]):
+        """
+        Sets latitude/longitude coordinates
+        The only accepted two inputs are integers or floats; this means no funny
+        inputs like 'r;w set coords 50°S, 50°E'. This would rather be
+        represented as `r;w set coords -50 50'.
+        """
+        user = str(ctx.author.id)
+        if not self.data.get(user):
+            self.data[user] = {}
+        if abs(lat) > 90:
+            return await ctx.send(f"Error: Latitude cannot exceed 90 degrees")
+        elif abs(long) > 180:
+            return await ctx.send(f"Error: Longitude cannot exceed 180 degrees")
+        else:
+            self.data[user]["latitude"] = lat
+            self.data[user]["longitude"] = long
+        self.bot.dispatch("weather_users_update", self.data)
+        await ctx.send(f"Set `latitude`, `longitude` to {lat}, {long}")
 
 
 def setup(bot):
