@@ -20,7 +20,7 @@ class Cogs(commands.Cog):
             dump(self.all_extensions, file)
 
     @staticmethod
-    def trim_whitespace(string: str):
+    def trim_whitespace(string: str) -> str:
         return ''.join(string.split())
 
     @commands.group(invoke_without_command=True, aliases=["c"])

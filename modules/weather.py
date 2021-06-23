@@ -53,7 +53,7 @@ def get_weather_url(apikey: str, **kwargs) -> str:
     return url + f"&appid={apikey}"
 
 
-async def get_weather(apikey: str, **kwargs):
+async def get_weather(apikey: str, **kwargs) -> dict:
     """Returns a dict object with weather information
     takes the same parameters as get_weather_url"""
     try:

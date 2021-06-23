@@ -1,7 +1,8 @@
 import json
+from typing import Any
 
 
-def safe_load(fp: str, backup):
+def safe_load(fp: str, backup) -> Any:
     try:
         with open(fp, "r", encoding="utf-8") as file:
             return json.load(file)
