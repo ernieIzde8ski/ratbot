@@ -9,7 +9,7 @@ class Trolling(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.trolls = safe_load("data/trolls.json", ["🚎"])
-        self.lmfao = safe_load("data/lmfao.json", "🐀")
+        self.lmfao = safe_load("data/lmfao.json", "🤬")
 
     @staticmethod
     def strings_in(string: str, substrings: Iterable, ignore_case: bool = True):
@@ -21,7 +21,6 @@ class Trolling(commands.Cog):
                 return True
         else:
             return False
-
 
     @commands.Cog.listener("on_message")
     async def on_troll(self, message):
@@ -40,7 +39,7 @@ class Trolling(commands.Cog):
 
         try:
             await message.add_reaction(self.lmfao)
-        except Forbidden:   
+        except Forbidden:
             await message.channel.send("Lmao !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
