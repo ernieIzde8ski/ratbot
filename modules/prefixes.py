@@ -5,7 +5,7 @@ from discord.ext.commands import when_mentioned, when_mentioned_or
 class Prefixes:
     def __init__(self, default_prefix):
         self.prefix = default_prefix
-        self.prefix = safe_load("data/prefixes.json", {})
+        self.prefixes = safe_load("data/prefixes.json", {})
 
     async def get_prefix(self, bot, message) -> list:
         if not message.guild:
