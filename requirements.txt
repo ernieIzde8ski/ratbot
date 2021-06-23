@@ -1,3 +1,5 @@
-# These versions are the ones that I'm testing 
+# These versions are the ones currently used to test
 python-dotenv >= 0.17.1
 discord.py >= 1.7.3
+fuzzywuzzy >= 0.18.0
+python-Levenshtein >= 0.12.2
