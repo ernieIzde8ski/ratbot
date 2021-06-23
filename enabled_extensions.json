@@ -1,1 +1,1 @@
-["cogs.commands.cogs", "cogs.commands.ping", "cogs.commands.bible", "cogs.commands.settings", "cogs.commands.weather"]
+["cogs.commands.cogs", "cogs.commands.ping", "cogs.commands.bible", "cogs.commands.settings", "cogs.commands.weather", "cogs.on_message.trolling"]
