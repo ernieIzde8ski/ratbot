@@ -29,7 +29,7 @@ bot = commands.Bot(
 )
 bot.config = config
 bot.config["weather"] = getenv("WEATHER_TOKEN")
-bot.channels = Channels(**config["channels"])
+bot.cs = Channels(**config["channels"])
 
 with open("enabled_extensions.json", "r") as file:
     for extension in load(file):
