@@ -5,7 +5,7 @@ from discord.ext import commands
 from modules.json import safe_load
 
 
-class Trolling(commands.Cog):
+class Reactions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.trolls = safe_load("data/trolls.json", ["🚎"])
@@ -44,4 +44,4 @@ class Trolling(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Trolling(bot))
+    bot.add_cog(Reactions(bot))
