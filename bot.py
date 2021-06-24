@@ -1,5 +1,7 @@
 from modules.prefixes import Prefixes
+from modules.channels import Channels
 from modules.msg_check import reply
+
 
 from discord import AllowedMentions, Intents
 from discord.ext import commands
@@ -27,6 +29,7 @@ bot = commands.Bot(
 )
 bot.config = config
 bot.config["weather"] = getenv("WEATHER_TOKEN")
+bot.channels = Channels(**config["channels"])
 
 with open("enabled_extensions.json", "r") as file:
     for extension in load(file):
