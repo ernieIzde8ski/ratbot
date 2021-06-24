@@ -56,12 +56,13 @@ class Weather(commands.Cog):
         Gets the weather for a given location
         Accepts either a city as the first parameter, the same flag parameters
         as the set subcommand, or defaults to the set parameter
+        
         Examples:
-            r;w south bend
+            r;w South Bend
             r;weather Warsaw, IN, US
-            r;weather --city_id:4174757 --units:imperial
-            r;weather --latitude:0 --longitude:0 --language:pl
-            r;weather --zip_code:00-413 --country_code:pl --units:standard
+            r;weather --city_id 4174757 --units imperial
+            r;weather --latitude 0 --longitude 0 --language pl
+            r;weather --zip_code 00-413 --country_code pl --units standard
         """
         user_data = self.data.get(str(ctx.author.id))
         if not location and not user_data:
@@ -99,10 +100,9 @@ class Weather(commands.Cog):
                 - see https://openweathermap.org/current#multi
 
         examples:
-            r;weather set --city_name:Warsaw
-            r;w set --city_name=warsaw  --state_code=in --country_code=us --units=imperial
-            r;w set --zip_code:00-413 --country_code:pl --units:standard --language:es
-            r;w set --latitude=0 --longitude=0 --units=imperial
+            r;w set --city_name Warsaw  --state_code IN --country_code US --units Imperial
+            r;w set --zip_code 00-413 --country_code PL --units Standard --language ES
+            r;w set --latitude 0 --longitude 0 --units Imperial
         """
         if not location:
             return await ctx.send("Please see the help command for proper usage")
