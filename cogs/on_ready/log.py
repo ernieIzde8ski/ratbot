@@ -10,8 +10,8 @@ class Log(commands.Cog):
         self.emoji = safe_load("data/emoji.json", ["🐣", "🎃"])
 
     def get_channels(self):
-        if not self.bot.cs.loaded:
-            self.bot.cs.get_channels(self.bot)
+        if not self.bot.c.loaded:
+            self.bot.c.get_channels(self.bot)
 
     def embed_constructor(self, status: str):
         if status == "online":
@@ -23,12 +23,12 @@ class Log(commands.Cog):
     async def on_ready(self):
         self.get_channels()
         print(f"{self.bot.user.name}#{self.bot.user.discriminator} online!")
-        await self.bot.cs.k["Status"].send(embed = self.embed_constructor("online"))
+        await self.bot.c.Status.send(embed = self.embed_constructor("online"))
     
     @commands.command()
     async def die(self, ctx):
         self.get_channels()
-        await self.bot.cs.k["Status"].send(embed = self.embed_constructor("offline"))
+        await self.bot.c.Status.send(embed = self.embed_constructor("offline"))
         await self.bot.close()
 
 

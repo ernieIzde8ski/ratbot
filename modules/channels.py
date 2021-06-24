@@ -4,9 +4,8 @@ class Channels():
         self.loaded = False
 
     def get_channels(self, bot):
-        self.k = {}
-        for key in self.channels.keys():
-            self.k[key] = bot.get_channel(self.channels[key])
-            if not self.k[key]:
-                print(f"Could not get channel {key}")
+        for key, value in self.channels.items():
+            setattr(self, key, bot.get_channel(value))
+            if not getattr(self, key):
+                print(f"Could not get channel {key} from id {value}")
         self.loaded = True
