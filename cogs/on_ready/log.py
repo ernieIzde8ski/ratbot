@@ -23,12 +23,12 @@ class Log(commands.Cog):
     async def on_ready(self):
         self.get_channels()
         print(f"{self.bot.user.name}#{self.bot.user.discriminator} online!")
-        await self.bot.c.Status.send(embed = self.embed_constructor("online"))
-    
+        await self.bot.c.Status.send(embed=self.embed_constructor("online"))
+
     @commands.command()
     async def die(self, ctx):
         self.get_channels()
-        await self.bot.c.Status.send(embed = self.embed_constructor("offline"))
+        await self.bot.c.Status.send(embed=self.embed_constructor("offline"))
         await self.bot.close()
 
 

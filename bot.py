@@ -1,6 +1,6 @@
 from modules.prefixes import Prefixes
 from modules.channels import Channels
-from modules.msg_check import reply
+from modules.msg_check import Check
 
 
 from discord import AllowedMentions, Intents
@@ -30,6 +30,7 @@ bot = commands.Bot(
 bot.config = config
 bot.config["weather"] = getenv("WEATHER_TOKEN")
 bot.c = Channels(**config["channels"])
+bot._check = Check()
 
 with open("enabled_extensions.json", "r") as file:
     for extension in load(file):
@@ -45,7 +46,7 @@ with open("enabled_extensions.json", "r") as file:
 
 @bot.event
 async def on_message(message):
-    valid = await reply(message)
+    valid = await bot._check.reply(message)
     if not valid: return
 
     await bot.process_commands(message)
