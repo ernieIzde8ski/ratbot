@@ -1,0 +1,75 @@
+from modules.json import safe_load, safe_dump
+from discord.ext import commands, tasks
+from discord import Embed, Color
+from typing import Optional, Union
+from fuzzywuzzy import fuzz
+from aiohttp import ClientSession
+
+
+class XKCD(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.xkcds = safe_load("data/xkcd.json", [])
+        self.update_index.start()
+
+    async def get_best_match(self, string) -> int:
+        xkcds = sorted(self.xkcds, key=lambda xkcd: fuzz.ratio(
+            xkcd["name"].lower(), string), reverse=True)
+        return xkcds[0]["int"]
+
+    @staticmethod
+    def embed_constructor(xkcd: dict) -> Embed:
+        return Embed(
+            title=f"{xkcd['num']}: {xkcd['title']}",
+            url=f"https://xkcd.com/{xkcd['num']}",
+            color=Color.random()
+        ).set_image(url=xkcd['img']).set_footer(text=xkcd['alt'])
+
+    @staticmethod
+    async def get_xkcd(id: int) -> dict:
+        if id == -1:
+            url = "https://xkcd.com/info.0.json"
+        else:
+            url = f"https://xkcd.com/{id}/info.0.json"
+
+        async with ClientSession() as session:
+            async with session.get(url) as resp:
+                if resp.status == 404:
+                    return {"error": "Invalid xkcd id"}
+                return await resp.json()
+
+    @commands.command()
+    async def xkcd(self, ctx, *, argument: Optional[Union[int, str]]):
+        if not argument:
+            argument = -1
+        elif isinstance(argument, str):
+            argument = await self.get_best_match(argument.lower())
+
+        xkcd = await self.get_xkcd(argument)
+        if xkcd.get("error"):
+            return await ctx.send(f"Error: {xkcd['error']}")
+
+        embed = self.embed_constructor(xkcd)
+        await ctx.send(embed=embed)
+
+    @tasks.loop(hours=6)
+    async def update_index(self):
+        latest = await self.get_xkcd(-1)
+        if latest.get("error"):
+            return
+        if latest["num"] <= self.xkcds[-1]["int"]:
+            print("No new XKCDs")
+            return
+        for i in range(self.xkcds[-1]["int"] + 1, latest["num"] + 1):
+            xkcd = await self.get_xkcd(i)
+            if xkcd.get("error"):
+                continue
+            self.xkcds.append(
+                {"name": xkcd["title"], "alt": xkcd["alt"], "int": xkcd["num"]}
+            )
+        safe_dump("data/xkcd.json", self.xkcds)
+        print("Updated XKCDs")
+
+
+def setup(bot):
+    bot.add_cog(XKCD(bot))
