@@ -10,8 +10,13 @@ get_xkcd = async int => {
     } else {
         url = `https://xkcd.com/${int}/info.0.json`;
     }
+    try {
+        resp = await fetch(url);
+    } catch (e) {
+        console.log(`Error on ${url}`);
+        return {error: e};
+    }
 
-    resp = await fetch(url);
     try {
         resp = await resp.json();
     } catch (e) {
