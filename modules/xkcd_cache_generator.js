@@ -54,7 +54,6 @@ if (require.main === module) {
 
     get_xkcds()
         .then(list => {
-            console.log(list);
             list = JSON.stringify(list);
             fs.writeFile("../data/xkcd.json", list, callback => "");
         });
