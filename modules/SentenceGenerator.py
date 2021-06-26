@@ -98,9 +98,3 @@ def loadGenerator(filename):
         raise ValueError("Tokens %s are used but not defined" % list(diff))
 
     return Generator(generator)
-
-
-if __name__ == "__main__":
-    generator = loadGenerator("StarTrek.txt")
-    for i in range(10):
-        print(generator.generate())
