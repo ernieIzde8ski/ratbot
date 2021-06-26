@@ -1,4 +1,4 @@
-const cache = require('../data/xkcd.json');
+const cache = require('./data/xkcd.json');
 var latest = cache[cache.length - 1];
 
 var difference = 1;
