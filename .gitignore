@@ -1,6 +1,7 @@
 # vscode defaults, saved data directory
 .vscode/
 data/
+modules/xkcd_cache.json
 
 # Defaults from the GitHub template
 # lightly pruned
