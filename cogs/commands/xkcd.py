@@ -10,7 +10,7 @@ from random import randint
 class XKCD(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.xkcds = safe_load("data/xkcd.json", [])
+        self.xkcds = safe_load("data/xkcd.json", [{"int": -1}])
         self.update_index.start()
 
     async def get_best_match(self, string) -> int:
