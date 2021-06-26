@@ -43,8 +43,9 @@ class Replies(commands.Cog):
         elif not blockee:
             await ctx.send(f"Blocked {self.message.author}")
             self.bot._check.update_blocked(self.message.author)
-            self.task.cancel()
-            self.message = None
+            if self.task:
+                self.task.cancel()
+                self.message = None
         else:
             await ctx.send(f"Blocked {blockee}")
             self.bot._check.update_blocked(blockee)
