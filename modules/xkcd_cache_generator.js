@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const fs = require('fs');
 const range = require('./javascript/range');
 
+
 var data = [];
 
 get_xkcd = async int => {
@@ -14,7 +15,7 @@ get_xkcd = async int => {
         resp = await fetch(url);
     } catch (e) {
         console.log(`Error on ${url}`);
-        return {error: e};
+        return { error: e };
     }
 
     try {
@@ -55,7 +56,7 @@ if (require.main === module) {
         .then(list => {
             console.log(list);
             list = JSON.stringify(list);
-            fs.writeFile("./xkcd_cache.json", list, callback => "");
+            fs.writeFile("../data/xkcd.json", list, callback => "");
         });
 
 }
