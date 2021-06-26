@@ -4,6 +4,7 @@ from discord import Embed, Color
 from typing import Optional, Union
 from fuzzywuzzy import fuzz
 from aiohttp import ClientSession
+from random import randint
 
 
 class XKCD(commands.Cog):
@@ -38,7 +39,7 @@ class XKCD(commands.Cog):
                     return {"error": "Invalid xkcd id"}
                 return await resp.json()
 
-    @commands.command()
+    @commands.group(invoke_without_command=True, aliases=["x"])
     async def xkcd(self, ctx, *, argument: Optional[Union[int, str]]):
         if not argument:
             argument = -1
@@ -52,15 +53,39 @@ class XKCD(commands.Cog):
         embed = self.embed_constructor(xkcd)
         await ctx.send(embed=embed)
 
+    @xkcd.command(aliases=["r"])
+    async def random(self, ctx):
+        id = randint(0, self._latest["num"])
+
+        xkcd = await self.get_xkcd(id)
+        if xkcd.get("error"):
+            return await ctx.send(f"Error: {xkcd['error']}")
+
+        embed = self.embed_constructor(xkcd)
+        await ctx.send(embed=embed)
+
+    @xkcd.command(aliases=["l"])
+    async def latest(self, ctx):
+        xkcd = await self.get_xkcd(-1)
+        if xkcd.get("error"):
+            return await ctx.send(f"Error: {xkcd['error']}")
+
+        embed = self.embed_constructor(xkcd)
+        await ctx.send(embed=embed)
+
+        if xkcd["num"] != self._latest["num"]:
+            self.update_index.cancel()
+            self.update_index.start()
+
     @tasks.loop(hours=6)
     async def update_index(self):
-        latest = await self.get_xkcd(-1)
-        if latest.get("error"):
+        self._latest = await self.get_xkcd(-1)
+        if self._latest.get("error"):
             return
-        if latest["num"] <= self.xkcds[-1]["int"]:
+        if self._latest["num"] <= self.xkcds[-1]["int"]:
             print("No new XKCDs")
             return
-        for i in range(self.xkcds[-1]["int"] + 1, latest["num"] + 1):
+        for i in range(self.xkcds[-1]["int"] + 1, self._latest["num"] + 1):
             xkcd = await self.get_xkcd(i)
             if xkcd.get("error"):
                 continue
