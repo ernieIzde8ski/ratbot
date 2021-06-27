@@ -4,41 +4,23 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
 
 ## Requirements
 
-- Python & Pip
-  - The next section installs the required modules
+- Python, pip
 - Node.js (Optional)
 
 ## Running the code
 
 - OS:
   - Windows: `bash`; continue
+    - if this doesn't work, good luck
   - Linux: continue
   - Mac: No lmao
 - `git clone https://github.com/ernieIzde8ski/ratbot.git rat.py -b rewrite`
 - `cd rat.py`
-- `mkdir data`
-- `mkdir data/temporary`
-- `nano .env`
-  - Copypaste, format, and save the .env format below
+- `./initialize.sh`
 - `nano config.json` (Highly recommended)
-  - Edit configs & change channel IDs to channels your bot application has access to
-- `node modules/xkcd_cache_generator` (Optional, will spam logs)
-  - For whatever reason, the code occasionally times out, depending on your luck; thus:
-  - `node modules/xkcd_cache_checker` to see what XKCDs didn't get cached (not finding 404 is normal)
-- `pip install -r requirements.txt` (or `pip3` on certain systems)
+  - format below
+  - edit loaded cogs with `nano enabled_extensions.json`
 - `python bot.py`
-
-### .env file
-
-```Shell
-# Token for a Discord bot application: https://discord.com/developers/applications
-# Ensure all intents are enabled
-DISCORD_TOKEN=token
-# API key from https://openweathermap.org/api
-# This is required in the weather cog, but that can be
-# disabled like any other extension in enabled_extensions.json
-WEATHER_TOKEN=apikey
-```
 
 ### config.json
 
@@ -60,4 +42,7 @@ WEATHER_TOKEN=apikey
 }
 ```
 
-#### See CONFIGS.md for the various files generated in data/
+<!--
+commented out until i actually make CONFIGS.md Lol 
+#### See CONFIGS.md for the various files generated in data/ 
+-->
