@@ -1,10 +1,11 @@
 from typing import Optional
 from discord.ext import commands
 
+
 class Settings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.command(aliases=["prefix"])
     @commands.has_permissions(manage_guild=True)
     async def set_prefix(self, ctx, prefix: Optional[str]):
@@ -15,6 +16,7 @@ class Settings(commands.Cog):
         self.bot.dispatch("prefix_update", str(ctx.guild.id), prefix)
         prefix = prefix.replace("`", "\`")
         await ctx.send(f"Updated prefix to {prefix}")
+
 
 def setup(bot):
     bot.add_cog(Settings(bot))
