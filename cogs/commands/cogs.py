@@ -16,6 +16,7 @@ class Cogs(commands.Cog):
 
     async def dump_extensions(self):
         self.all_extensions = list(self.bot.extensions.keys())
+        self.all_extensions.sort(key=lambda i: i.lower())
         with open("enabled_extensions.json", "w", encoding="utf-8") as file:
             dump(self.all_extensions, file)
 
@@ -71,7 +72,7 @@ class Cogs(commands.Cog):
     
     @cogs.command(aliases=["r"])
     @commands.is_owner()
-    async def reload(self, ctx, *, extensions: Optional[str]):
+    async def reload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = list(self.bot.extensions.keys())
@@ -87,6 +88,8 @@ class Cogs(commands.Cog):
                 resp += f"Reloaded extension: {extension}\n"
         resp = resp.strip()
         print(resp); await ctx.send(resp)
+        if tag.get("t") or tag.get("temporary"): return
+        await self.dump_extensions()
 
 def setup(bot):
     bot.add_cog(Cogs(bot))
