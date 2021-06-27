@@ -3,6 +3,9 @@
 data/
 modules/xkcd_cache.json
 
+# file so that linter stops shouting at me for errors
+.jshintrc
+
 # Defaults from the GitHub template
 # lightly pruned
 

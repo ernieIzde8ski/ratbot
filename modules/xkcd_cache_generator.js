@@ -15,7 +15,9 @@ get_xkcd = async int => {
         resp = await fetch(url);
     } catch (e) {
         console.log(`Error on ${url}`);
-        return { error: e };
+        return {
+            error: e
+        };
     }
 
     try {
@@ -28,7 +30,7 @@ get_xkcd = async int => {
     return resp;
 };
 
-get_xkcds = async int => {
+get_xkcds = async () => {
     var list = [];
     var latest = await get_xkcd(-1);
     var xkcds = range(stop = latest.num + 1);
@@ -37,7 +39,9 @@ get_xkcds = async int => {
         xkcd = await get_xkcd(xkcd);
         if (xkcd.error) continue;
         list.push(xkcd);
-        console.log(xkcd.num, xkcd.title);
+        if (xkcd.num % 50 == 0) {
+            console.log(xkcd.num, xkcd.title);
+        }
     }
     return list.map(item => {
         return {
@@ -51,11 +55,10 @@ get_xkcds = async int => {
 
 if (require.main === module) {
     console.log('called directly');
-
-    get_xkcds()
-        .then(list => {
-            list = JSON.stringify(list);
-            fs.writeFile("./data/xkcd.json", list, err => console.error);
-        });
-
 }
+
+get_xkcds()
+    .then(list => {
+        list = JSON.stringify(list);
+        fs.writeFile("./data/xkcd.json", list, err => console.error);
+    });
