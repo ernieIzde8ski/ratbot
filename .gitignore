@@ -3,6 +3,9 @@
 data/
 modules/xkcd_cache.json
 
+# to-do list
+TODO
+
 # file so that linter stops shouting at me for errors
 .jshintrc
 
