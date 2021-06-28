@@ -1,6 +1,6 @@
 from modules.weather import valid_kwargs, valid_kwarg_types, get_weather
 from modules.converters import FlagConverter
-from modules.json import safe_load, safe_dump
+from modules._json import safe_load, safe_dump
 from typing import Optional, Union
 from discord.ext import commands
 from discord import Embed
@@ -9,11 +9,12 @@ from discord import Embed
 class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.data = safe_load("data/weather_users.json", {})
+        self.data = safe_load("data/weather_locations.json", {})
+
 
     @commands.Cog.listener()
     async def on_weather_users_update(self, new_obj):
-        safe_dump("data/weather_users.json", new_obj)
+        safe_dump("data/weather_locations.json", new_obj)
 
     @staticmethod
     async def embed_constructor(weather_data: dict, color) -> Embed:

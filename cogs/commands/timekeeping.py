@@ -1,4 +1,4 @@
-from modules.json import safe_load, safe_dump
+from modules._json import safe_load, safe_dump
 from typing import Optional, Union
 from discord.ext import commands
 from datetime import datetime

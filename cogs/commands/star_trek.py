@@ -1,6 +1,6 @@
 from discord.ext import commands
 from modules.SentenceGenerator import loadGenerator
-from modules.json import safe_load
+from modules._json import safe_load
 import random
 
 

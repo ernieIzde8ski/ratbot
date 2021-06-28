@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord import Embed, Color
 from discord.user import ClientUser
-from modules.json import safe_load
+from modules._json import safe_load
 
 
 class Log(commands.Cog):

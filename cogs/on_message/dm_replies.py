@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord import Message, Attachment, File, AllowedMentions, User
 from discord import Forbidden, HTTPException
 from asyncio import sleep
-from modules.json import safe_load
+from modules._json import safe_load
 from os import remove
 
 

@@ -2,7 +2,7 @@ from random import random, choice
 from typing import Iterable
 from discord.errors import Forbidden
 from discord.ext import commands
-from modules.json import safe_load
+from modules._json import safe_load
 
 
 class Reactions(commands.Cog):

@@ -2,7 +2,7 @@ from textwrap import fill
 from aiohttp import ClientSession
 from discord.ext import commands
 from json import dump
-from modules.json import safe_load
+from modules._json import safe_load
 from discord import Embed
 from typing import Optional
 

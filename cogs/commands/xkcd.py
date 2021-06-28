@@ -1,4 +1,4 @@
-from modules.json import safe_load, safe_dump
+from modules._json import safe_load, safe_dump
 from discord.ext import commands, tasks
 from discord import Embed, Color
 from typing import Optional, Union
