@@ -25,7 +25,7 @@ class WeatherUpdates(commands.Cog):
         self.user_locations = new_obj
 
     def check(self, member: Member):
-        return member.bot or member.guild.id != self.bot.config["main_server"] or not (self.user_locations.get(str(member.id)) and member.id in self.users["active_users"])
+        return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.user_locations.get(str(member.id)) and member.id in self.users["active_users"])
 
     def temp_eval(self, temp: Union[int, float]) -> str:
         for num, value in self.data["temperature_resps"]:
