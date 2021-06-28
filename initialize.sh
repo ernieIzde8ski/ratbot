@@ -54,3 +54,6 @@ else
         echo 'Ensure pip is installed and run \"pip install -r requirements.txt\" afterwards'
     fi
 fi
+
+curl -o data/russian.json https://raw.githubusercontent.com/thiagobodruk/bible/master/json/ru_synodal.json
+python modules/russian.py
