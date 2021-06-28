@@ -1,10 +1,19 @@
 from aiohttp import ClientSession
+from enum import Enum
 
 valid_kwarg_types = {
-    "city_id": int, "latitude": (int, float), "longitude": (int, float), "zip_code": (str, int), 
+    "city_id": int, "latitude": (int, float), "longitude": (int, float), "zip_code": (str, int),
     "country_code": str, "state_code": str, "city_name": str, "units": str, "language": str
 }
 valid_kwargs = list(valid_kwarg_types.keys())
+
+
+class Units(Enum):
+    STANDARD = {"dt": "UTC", "sunrise": "UTC", "sunset": "UTC", "temp": "Kelvin", "Humidity": "%", "pressure": "hPa",
+                "speed": "meter/sec", "deg": "degrees (meteorological)", "gust": "meter/sec", "all": "%", "1h": "mm", "3h": "mm"}
+    METRIC = {**STANDARD, "temp": "Celsius"}
+    IMPERIAL = {**STANDARD, "temp": "Fahrenheit",
+                "speed": "miles/hour", "gust": "miles/hour"}
 
 
 def get_weather_url(apikey: str, **kwargs) -> str:
@@ -68,7 +77,13 @@ async def get_weather(apikey: str, **kwargs) -> dict:
                 return {"error": resp["message"]}
             else:
                 if kwargs.get("units"):
-                    resp["units"] = kwargs["units"]
-                else: 
-                    resp["units"] = "metric"
+                    units = kwargs.get("units").title()
+                    if units == "Imperial":
+                        resp["units"] = Units.IMPERIAL.value
+                    elif units == "Metric":
+                        resp["units"] = Units.METRIC.value
+                    else:
+                        resp["units"] = Units.STANDARD.value
+                else:
+                    resp["units"] = Units.METRIC.value
                 return resp

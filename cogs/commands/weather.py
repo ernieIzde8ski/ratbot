@@ -26,12 +26,7 @@ class Weather(commands.Cog):
                  f"Pressure: {weather_data['main']['pressure']} hPa | " \
                  f"Humidity: {weather_data['main']['humidity']}%"
 
-        if weather_data["units"].lower() == "metric":
-            main = main.replace("°", "°C")
-        elif weather_data["units"].lower() == "imperial":
-            main = main.replace("°", "°F")
-        else:
-            main = main.replace("°", "°K")
+        main = main.replace("°", "°" + weather_data["units"]["temp"][:1])
 
         if weather_data['sys'].get("country"):
             country = ", " + weather_data['sys']['country'] + "."

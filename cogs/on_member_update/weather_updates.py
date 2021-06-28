@@ -47,24 +47,13 @@ class WeatherUpdates(commands.Cog):
                 weather['main']['feels_like'], 1), round(weather['main']['temp_max'], 1), round(weather['main']['temp_min'], 1)]
             felt = f" (and it feels like {felt}°)" if current != felt else ""
 
-            weather["units"] = weather["units"].title()
-            if weather["units"] == "Metric":
-                temperature_unit = "Centigrade"
-                wind_unit = "meters per second"
-            elif weather["units"] == "Imperial":
-                temperature_unit = "Fahrenheit"
-                wind_unit = "miles per hour"
-            else:
-                temperature_unit = "Kelvin"
-                wind_unit = "meters per second"
-
-            message += f"It is currently {current} degrees {temperature_unit}{felt}, with a high of {high}° and a low of {low}°. " \
+            message += f"It is currently {current} degrees {weather['units']['temp']}{felt}, with a high of {high}° and a low of {low}°. " \
                        f"the Weather is \"{weather['weather'][0]['description'].title()}\", " \
-                       f"with a humidity at {weather['main']['humidity']}% and windspeeds at {weather['wind']['speed']} {wind_unit}. "
+                       f"with a humidity at {weather['main']['humidity']}% and windspeeds at {weather['wind']['speed']} {weather['units']['speed']}. "
 
-            if temperature_unit == "Fahrenheit":
+            if weather['units']['temp'] == "Fahrenheit":
                 current = (current - 32) * (5/9)
-            elif temperature_unit == "Kelvin":
+            elif weather['units']['temp'] == "Kelvin":
                 current -= 273.15
             message += self.temp_eval(current) + "\n\n"
         
