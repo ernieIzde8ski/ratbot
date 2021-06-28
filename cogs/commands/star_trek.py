@@ -6,8 +6,8 @@ import random
 
 class Trek(commands.Cog):
     def __init__(self):
-        self.tos_generator = loadGenerator("modules/Star Trek.meow")
-        self.borg_samples = safe_load("modules/borg.json", [])
+        self.tos_generator = loadGenerator("modules/JSON/Star_Trek.meow")
+        self.borg_samples = safe_load("modules/JSON/borg.json", [])
 
     @commands.command()
     async def borg(self, ctx, *, borg: str = "Borg"):

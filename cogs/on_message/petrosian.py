@@ -8,7 +8,7 @@ from json import load
 class Petrosian(commands.Cog):
     def __init__(self):
         self.regex = r"pipi|liers|petr(o|at)s[iy]an|looser|\"w\"esley\"s\"o|firouzja|otbblitzmatch"
-        with open("modules/petrosian.json", "r", encoding="utf-8") as file:
+        with open("modules/JSON/petrosian.json", "r", encoding="utf-8") as file:
             self.petrosian = load(file)
     
     @commands.Cog.listener()
