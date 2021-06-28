@@ -9,9 +9,15 @@ class Censorship(commands.Cog):
 
     @staticmethod
     def reduce(text: str) -> str:
-        text = "".join(text.lower().split())
         text = "".join([c for c in text if ord(c) <= 128])
-        return text
+        resp = " "
+        for i in text:
+            if i == resp[-1]:
+                continue
+            else:
+                resp += i
+        resp = "".join(resp.lower().split())
+        return resp
 
     @commands.Cog.listener("on_message")
     async def on_twitter(self, message):
@@ -20,7 +26,7 @@ class Censorship(commands.Cog):
         elif self.bot.config["main_guild"] != message.guild.id:
             return
         message.content = self.reduce(message.content)
-        if "twitter" in message.content or fuzz.partial_ratio(message.content, "twitter") > 75:
+        if fuzz.partial_ratio(message.content, "twiter") > 75:
             await message.delete()
             await message.author.send("Trolled")
 
