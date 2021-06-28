@@ -1,6 +1,7 @@
 {
     "prefix": ["r.", "r!"],
     "preferred_timezone": "EST",
+    "main_server": 488475203303768065,
     "channels": {
         "BMs": 762166605458964510,
         "DMs": 715297562613121084,
