@@ -1,35 +1,37 @@
-import re
-import requests
 from bs4 import BeautifulSoup
+from aiohttp import ClientSession
+import asyncio
+import re
 
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
 
 
-def get_bands(loops: int) -> list[list[str, list[str]]]:
+async def get_bands(loops: int) -> list[list[str, list[str]]]:
     band_list = []
     for i in range(loops):
-        result = requests.get(url)
-        result = BeautifulSoup(result.text, "html.parser")
-        band_name = result.find_all("h1", class_="band_name")[0].text
+        async with ClientSession() as session:
+            async with session.get(url) as resp:
+                result = BeautifulSoup(await resp.text(), "html.parser")
+                band_name = result.find_all("h1", class_="band_name")[0].text
 
-        stats1 = result.find_all("dl", class_="float_left")[0].text
-        stats1 = [i for i in re.split(regex, stats1) if i.split()]
-        stats1 = [v for k, v in enumerate(stats1) if k % 2 == 1]
+                stats1 = result.find_all("dl", class_="float_left")[0].text
+                stats1 = [i for i in re.split(regex, stats1) if i.split()]
+                stats1 = [v for k, v in enumerate(stats1) if k % 2 == 1]
 
-        stats2 = result.find_all("dl", class_="float_right")[0].text
-        stats2 = [i for i in re.split(regex, stats2) if i.split()]
-        stats2 = [v for k, v in enumerate(stats2) if k % 2 == 1]
+                stats2 = result.find_all("dl", class_="float_right")[0].text
+                stats2 = [i for i in re.split(regex, stats2) if i.split()]
+                stats2 = [v for k, v in enumerate(stats2) if k % 2 == 1]
 
-        stats = stats1 + stats2
-        band_list.append([band_name, stats])
+                stats = stats1 + stats2
+                band_list.append([band_name, stats])
     return band_list
 
 
-def main(integer: int = 5):
+async def format(integer: int = 5):
     max_band_spaces = 0
     max_genre_spaces = 0
-    bands = get_bands(integer)
+    bands = await get_bands(integer)
 
     for band in bands:
         len = band[0].__len__() + 2
@@ -50,6 +52,7 @@ def main(integer: int = 5):
         resp += f"|  Region: {band[1][0]}\n"
     return resp
 
-
 if __name__ == "__main__":
-    print(main())
+    """This generates an error, but it also prints the list, so at some point I stopped caring"""
+    resp = asyncio.run(format())
+    print(resp)
