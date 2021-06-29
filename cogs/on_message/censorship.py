@@ -14,8 +14,8 @@ class Censorship(commands.Cog):
             return
         elif self.bot.config["main_guild"] != message.guild.id:
             return
-        message.content = reduce(message.content)
-        if fuzz.partial_ratio(message.content, "twiter") > 75:
+        content = reduce(message.content)
+        if fuzz.partial_ratio(content, "twiter") > 75:
             await message.delete()
             await message.author.send("Trolled")
 
@@ -23,10 +23,10 @@ class Censorship(commands.Cog):
     async def on_fanfics(self, message):
         if message.author.bot or not message.guild:
             return
-        message.content = reduce(message.content)
-        if re.match(r"(ernie|ernest)readsstartrekfanfic(tion|)(s|)", message.content):
+        content = reduce(message.content)
+        if re.match(r"(ernie|ernest)readsstartrekfanfic(tion|)(s|)", content):
             await message.delete()
-        elif re.match(r"(ernie|ernest)(doesnot|doesn't)readstartrekfanfic(tion|)(s|)", message.content):
+        elif re.match(r"(ernie|ernest)(doesnot|doesn't)readstartrekfanfic(tion|)(s|)", content):
             await message.reply("Based !!!!!!!!!!!!")
 
 
