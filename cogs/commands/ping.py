@@ -1,5 +1,4 @@
 from typing import Optional, Union
-from discord import message
 from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
 from modules.converters import FlagConverter

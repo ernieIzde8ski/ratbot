@@ -1,6 +1,5 @@
 from discord.ext import commands
 from discord import Embed, Color
-from discord.user import ClientUser
 from modules._json import safe_load
 
 

@@ -1,6 +1,4 @@
-from typing import Optional
 from discord.ext import commands
-from modules._json import safe_load, safe_dump
 from discord import Embed, Color
 
 

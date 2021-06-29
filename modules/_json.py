@@ -1,5 +1,5 @@
-import json
 from typing import Any
+import json
 
 
 def safe_load(fp: str, backup) -> Any:

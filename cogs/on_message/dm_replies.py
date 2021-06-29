@@ -1,13 +1,12 @@
 from typing import Optional
 from aiohttp.client import ClientSession
-from discord.errors import HTTPException
 from discord.ext import commands
 from discord import Message, Attachment, File, AllowedMentions, User
 from discord import Forbidden, HTTPException
 from asyncio import sleep
 from modules._json import safe_load
-import re
 from os import remove
+import re
 
 
 class Replies(commands.Cog):
