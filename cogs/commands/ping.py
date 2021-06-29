@@ -5,8 +5,8 @@ from modules.converters import FlagConverter
 
 
 class Ping(commands.Cog):
-    def __init__(self):
-        pass
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.command()
     async def echo(self, ctx, messageable: Optional[Union[commands.UserConverter, commands.TextChannelConverter]], *, message: str):
@@ -25,7 +25,11 @@ class Ping(commands.Cog):
             await ctx.send("No flags present")
         else:
             await ctx.send(f"Flags: {flags}")
+    
+    @commands.command(hidden=True)
+    async def songs(self, ctx):
+        await ctx.send(self.bot.songs)
 
 
 def setup(bot):
-    bot.add_cog(Ping())
+    bot.add_cog(Ping(bot))

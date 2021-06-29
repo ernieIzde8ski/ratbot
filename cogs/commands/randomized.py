@@ -1,15 +1,20 @@
-from typing import Optional
+from discord.ext import commands
+
 from modules._json import safe_load, safe_dump
 from modules.functions import reduce
 import modules.random_band as rb
-from discord.ext import commands
+
+from typing import Optional
 import random
+import re
 
 
 class Randomized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bmed = safe_load("data/bm.json", [])
+        self.songs = safe_load("data/songs.json", {})
+        self.bot.songs = list(self.songs.keys())
 
     @commands.command(aliases=["rb", "bands"])
     @commands.cooldown(1, 45, commands.BucketType.user)
@@ -57,7 +62,22 @@ class Randomized(commands.Cog):
 
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
+    
+    @commands.group(aliases=["song"], invoke_without_command=True)
+    async def random_song(self, ctx):
+        await ctx.send("https://youtu.be/" + random.choice(self.bot.songs))
+    
+    @random_song.command()
+    async def update(self, ctx, link: str, *, title: str):
+        link = re.sub(r"&.+=.+$", "", link)
+        link = link.removeprefix("https://youtu.be/").removeprefix("https://www.youtube.com/watch?v=")
 
+        if link in self.bot.songs:
+            await ctx.send(f"Overwriting `{link}`: `{self.songs[link]}`")
+        self.songs[link] = title
+        safe_dump("data/songs.json", self.songs)
+        self.bot.songs = list(self.songs.keys())
+        await ctx.send(f"Set {link} to {title}")
 
 def setup(bot):
     bot.add_cog(Randomized(bot))
