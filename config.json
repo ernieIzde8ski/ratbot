@@ -1,5 +1,6 @@
 {
     "prefix": ["r.", "r!"],
+    "default_status": "{}help",
     "preferred_timezone": "EST",
     "main_guild": 488475203303768065,
     "channels": {
