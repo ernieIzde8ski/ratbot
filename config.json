@@ -2,7 +2,9 @@
     "prefix": ["r.", "r!"],
     "default_status": "{}help",
     "preferred_timezone": "EST",
+    "github": "https://github.com/ernieIzde8ski/ratbot",
     "main_guild": 488475203303768065,
+    "invite": "https://discord.gg/3gfP2kYPp4",
     "channels": {
         "BMs": 762166605458964510,
         "DMs": 715297562613121084,
