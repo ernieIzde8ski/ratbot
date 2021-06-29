@@ -1,3 +1,4 @@
+from discord import Message, AllowedMentions
 from discord.ext import commands
 from fuzzywuzzy import fuzz
 from modules.functions import reduce
@@ -7,9 +8,10 @@ import re
 class Censorship(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.allowed_mentions = AllowedMentions.all()
 
     @commands.Cog.listener("on_message")
-    async def on_twitter(self, message):
+    async def on_twitter(self, message: Message):
         if not message.guild or message.author.bot:
             return
         elif self.bot.config["main_guild"] != message.guild.id:
@@ -20,7 +22,7 @@ class Censorship(commands.Cog):
             await message.author.send("Trolled")
 
     @commands.Cog.listener("on_message")
-    async def on_fanfics(self, message):
+    async def on_fanfics(self, message: Message):
         if message.author.bot or not message.guild:
             return
         content = reduce(message.content)
@@ -28,6 +30,16 @@ class Censorship(commands.Cog):
             await message.delete()
         elif re.match(r"(ernie|ernest)(doesnot|doesn't)readstartrekfanfic(tion|)(s|)", content):
             await message.reply("Based !!!!!!!!!!!!")
+
+    @commands.Cog.listener("on_message")
+    async def on_armenium(self, message: Message):
+        if message.author.bot:
+            return
+        if message.channel.id != 811023978045898822 or message.author.id == 232706427045543936:
+            return
+
+        await message.delete()
+        await message.channel.send(f"{message.author.mention} WTF.", allowed_mentions=self.allowed_mentions, delete_after=3)
 
 
 def setup(bot):
