@@ -10,12 +10,12 @@ class Censorship(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def on_twitter(self, message):
-        if not message.guild:
+        if not message.guild or message.author.bot:
             return
         elif self.bot.config["main_guild"] != message.guild.id:
             return
         content = reduce(message.content)
-        if fuzz.partial_ratio(content, "twiter") > 75:
+        if fuzz.partial_ratio(content, "twiter") > 85:
             await message.delete()
             await message.author.send("Trolled")
 

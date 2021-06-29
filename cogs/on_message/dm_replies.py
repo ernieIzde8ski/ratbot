@@ -6,6 +6,7 @@ from discord import Message, Attachment, File, AllowedMentions, User
 from discord import Forbidden, HTTPException
 from asyncio import sleep
 from modules._json import safe_load
+import re
 from os import remove
 
 
@@ -24,7 +25,7 @@ class Replies(commands.Cog):
     async def update_message(self, message: Message) -> None:
         if self.task:
             self.task.cancel()
-        self.bot.loop.create_task(self._update_message(message))
+        self.task = self.bot.loop.create_task(self._update_message(message))
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs)
@@ -33,6 +34,8 @@ class Replies(commands.Cog):
             await ctx.send("There's nothing to clear!")
         else:
             await ctx.send(f"Clearing open channel with {self.message.author}")
+            self.task.cancel()
+            self.message = None
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
@@ -74,15 +77,19 @@ class Replies(commands.Cog):
 
     @commands.Cog.listener()
     async def on_private_message(self, message: Message):
+        if re.match(r"^.*?\s*clear$", message.content):
+            return
         await self.update_message(message)
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
         if message.author.bot or message.author.id in self.bot._check.blocked:
             return
-        if not self.message or message.channel != self.bot.c.DMs:
+        elif not self.message or message.channel != self.bot.c.DMs:
             return
-
+        elif re.match(r"^.*?\s*clear$", message.content):
+            return
+        
         [resp, files, failed_files] = await self.get_resp(message)
         try:
             await self.message.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
