@@ -44,21 +44,19 @@ class Randomized(commands.Cog):
             await self.bot.c.BMs.send(f"```{argument}, {determination}{emphasis}```")
             self.bmed.append(argument)
             safe_dump("data/bm.json", self.bmed)
-    
+
     @commands.command(aliases=["gobi"])
     async def gobi_percentage(self, ctx, *, argument: Optional[str]):
         if isinstance(argument, str):
             argument = argument[:1000].replace("*", "").replace("`", "") + (" [...]" if argument[1000:] else "")
         if not argument:
             return await ctx.send("**Your are 100% Gobi.**")
-        
+
         seed = reduce(argument)
         random.seed(seed)
 
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
-        
-
 
 
 def setup(bot):
