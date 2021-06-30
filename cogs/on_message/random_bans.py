@@ -24,12 +24,12 @@ class Bans(commands.Cog):
             self.guilds.pop(id)
         else:
             if not percent:
-                percent = 0.0002
+                percent = 0.00002
             elif not (0 < percent < 1):
                 return await ctx.send("Error: Percentage must be from 0% to 100% (or 0.0 to 1.0)")
             await ctx.send(f"Enabling random bans in this guild with a {percent * 100}% chance")
             self.guilds[id] = percent
-            safe_dump("data/banning.json", self.guilds)
+        safe_dump("data/banning.json", self.guilds)
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
