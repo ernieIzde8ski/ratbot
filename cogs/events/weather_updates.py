@@ -75,7 +75,7 @@ class WeatherUpdates(commands.Cog):
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
 
-        if random.random() < 1.0:
+        if random.random() < 0.1:
             _m = await after.send("do you want a Song ?")
 
             def _check(m):
@@ -86,7 +86,7 @@ class WeatherUpdates(commands.Cog):
                 return m.content.lower()[0] in ["y", "n"]
 
             try:
-                message = await self.bot.wait_for("message", timeout=30.0, check=_check)
+                message = await self.bot.wait_for("message", timeout=300.0, check=_check)
             except asyncio.TimeoutError:
                 return await after.send("WHAT IS WRONG WTIH YOU ARE YOU STUPID AOR SOMETHING . OR ARE YOU JUST STUPID OR ARE YOU")
 

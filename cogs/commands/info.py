@@ -1,5 +1,5 @@
 from discord.ext import commands
-from discord import Embed, Color, Permissions, utils
+from discord import Embed, Permissions, utils
 from random import choice
 
 

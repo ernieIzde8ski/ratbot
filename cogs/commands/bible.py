@@ -1,7 +1,6 @@
 from textwrap import fill
 from aiohttp import ClientSession
 from discord.ext import commands
-from json import dump
 from modules._json import safe_load, safe_dump
 from discord import Embed
 from typing import Optional
