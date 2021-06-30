@@ -36,7 +36,7 @@ else
     if [[ "$CHARACTER" == "y" || "$CHARACTER" == "Y" ]]; then
         node modules/xkcd_cache_generator.js
         node modules/xkcd_cache_checker.js
-        node modules/weather_resps.js
+        node modules/WeatherResper.js
     else
         echo "Continuing"
     fi
