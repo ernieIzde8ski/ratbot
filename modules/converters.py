@@ -12,7 +12,7 @@ class FlagConverter(commands.Converter):
             raise commands.BadArgument("Arguments must begin with --")
         dict_ = {}
         arguments = arguments.replace(";", " ")
-        arguments = split(r"\s+--", arguments[2:])
+        arguments = split(r"\s*--\s*", arguments)[1:]
         for argument in arguments:
             if not argument:
                 raise commands.BadArgument("Argument key must exist")
