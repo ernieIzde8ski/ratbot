@@ -6,6 +6,10 @@ modules/xkcd_cache.json
 # to-do list
 TODO
 
+# I have no goddamn clue what this folder does or what generates it, nor do I feel like I care
+# enough to bother to find out
+target/
+
 # file so that linter stops shouting at me for errors
 .jshintrc
 

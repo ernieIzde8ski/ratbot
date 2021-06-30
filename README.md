@@ -13,7 +13,7 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
   - Windows: run `bash`; continue
     - if this doesn't work, good luck
   - Linux, Mac: continue
-- `git clone https://github.com/ernieIzde8ski/ratbot.git rat.py -b rewrite`
+- `git clone https://github.com/ernieIzde8ski/ratbot.git rat.py`
 - `cd rat.py`
 - `./initialize.sh`
 - `nano config.json` (Highly recommended)
@@ -52,4 +52,4 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
 }
 ```
 
-#### See CONFIGS.md for the various files generated in ./data/
+#### See [CONFIGS.md](CONFIGS.md) for the various files generated in ./data/
