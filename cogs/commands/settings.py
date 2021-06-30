@@ -21,7 +21,7 @@ class Settings(commands.Cog):
         prefix = prefix.replace("`", "\`")
         await ctx.send(f"Updated prefix to {prefix}")
 
-    @commands.command(aliases=["toggle_tenor"])
+    @commands.command(aliases=["toggle_tenors"])
     @commands.has_permissions(manage_guild=True)
     async def tenor_toggle(self, ctx):
         if not ctx.guild:

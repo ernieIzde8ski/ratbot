@@ -2,7 +2,7 @@ from textwrap import fill
 from aiohttp import ClientSession
 from discord.ext import commands
 from json import dump
-from modules._json import safe_load
+from modules._json import safe_load, safe_dump
 from discord import Embed
 from typing import Optional
 
@@ -83,8 +83,7 @@ class Bible(commands.Cog):
             )
         else:
             self.data[str(ctx.author.id)] = translation
-            with open("data/bible.json", "w") as file:
-                dump(self.data, file)
+            safe_dump("data/bible.json", self.data)
             await ctx.send(f"Set your translation to `{self.translation_languages[translation][0]}` ({self.translation_languages[translation][1]})")
 
 

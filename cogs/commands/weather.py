@@ -11,9 +11,8 @@ class Weather(commands.Cog):
         self.bot = bot
         self.bot.userlocs = safe_load("data/weather_locations.json", {})
 
-    @commands.Cog.listener()
-    async def on_weather_users_update(self, new_obj):
-        safe_dump("data/weather_locations.json", new_obj)
+    async def _update(self):
+        safe_dump("data/weather_locations.json", self.bot.userlocs)
 
     @staticmethod
     async def embed_constructor(weather_data: dict, color) -> Embed:
@@ -105,7 +104,7 @@ class Weather(commands.Cog):
             set = "Reset" if self.bot.userlocs.get(
                 str(ctx.author.id)) else "Set"
             self.bot.userlocs[str(ctx.author.id)] = location
-            self.bot.dispatch("weather_users_update", self.bot.userlocs)
+            await self._update()
             await ctx.send(f"{set} information, test the weather command to check")
 
     @set.command()
@@ -130,7 +129,7 @@ class Weather(commands.Cog):
                 self.bot.userlocs[user][type_[1]] = list_.pop(0)
             if list_:
                 return await ctx.send("Too many codes passed")
-        self.bot.dispatch("weather_users_update", self.bot.userlocs)
+        await self._update()
         await ctx.send(f"Set `{type_}` to {city_name_or_id}")
 
     @set.command(aliases=["lat-long"])
@@ -151,7 +150,7 @@ class Weather(commands.Cog):
         else:
             self.bot.userlocs[user]["latitude"] = lat
             self.bot.userlocs[user]["longitude"] = long
-        self.bot.dispatch("weather_users_update", self.bot.userlocs)
+        await self._update()
         await ctx.send(f"Set `latitude`, `longitude` to {lat}, {long}")
 
 
