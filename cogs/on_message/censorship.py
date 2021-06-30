@@ -40,16 +40,16 @@ class Censorship(commands.Cog):
 
         await message.delete()
         await message.channel.send(f"{message.author.mention} WTF.", allowed_mentions=self.allowed_mentions, delete_after=3)
-    
+
     @commands.Cog.listener("on_message")
     async def on_tenor(self, message: Message):
         if message.author.bot or not message.guild:
             return
         elif message.guild.id not in self.bot.tenor_guilds:
             return
-        elif re.match(r"https{0,1}:\/\/tenor.com\/view\/([a-z]|-)+\d+", message.content):
+        elif re.match(r"https{0,1}:\/\/(www.)*tenor.com\/view\/([a-z]|-)+\d+", message.content):
             await message.delete()
-            await message.channel.send(f"{message.author.mention} Stupid")
+            await message.channel.send(f"{message.author.mention} Stupid", allowed_mentions=self.allowed_mentions)
 
 
 def setup(bot):
