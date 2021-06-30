@@ -25,9 +25,12 @@ class FlagConverter(commands.Converter):
             else:
                 value = " ".join([i.replace("__", " ") for i in value])
                 try:
-                    value = loads(value.lower())
+                    value = loads(value)
                 except JSONDecodeError:
-                    pass
+                    try:
+                        value = loads(value.lower())
+                    except JSONDecodeError:
+                        pass
 
             dict_[key] = value
 
