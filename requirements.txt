@@ -1,5 +1,8 @@
 # These versions are the ones currently used to test
-python-dotenv >= 0.17.1
+aiohttp >= 3.7.4
 discord.py >= 1.7.3
+python-dotenv >= 0.17.1
 fuzzywuzzy >= 0.18.0
 python-Levenshtein >= 0.12.2
+beautifulsoup4 >= 4.9.3
+pytz >= 2021.1
