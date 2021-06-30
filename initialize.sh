@@ -28,7 +28,7 @@ mkdir data
 mkdir data/temporary
 
 echo "Generating the XKCD cache will spam the console & requires node.js"
-read -p "Generate XKCD cache?  " BOOL
+read -p "Generate XKCD cache and weather_resps.json?  " BOOL
 if [ -z "$BOOL" ] ; then
     echo "No input; continuing"
 else
@@ -36,6 +36,7 @@ else
     if [[ "$CHARACTER" == "y" || "$CHARACTER" == "Y" ]]; then
         node modules/xkcd_cache_generator.js
         node modules/xkcd_cache_checker.js
+        node modules/weather_resps.js
     else
         echo "Continuing"
     fi
