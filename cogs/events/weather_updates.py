@@ -103,6 +103,7 @@ class WeatherUpdates(commands.Cog):
     async def weather_data_set(self, ctx, target: Optional[Member], *, flags: FlagConverter = {}):
         """
         Add a user to weather updates
+        tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
         Usage: r;wset --id 302956027656011776 --tz America/Los_Angeles --aliases ["ernie", "Pepito"]
         """
         if target:

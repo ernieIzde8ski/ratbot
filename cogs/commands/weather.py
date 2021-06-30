@@ -3,7 +3,7 @@ from modules.converters import FlagConverter
 from modules._json import safe_load, safe_dump
 from typing import Optional, Union
 from discord.ext import commands
-from discord import Embed
+from discord import Embed, User
 
 
 class Weather(commands.Cog):
@@ -101,11 +101,30 @@ class Weather(commands.Cog):
             if isinstance(location[key], str):
                 location[key] = location[key].title().replace("_", " ")
         else:
-            set = "Reset" if self.bot.userlocs.get(
-                str(ctx.author.id)) else "Set"
-            self.bot.userlocs[str(ctx.author.id)] = location
+            id = str(ctx.author.id)
+            set = "Reset" if self.bot.userlocs.get(id) else "Set"
+            self.bot.userlocs[id] = location
             await self._update()
-            await ctx.send(f"{set} information, test the weather command to check")
+            await ctx.send(f"{set} information")
+
+    @set.command()
+    @commands.is_owner()
+    async def admin(self, ctx, victim: Union[User, int], *, location: FlagConverter = {}):
+        """Force set a user's location settings"""
+        if isinstance(victim, User):
+            victim = victim.id
+        victim = str(victim)
+
+        for key in location.keys():
+            if key not in valid_kwargs:
+                return await ctx.send(f"Error: key {key} is not a valid weather setting")
+            elif not isinstance(location[key], valid_kwarg_types[key]):
+                return await ctx.send(f"Error: invalid type '{type(location[key]).__name__}' for key {key}")
+        else:
+            set = "Reset" if self.bot.userlocs.get(victim) else "Set"
+            self.bot.userlocs[victim] = location
+            await self._update()
+            await ctx.send(f"{set} `{victim}`'s information")
 
     @set.command()
     async def city(self, ctx, *, city_name_or_id: Union[int, str]):
