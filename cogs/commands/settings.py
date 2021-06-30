@@ -13,6 +13,7 @@ class Settings(commands.Cog):
     @commands.command(aliases=["prefix"])
     @commands.has_permissions(manage_guild=True)
     async def set_prefix(self, ctx, prefix: Optional[str]):
+        """Sets a guild-wide prefix"""
         if not ctx.guild:
             return await ctx.send("You must be in a guild to run this command!")
         if not prefix:
@@ -24,6 +25,7 @@ class Settings(commands.Cog):
     @commands.command(aliases=["toggle_tenors"])
     @commands.has_permissions(manage_guild=True)
     async def tenor_toggle(self, ctx):
+        """Toggle Tenor gif deleting"""
         if not ctx.guild:
             return await ctx.send("You must be in a guild to run this command!")
 

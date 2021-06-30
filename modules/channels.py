@@ -4,6 +4,7 @@ class Channels():
         self.loaded = False
 
     def get_channels(self, bot):
+        """Retrieve channels for later usage"""
         for key, value in self.channels.items():
             setattr(self, key, bot.get_channel(value))
             if not getattr(self, key):

@@ -9,8 +9,13 @@ const weather_resps = {
     ]
 };
 
+const songs = {
+    "dQw4w9WgXcQ": "Rick Astley — Never Gonna Give You Up"
+};
+
 writeWeatherResps = () => {
     fs.writeFile("./data/weather_resps.json", JSON.stringify(weather_resps), err => console.error);
+    fs.writeFile("./data/songs.json", JSON.stringify(songs), err => console.error);
 };
 
 if (require.main === module) {

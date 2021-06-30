@@ -26,11 +26,14 @@ class Cogs(commands.Cog):
 
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx):
+        """Return cog list
+        Subcommands load, unload, and reload cogs"""
         await ctx.send(f"Loaded extensions: `{'`, `'.join(self.bot.extensions.keys())}`")
 
     @cogs.command(aliases=["l"])
     @commands.is_owner()
     async def load(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
+        """Load given cog(s)"""
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = self.all_extensions
@@ -52,6 +55,7 @@ class Cogs(commands.Cog):
     @cogs.command(aliases=["u"])
     @commands.is_owner()
     async def unload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
+        """Unload given cog(s)"""
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = self.all_extensions
@@ -73,6 +77,7 @@ class Cogs(commands.Cog):
     @cogs.command(aliases=["r"])
     @commands.is_owner()
     async def reload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
+        """Reload given cog(s)"""
         if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = list(self.bot.extensions.keys())

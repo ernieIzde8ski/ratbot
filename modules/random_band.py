@@ -8,6 +8,7 @@ regex = r"(\n|.+:)"
 
 
 async def get_bands(loops: int) -> list[list[str, list[str]]]:
+    """Get random bands & statistics"""
     band_list = []
     for i in range(loops):
         async with ClientSession() as session:
@@ -29,6 +30,7 @@ async def get_bands(loops: int) -> list[list[str, list[str]]]:
 
 
 async def format(integer: int = 5):
+    """Format random bands"""
     max_band_spaces = 0
     max_genre_spaces = 0
     bands = await get_bands(integer)

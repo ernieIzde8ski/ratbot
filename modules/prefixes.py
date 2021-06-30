@@ -7,6 +7,7 @@ class Prefixes:
         self.prefixes = safe_load("data/prefixes.json", {})
 
     async def get_prefix(self, bot, message) -> list:
+        """Returns a prefix off of context"""
         if not message.guild:
             return when_mentioned(bot, message) + self.prefix
         id = str(message.guild.id)
@@ -16,5 +17,6 @@ class Prefixes:
             return when_mentioned_or(self.prefixes[id])(bot, message)
     
     async def update_prefixes(self, id, new_prefix) -> None:
+        """Update a guild's prefix"""
         self.prefixes[id] = new_prefix
         safe_dump("data/prefixes.json", self.prefixes)

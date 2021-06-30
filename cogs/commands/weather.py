@@ -47,7 +47,7 @@ class Weather(commands.Cog):
     @commands.group(invoke_without_command=True, aliases=["w"])
     async def weather(self, ctx, *, location: Optional[Union[FlagConverter, str]]):
         """
-        Gets the weather for a given location
+        Returns the weather for a given location
         Accepts either a city as the first parameter, the same flag parameters
         as the set subcommand, or defaults to the set parameter
         """
@@ -70,7 +70,7 @@ class Weather(commands.Cog):
     @weather.group(invoke_without_command=True, aliases=["s"])
     async def set(self, ctx, *, location: Optional[FlagConverter] = {}):
         """
-        Saves a default location
+        Sets a default location
         The easiest usage is r;w set --city_name:city_name --units:metric [...]
         Subcommands also exist if you don't feel like doing that
 

@@ -6,6 +6,7 @@ from re import split, sub
 
 
 class FlagConverter(commands.Converter):
+    """Convert flags to a dictionary"""
     async def convert(self, ctx: commands.Context, arguments: str) -> dict:
         if not arguments.startswith("--"):
             raise commands.BadArgument("Arguments must begin with --")

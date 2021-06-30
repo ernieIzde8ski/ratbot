@@ -11,6 +11,7 @@ class Trek(commands.Cog):
 
     @commands.command()
     async def borg(self, ctx, *, borg: str = "Borg"):
+        """Sends a Borg copypasta with an argument as Borg"""
         resp = "We are the {Borg}. "
         resp += " ".join(random.sample(self.borg_samples,
                          k=random.randint(2, len(self.borg_samples))))
@@ -18,6 +19,7 @@ class Trek(commands.Cog):
 
     @commands.command(aliases=["rt", "trek"])
     async def random_tos_plot(self, ctx, count: int = 1):
+        """Generates a random Star Trek: The Original Series plot"""
         if count < 1 or count > 10:
             return await ctx.send("Count must be between 1 and 10")
 

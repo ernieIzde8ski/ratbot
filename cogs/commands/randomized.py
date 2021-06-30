@@ -20,6 +20,8 @@ class Randomized(commands.Cog):
     @commands.cooldown(1, 45, commands.BucketType.user)
     @commands.cooldown(1, 15, commands.BucketType.guild)
     async def random_bands(self, ctx, integer: int = 3):
+        """Return x amount of bands from metal-archives.com
+        If set, the amount of bands must between 1 to 10"""
         if not (1 <= integer <= 10):
             return await ctx.send(f"{integer} is an invalid amount of bands (range from 1 to 10)")
 
@@ -33,6 +35,7 @@ class Randomized(commands.Cog):
 
     @commands.command(aliases=["bm"])
     async def based_meter(self, ctx, *, argument: Optional[str]):
+        """Determines basedness of an argument"""
         if isinstance(argument, str):
             argument = argument[:1000].replace("*", "").replace("`", "") + (" [...]" if argument[1000:] else "")
         if not argument:
@@ -52,6 +55,7 @@ class Randomized(commands.Cog):
 
     @commands.command(aliases=["gobi"])
     async def gobi_percentage(self, ctx, *, argument: Optional[str]):
+        """Determines gobiness of an argument"""
         if isinstance(argument, str):
             argument = argument[:1000].replace("*", "").replace("`", "") + (" [...]" if argument[1000:] else "")
         if not argument:
@@ -65,6 +69,7 @@ class Randomized(commands.Cog):
     
     @commands.group(aliases=["song"], invoke_without_command=True)
     async def random_song(self, ctx):
+        """Returns a random song from a saved directory"""
         await ctx.send("https://youtu.be/" + random.choice(self.bot.songs))
     
     @random_song.command()

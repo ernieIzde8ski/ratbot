@@ -33,6 +33,7 @@ class Stati(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def set_presence(self, ctx, *, presence: Union[FlagConverter, str]):
+        """Sets a presence"""
         if isinstance(presence, dict):
             activity = Game(presence.get("activity"))
             status = self.get_status(presence.get("status"))

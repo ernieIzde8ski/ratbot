@@ -9,7 +9,10 @@ class Ping(commands.Cog):
         self.bot = bot
 
     @commands.command()
+    @commands.is_owner()
     async def echo(self, ctx, messageable: Optional[Union[commands.UserConverter, commands.TextChannelConverter]], *, message: str):
+        """Echo a message
+        Optional parameter messageable determines location"""
         if not messageable:
             messageable = ctx
         if message[:1] == "\\":
@@ -21,6 +24,7 @@ class Ping(commands.Cog):
 
     @commands.command(hidden=True)
     async def flags(self, ctx, *, flags: Optional[FlagConverter]):
+        """Return flags"""
         if not flags:
             await ctx.send("No flags present")
         else:
@@ -28,6 +32,7 @@ class Ping(commands.Cog):
     
     @commands.command(hidden=True)
     async def songs(self, ctx):
+        """Return the entire song list"""
         await ctx.send(self.bot.songs)
 
 

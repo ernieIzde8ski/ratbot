@@ -41,6 +41,7 @@ class XKCD(commands.Cog):
 
     @commands.group(invoke_without_command=True, aliases=["x"])
     async def xkcd(self, ctx, *, argument: Optional[Union[int, str]]):
+        """Return an XKCD from an argument"""
         if not argument:
             argument = -1
         elif isinstance(argument, str):
@@ -55,6 +56,7 @@ class XKCD(commands.Cog):
 
     @xkcd.command(aliases=["r"])
     async def random(self, ctx):
+        """Returns a random XKCD"""
         id = randint(0, self._latest["num"])
 
         xkcd = await self.get_xkcd(id)
@@ -66,6 +68,7 @@ class XKCD(commands.Cog):
 
     @xkcd.command(aliases=["l"])
     async def latest(self, ctx):
+        """Returns the latest XKCD"""
         xkcd = await self.get_xkcd(-1)
         if xkcd.get("error"):
             return await ctx.send(f"Error: {xkcd['error']}")

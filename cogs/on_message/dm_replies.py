@@ -29,6 +29,7 @@ class Replies(commands.Cog):
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs)
     async def clear(self, ctx):
+        """Clear the DM channel"""
         if not self.task:
             await ctx.send("There's nothing to clear!")
         else:
@@ -39,6 +40,7 @@ class Replies(commands.Cog):
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
     async def block(self, ctx, *, blockee: Optional[User]):
+        """Block a discord.User"""
         print(ctx.author.id, ctx.bot.owner_id)
         if not blockee and not self.message:
             await ctx.send("There's no one to block!")

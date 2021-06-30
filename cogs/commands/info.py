@@ -9,6 +9,7 @@ class Information(commands.Cog):
 
     @commands.command(aliases=["info", "support"])
     async def information(self, ctx: commands.Context):
+        """Provide useful information"""
         main = f"[GitHub]({self.bot.config['github']})\n" \
                f"[Bot Invite]({utils.oauth_url(self.bot.user.id, permissions=Permissions(2214915137))})\n" \
                f"[Server Invite]({self.bot.config['invite']})\n" \

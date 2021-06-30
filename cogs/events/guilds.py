@@ -29,7 +29,7 @@ class Guilds(commands.Cog):
     @commands.is_owner()
     async def guilds(self, ctx: commands.Context, *, sort: FlagConverter = {}):
         """
-        Get guild list
+        Return guild list
         Usage:
             r;guilds
             r;guilds --order member_count --reverse

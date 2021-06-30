@@ -25,7 +25,9 @@ class Log(commands.Cog):
         await self.bot.c.Status.send(embed=self.embed_constructor("online"))
 
     @commands.command()
+    @commands.is_owner()
     async def die(self, ctx):
+        """Shuts down bot"""
         self.get_channels()
         await self.bot.c.Status.send(embed=self.embed_constructor("offline"))
         await self.bot.close()
