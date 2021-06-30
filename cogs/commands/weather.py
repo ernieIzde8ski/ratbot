@@ -9,8 +9,7 @@ from discord import Embed
 class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.data = safe_load("data/weather_locations.json", {})
-
+        self.bot.userlocs = safe_load("data/weather_locations.json", {})
 
     @commands.Cog.listener()
     async def on_weather_users_update(self, new_obj):
@@ -52,15 +51,8 @@ class Weather(commands.Cog):
         Gets the weather for a given location
         Accepts either a city as the first parameter, the same flag parameters
         as the set subcommand, or defaults to the set parameter
-        
-        Examples:
-            r;w South Bend
-            r;weather Warsaw, IN, US
-            r;weather --city_id 4174757 --units imperial
-            r;weather --latitude 0 --longitude 0 --language pl
-            r;weather --zip_code 00-413 --country_code pl --units standard
         """
-        user_data = self.data.get(str(ctx.author.id))
+        user_data = self.bot.userlocs.get(str(ctx.author.id))
         if not location and not user_data:
             prefix = ctx.prefix.replace('`', '\`')
             return await ctx.send("Invalid usage; "
@@ -110,34 +102,35 @@ class Weather(commands.Cog):
             if isinstance(location[key], str):
                 location[key] = location[key].title().replace("_", " ")
         else:
-            set = "Reset" if self.data.get(str(ctx.author.id)) else "Set"
-            self.data[str(ctx.author.id)] = location
-            self.bot.dispatch("weather_users_update", self.data)
+            set = "Reset" if self.bot.userlocs.get(
+                str(ctx.author.id)) else "Set"
+            self.bot.userlocs[str(ctx.author.id)] = location
+            self.bot.dispatch("weather_users_update", self.bot.userlocs)
             await ctx.send(f"{set} information, test the weather command to check")
 
     @set.command()
     async def city(self, ctx, *, city_name_or_id: Union[int, str]):
         """Sets a city location"""
         user = str(ctx.author.id)
-        if not self.data.get(user):
-            self.data[user] = {}
+        if not self.bot.userlocs.get(user):
+            self.bot.userlocs[user] = {}
         if isinstance(city_name_or_id, int):
             type_ = "city_id"
-            self.data[user][type_] = city_name_or_id
+            self.bot.userlocs[user][type_] = city_name_or_id
         elif isinstance(city_name_or_id, str):
             city_name_or_id = city_name_or_id.replace(", ", ",").split(",")
             list_ = list(city_name_or_id)
             type_ = "city_name"
-            self.data[user][type_] = list_.pop(0)
+            self.bot.userlocs[user][type_] = list_.pop(0)
             if list_:
                 type_ = [type_, "state_code"]
-                self.data[user][type_[1]] = list_.pop(0)
+                self.bot.userlocs[user][type_[1]] = list_.pop(0)
             if list_:
                 type_ += ["country_code"]
-                self.data[user][type_[1]] = list_.pop(0)
+                self.bot.userlocs[user][type_[1]] = list_.pop(0)
             if list_:
                 return await ctx.send("Too many codes passed")
-        self.bot.dispatch("weather_users_update", self.data)
+        self.bot.dispatch("weather_users_update", self.bot.userlocs)
         await ctx.send(f"Set `{type_}` to {city_name_or_id}")
 
     @set.command(aliases=["lat-long"])
@@ -149,16 +142,16 @@ class Weather(commands.Cog):
         represented as `r;w set coords -50 50'.
         """
         user = str(ctx.author.id)
-        if not self.data.get(user):
-            self.data[user] = {}
+        if not self.bot.userlocs.get(user):
+            self.bot.userlocs[user] = {}
         if abs(lat) > 90:
             return await ctx.send(f"Error: Latitude cannot exceed 90 degrees")
         elif abs(long) > 180:
             return await ctx.send(f"Error: Longitude cannot exceed 180 degrees")
         else:
-            self.data[user]["latitude"] = lat
-            self.data[user]["longitude"] = long
-        self.bot.dispatch("weather_users_update", self.data)
+            self.bot.userlocs[user]["latitude"] = lat
+            self.bot.userlocs[user]["longitude"] = long
+        self.bot.dispatch("weather_users_update", self.bot.userlocs)
         await ctx.send(f"Set `latitude`, `longitude` to {lat}, {long}")
 
 
