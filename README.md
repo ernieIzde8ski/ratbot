@@ -16,6 +16,7 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
 - `git clone https://github.com/ernieIzde8ski/ratbot.git rat.py`
 - `cd rat.py`
 - `./initialize.sh`
+  - if `-bash: ./initialize.sh: Permission denied`: `chmod u+x ./initialize.sh`
 - `nano config.json` (Highly recommended)
   - format below
   - edit loaded cogs with `nano enabled_extensions.json`

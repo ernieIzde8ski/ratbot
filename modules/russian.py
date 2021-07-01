@@ -1,8 +1,10 @@
 import json
 import os
+from pathlib import Path
 
 
-path = os.path.dirname(os.path.dirname(__file__)) + "/data/russian.json"
+path = Path("../data/russian.json")
+print(path)
 
 with open(path, "r+", encoding="utf-8-sig") as file:
     data = json.load(file)
