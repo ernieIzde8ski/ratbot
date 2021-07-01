@@ -2,7 +2,7 @@ from discord.ext import commands
 
 from modules._json import safe_load, safe_dump
 from modules.functions import reduce
-import modules.random_band as rb
+from modules.random_band import format
 
 from typing import Optional
 import random
@@ -25,7 +25,7 @@ class Randomized(commands.Cog):
         if not (1 <= integer <= 10):
             return await ctx.send(f"{integer} is an invalid amount of bands (range from 1 to 10)")
 
-        bands = await rb.format(integer)
+        bands = await format(integer)
         await ctx.send(f"```\n{bands}\n```")
 
     @random_bands.error

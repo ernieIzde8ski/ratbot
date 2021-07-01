@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 from aiohttp import ClientSession
-import asyncio
 import re
 
 url = "https://www.metal-archives.com/band/random"
@@ -53,8 +52,3 @@ async def format(integer: int = 5):
         resp += f"|  Genre(s): {band[1][4]}" + (" " * len2)
         resp += f"|  Region: {band[1][0]}\n"
     return resp
-
-if __name__ == "__main__":
-    """This generates an error, but it also prints the list, so at some point I stopped caring"""
-    resp = asyncio.run(format())
-    print(resp)
