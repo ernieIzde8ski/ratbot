@@ -15,9 +15,5 @@ def safe_load(fp: str, backup) -> Any:
 
 def safe_dump(fp: str, obj) -> None:
     """Write to a file & create it if it doesn't exist"""
-    try:
-        with open(fp, "w", encoding="utf-8") as file:
-            json.dump(obj, file)
-    except FileNotFoundError:
-        with open(fp, "x", encoding="utf-8") as file:
-            json.dump(obj, file)
+    with open(fp, "w+", encoding="utf-8") as file:
+        json.dump(obj, file)

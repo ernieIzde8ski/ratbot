@@ -26,7 +26,7 @@ class Randomized(commands.Cog):
             return await ctx.send(f"{integer} is an invalid amount of bands (range from 1 to 10)")
 
         bands = await rb.format(integer)
-        await ctx.send(f"```{bands}```")
+        await ctx.send(f"```\n{bands}\n```")
 
     @random_bands.error
     async def random_bands_error(self, ctx: commands.Context, error: commands.CommandError):
