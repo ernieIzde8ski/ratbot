@@ -57,7 +57,7 @@ class Randomized(commands.Cog):
     async def gobi_percentage(self, ctx, *, argument: Optional[str]):
         """Determines gobiness of an argument"""
         if isinstance(argument, str):
-            argument = argument[:1000].replace("*", "").replace("`", "") + (" [...]" if argument[1000:] else "")
+            argument = argument[:1000] + (" [...]" if argument[1000:] else "")
         if not argument:
             return await ctx.send("**Your are 100% Gobi.**")
 
@@ -66,12 +66,14 @@ class Randomized(commands.Cog):
 
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
-    
+
     @commands.group(aliases=["song"], invoke_without_command=True)
     async def random_song(self, ctx):
         """Returns a random song from a saved directory"""
+        if not self.bot.songs:
+            return await ctx.send("There are no songs Lol")
         await ctx.send("https://youtu.be/" + random.choice(self.bot.songs))
-    
+
     @random_song.command()
     async def update(self, ctx, link: str, *, title: str):
         link = re.sub(r"&.+=.+$", "", link)
@@ -83,6 +85,7 @@ class Randomized(commands.Cog):
         safe_dump("data/songs.json", self.songs)
         self.bot.songs = list(self.songs.keys())
         await ctx.send(f"Set {link} to {title}")
+
 
 def setup(bot):
     bot.add_cog(Randomized(bot))
