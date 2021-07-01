@@ -57,4 +57,16 @@ else
 fi
 
 curl -o data/russian.json https://raw.githubusercontent.com/thiagobodruk/bible/master/json/ru_synodal.json
+
 python modules/russian.py
+if (( $? == 0 )); then
+    echo 'Downloaded a Russian bible successfully'
+else
+	python3 install -r requirements.txt
+    if (( $? == 0 )); then
+        echo 'Downloaded a Russian bible successfully'
+    else
+        echo 'An error occurred in downloading the bible'
+        echo 'Ensure python is installed and restart this'
+    fi
+fi
