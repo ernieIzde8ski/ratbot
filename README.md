@@ -4,7 +4,8 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
 
 ## Requirements
 
-- Python, pip
+- Python 3.9, pip
+  - have fun getting Python 3.9 to work on Linux
 - Node.js (Optional)
 
 ## Running the code
