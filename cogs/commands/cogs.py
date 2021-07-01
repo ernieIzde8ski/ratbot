@@ -1,6 +1,5 @@
 from modules.converters import FlagConverter
 from discord.ext import commands
-from traceback import format_tb
 from typing import Optional
 from json import dump
 
@@ -46,8 +45,6 @@ class Cogs(commands.Cog):
                 self.bot.load_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
-                resp += f"Traceback:\n"
-                resp += "".join(format_tb(error.__traceback__)) + "\n"
             else:
                 resp += f"Loaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
@@ -70,8 +67,6 @@ class Cogs(commands.Cog):
                 self.bot.unload_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
-                resp += f"Traceback:\n"
-                resp += "".join(format_tb(error.__traceback__)) + "\n"
             else:
                 resp += f"Unloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
@@ -94,8 +89,6 @@ class Cogs(commands.Cog):
                 self.bot.reload_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
-                resp += f"Traceback:\n"
-                resp += "".join(format_tb(error.__traceback__)) + "\n"
             else:
                 resp += f"Reloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
