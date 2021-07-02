@@ -98,6 +98,7 @@ class Replies(commands.Cog):
             await message.reply(f"Error: Cannot send messages to {self.message.author}")
             if self.task:
                 self.task.cancel()
+            self.message = None
         except HTTPException as e:
             await message.reply(f"{e.__class__.__name__}: {e}")
         else:
