@@ -1,5 +1,5 @@
 from random import random, choice
-from discord.errors import Forbidden
+from discord import Forbidden, Message
 from discord.ext import commands
 from modules._json import safe_load
 import re
@@ -12,8 +12,8 @@ class Reactions(commands.Cog):
         self.lmfao = safe_load("data/lmfao.json", "🤬")
 
     @commands.Cog.listener("on_message")
-    async def on_troll(self, message):
-        if not re.match(r"(?i)\btroll?(e|ing)?|:.*troll.*:", message.content):
+    async def on_troll(self, message: Message):
+        if not re.search(r"troll|trole|troling", message.content, re.I):
             return
         try:
             troll = choice(self.trolls)
@@ -24,7 +24,7 @@ class Reactions(commands.Cog):
             await message.channel.send("Trolled")
 
     @commands.Cog.listener("on_message")
-    async def on_lmfao(self, message):
+    async def on_lmfao(self, message: Message):
         if random() > 0.15 or not re.match(r"(?i)lmf?ao", message.content):
             return
 
