@@ -11,27 +11,25 @@ class Reactions(commands.Cog):
         self.trolls = safe_load("data/trolls.json", ["🚎"])
         self.lmfao = safe_load("data/lmfao.json", "🤬")
 
-    @commands.Cog.listener("on_message")
-    async def on_troll(self, message: Message):
-        if not re.search(r"troll|trole|troling", message.content, re.I):
-            return
-        try:
-            troll = choice(self.trolls)
-            await message.add_reaction(troll)
-        except Forbidden:
-            if message.author == self.bot.user:
+    @commands.Cog.listener()
+    async def on_message(self, message: Message):
+
+        if re.search(r"troll|trole|troling", message.content, re.I):
+            try:
+                troll = choice(self.trolls)
+                await message.add_reaction(troll)
+            except Forbidden:
+                if message.author == self.bot.user:
+                    return
+                await message.channel.send("Trolled")
+
+        if re.search(f"(?i)lmf?ao", message.content):
+            if random() > 0.15:
                 return
-            await message.channel.send("Trolled")
-
-    @commands.Cog.listener("on_message")
-    async def on_lmfao(self, message: Message):
-        if random() > 0.15 or not re.match(r"(?i)lmf?ao", message.content):
-            return
-
-        try:
-            await message.add_reaction(self.lmfao)
-        except Forbidden:
-            await message.channel.send("Lmao !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            try:
+                await message.add_reaction(self.lmfao)
+            except Forbidden:
+                await message.channel.send("Lmao !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
 def setup(bot):

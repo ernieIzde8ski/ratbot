@@ -95,7 +95,7 @@ class Replies(commands.Cog):
         try:
             await self.message.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
         except Forbidden:
-            await message.reply(f"Error: Cannot send messages to {self.message.author}")
+            await message.reply(f"Error: Cannot send messages to {self.message.author}, closing the channel")
             if self.task:
                 self.task.cancel()
             self.message = None
