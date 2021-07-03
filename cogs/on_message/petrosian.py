@@ -1,8 +1,8 @@
 from discord.ext import commands
 from discord import AllowedMentions
 from random import random
-from re import match
 from json import load
+import re
 
 
 class Petrosian(commands.Cog):
@@ -17,7 +17,7 @@ class Petrosian(commands.Cog):
             return
         
         text = "".join(message.content.lower().split())
-        if not match(self.regex, text):
+        if not re.search(self.regex, text):
             return
         elif random() > 0.33:
             return
