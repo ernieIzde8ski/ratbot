@@ -16,11 +16,17 @@ class Settings(commands.Cog):
         """Sets a guild-wide prefix"""
         if not ctx.guild:
             return await ctx.send("You must be in a guild to run this command!")
+        id = str(ctx.guild.id)
         if not prefix:
-            return await ctx.send("Your prefix must have a length!")
-        self.bot.dispatch("prefix_update", str(ctx.guild.id), prefix)
-        prefix = prefix.replace("`", "\`")
-        await ctx.send(f"Updated prefix to {prefix}")
+            if self.bot.pfx.prefixes.get(id):
+                await ctx.send(f"Resetting prefix from {self.bot.pfx.prefixes[id]}")
+                await self.bot.pfx.reset(id)
+            else:
+                await ctx.send("Your prefix must have a length!")
+        else:
+            await self.bot.pfx.update(id, prefix)
+            prefix = prefix.replace("`", "\`")
+            await ctx.send(f"Updated prefix to {prefix}")
 
     @commands.command(aliases=["toggle_tenors"])
     @commands.has_permissions(manage_guild=True)

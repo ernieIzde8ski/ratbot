@@ -23,7 +23,7 @@ with open("config.json", "r", encoding="utf-8") as file:
 prefixes = Prefixes(config["prefix"])
 
 bot = commands.Bot(
-    command_prefix=prefixes.get_prefix,
+    command_prefix=prefixes.get,
     allowed_mentions=AllowedMentions.none(),
     intents=Intents.all()
 )
@@ -31,6 +31,7 @@ bot.config = config
 bot.config["weather"] = getenv("WEATHER_TOKEN")
 bot.c = Channels(**config["channels"])
 bot._check = Check()
+bot.pfx = prefixes
 
 with open("enabled_extensions.json", "r") as file:
     for extension in load(file):
