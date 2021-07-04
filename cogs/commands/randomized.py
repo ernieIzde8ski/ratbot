@@ -28,11 +28,6 @@ class Randomized(commands.Cog):
         bands = await format(integer)
         await ctx.send(f"```\n{bands}\n```")
 
-    @random_bands.error
-    async def random_bands_error(self, ctx: commands.Context, error: commands.CommandError):
-        if isinstance(error, commands.CommandOnCooldown):
-            await ctx.reply("Lol , command is on Cooldown")
-
     @commands.command(aliases=["bm"])
     async def based_meter(self, ctx, *, argument: Optional[str]):
         """Determines basedness of an argument"""
