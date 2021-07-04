@@ -1,12 +1,10 @@
 import json
-import os
 from pathlib import Path
-
 
 path = Path("../data/russian.json")
 print(path)
 
-with open(path, "r+", encoding="utf-8-sig") as file:
+with open(path, "r", encoding="utf-8-sig") as file:
     data = json.load(file)
     verses = []
     for book in data:

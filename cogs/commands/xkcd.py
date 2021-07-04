@@ -1,10 +1,11 @@
-from modules._json import safe_load, safe_dump
-from discord.ext import commands, tasks
-from discord import Embed, Color
-from typing import Optional, Union
-from fuzzywuzzy import fuzz
 from aiohttp import ClientSession
+from discord import Embed, Color
+from discord.ext import commands, tasks
+from fuzzywuzzy import fuzz
 from random import randint
+from typing import Optional, Union
+
+from modules._json import safe_load, safe_dump
 
 
 class XKCD(commands.Cog):

@@ -1,12 +1,12 @@
-from typing import Optional
-from aiohttp.client import ClientSession
-from discord.ext import commands
-from discord import Message, Attachment, File, AllowedMentions, User
-from discord import Forbidden, HTTPException
-from asyncio import sleep
-from modules._json import safe_load
-from os import remove
 import re
+from aiohttp.client import ClientSession
+from asyncio import sleep
+from discord import Forbidden, HTTPException, Message, Attachment, File, AllowedMentions, User
+from discord.ext import commands
+from os import remove
+from typing import Optional
+
+from modules._json import safe_load
 
 
 class Replies(commands.Cog):
@@ -90,7 +90,7 @@ class Replies(commands.Cog):
             return
         elif re.match(r"^.*?\s*clear$", message.content):
             return
-        
+
         [resp, files, failed_files] = await self.get_resp(message)
         try:
             await self.message.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)

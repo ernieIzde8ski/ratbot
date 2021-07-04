@@ -1,7 +1,6 @@
-from discord.ext import commands
-from discord import Message, AllowedMentions, Forbidden
 from asyncio import sleep
-from typing import Optional
+from discord import Message, AllowedMentions, Forbidden
+from discord.ext import commands
 from random import random
 
 

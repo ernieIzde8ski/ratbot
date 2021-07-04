@@ -1,8 +1,9 @@
-from random import random, choice
+import re
 from discord import Forbidden, Message
 from discord.ext import commands
+from random import random, choice
+
 from modules._json import safe_load
-import re
 
 
 class Reactions(commands.Cog):

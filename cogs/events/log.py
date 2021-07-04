@@ -1,5 +1,6 @@
-from discord.ext import commands
 from discord import Embed, Color
+from discord.ext import commands
+
 from modules._json import safe_load
 
 

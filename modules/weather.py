@@ -9,8 +9,9 @@ valid_kwargs = list(valid_kwarg_types.keys())
 
 
 class Units(Enum):
-    STANDARD = {"dt": "UTC", "sunrise": "UTC", "sunset": "UTC", "temp": "Kelvin", "Humidity": "%", "pressure": "hPa",
-                "speed": "meter/sec", "deg": "degrees (meteorological)", "gust": "meter/sec", "all": "%", "1h": "mm", "3h": "mm"}
+    STANDARD = {"dt": "UTC", "sunrise": "UTC", "sunset": "UTC", "temp": "Kelvin", "Humidity": "%",
+                "pressure": "hPa", "speed": "meter/sec", "deg": "degrees (meteorological)",
+                "gust": "meter/sec", "all": "%", "1h": "mm", "3h": "mm"}
     METRIC = {**STANDARD, "temp": "Celsius"}
     IMPERIAL = {**STANDARD, "temp": "Fahrenheit",
                 "speed": "miles/hour", "gust": "miles/hour"}

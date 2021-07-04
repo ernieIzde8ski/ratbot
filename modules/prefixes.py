@@ -1,5 +1,6 @@
-from modules._json import safe_dump, safe_load
 from discord.ext.commands import when_mentioned, when_mentioned_or
+
+from modules._json import safe_dump, safe_load
 
 
 class Prefixes:

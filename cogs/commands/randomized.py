@@ -1,12 +1,11 @@
+import random
+import re
 from discord.ext import commands
+from typing import Optional
 
 from modules._json import safe_load, safe_dump
 from modules.functions import reduce
 from modules.random_band import format
-
-from typing import Optional
-import random
-import re
 
 
 class Randomized(commands.Cog):

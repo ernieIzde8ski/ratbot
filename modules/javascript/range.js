@@ -7,7 +7,8 @@ module.exports = (start = 0, stop = null, step = null) => {
     if (stop == null) {
         stop = start;
         start = 0;
-    } if (step == null) {
+    }
+    if (step == null) {
         if (start < stop) step = 1;
         else step = -1;
     }

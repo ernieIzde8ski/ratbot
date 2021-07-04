@@ -1,6 +1,7 @@
-from typing import Optional, Union
 from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
+from typing import Optional, Union
+
 from modules.converters import FlagConverter
 
 
@@ -29,7 +30,7 @@ class Ping(commands.Cog):
             await ctx.send("No flags present")
         else:
             await ctx.send(f"Flags: {flags}")
-    
+
     @commands.command(hidden=True)
     async def songs(self, ctx):
         """Return the entire song list"""

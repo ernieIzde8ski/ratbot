@@ -1,6 +1,6 @@
-from bs4 import BeautifulSoup
-from aiohttp import ClientSession
 import re
+from aiohttp import ClientSession
+from bs4 import BeautifulSoup
 
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"

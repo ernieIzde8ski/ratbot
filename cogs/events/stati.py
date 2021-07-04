@@ -1,6 +1,7 @@
-from typing import Union
-from discord.ext import commands
 from discord import Activity, ActivityType, Game, Status
+from discord.ext import commands
+from typing import Union
+
 from modules.converters import FlagConverter
 
 

@@ -1,9 +1,10 @@
-from modules.weather import valid_kwargs, valid_kwarg_types, get_weather
-from modules.converters import FlagConverter
-from modules._json import safe_load, safe_dump
-from typing import Optional, Union
-from discord.ext import commands
 from discord import Embed, User
+from discord.ext import commands
+from typing import Optional, Union
+
+from modules._json import safe_load, safe_dump
+from modules.converters import FlagConverter
+from modules.weather import valid_kwargs, valid_kwarg_types, get_weather
 
 
 class Weather(commands.Cog):

@@ -1,16 +1,14 @@
 import asyncio
-from discord.ext import commands
-from discord import Member
-
-from modules.converters import FlagConverter
-from modules._json import safe_dump, safe_load
-
 import random
-from typing import Optional, Union
-from modules.weather import get_weather
-
 from datetime import datetime
+from discord import Member
+from discord.ext import commands
 from pytz import timezone as tz
+from typing import Optional, Union
+
+from modules._json import safe_dump, safe_load
+from modules.converters import FlagConverter
+from modules.weather import get_weather
 
 
 class WeatherUpdates(commands.Cog):
@@ -38,7 +36,7 @@ class WeatherUpdates(commands.Cog):
         message += " hope you have Exciting Day. (Just kidding your Stupid)\n\n"
         if weather.get("error"):
             message += f"Error occured (Because you are Stupid) (`{weather['error']}`). " \
-                "Try resetting your Location data (using `r.w set $CITY_NAME`) and trying again tomorrow (Not today (Stupid idiot thing)) \n\n"
+                       "Try resetting your Location data (using `r.w set $CITY_NAME`) and trying again tomorrow (Not today (Stupid idiot thing)) \n\n"
         else:
             [current, felt, high, low] = [round(weather['main']['temp'], 1), round(
                 weather['main']['feels_like'], 1), round(weather['main']['temp_max'], 1), round(weather['main']['temp_min'], 1)]
@@ -49,13 +47,13 @@ class WeatherUpdates(commands.Cog):
                        f"with a humidity at {weather['main']['humidity']}% and windspeeds at {weather['wind']['speed']} {weather['units']['speed']}. "
 
             if weather['units']['temp'] == "Fahrenheit":
-                current = (current - 32) * (5/9)
+                current = (current - 32) * (5 / 9)
             elif weather['units']['temp'] == "Kelvin":
                 current -= 273.15
             message += self.temp_eval(current) + "\n\n"
 
         message += "**" + \
-            " ".join(random.sample(self.bible, k=random.randint(2, 5))) + "**"
+                   " ".join(random.sample(self.bible, k=random.randint(2, 5))) + "**"
 
         return message
 

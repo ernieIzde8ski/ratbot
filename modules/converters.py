@@ -1,12 +1,12 @@
-from typing import Union
 from discord.ext import commands
-from json.decoder import JSONDecodeError
 from json import loads
+from json.decoder import JSONDecodeError
 from re import split, sub
 
 
 class FlagConverter(commands.Converter):
     """Convert flags to a dictionary"""
+
     async def convert(self, ctx: commands.Context, arguments: str) -> dict:
         if not arguments.startswith("--"):
             raise commands.BadArgument("Arguments must begin with --")
@@ -39,6 +39,7 @@ class FlagConverter(commands.Converter):
 
 class Percentage(commands.Converter):
     """Convert a number or string to a percentage if possible"""
+
     async def convert(self, ctx: commands.Context, argument: str):
         try:
             return float(argument)

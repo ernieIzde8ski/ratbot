@@ -1,19 +1,15 @@
-from modules.prefixes import Prefixes
-from modules.channels import Channels
-from modules.msg_check import Check
-
-
 from discord import AllowedMentions, Intents
 from discord.ext import commands
-
-from json import load
-
 from dotenv import load_dotenv
+from json import load
 from os import getenv
+
+from modules.channels import Channels
+from modules.msg_check import Check
+from modules.prefixes import Prefixes
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
-
 
 with open("config.json", "r", encoding="utf-8") as file:
     config = load(file)
@@ -56,5 +52,6 @@ async def on_message(message):
 @bot.event
 async def on_prefix_update(id, new_prefix):
     await prefixes.update_prefixes(id, new_prefix)
+
 
 bot.run(token)

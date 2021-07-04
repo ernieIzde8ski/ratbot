@@ -11,7 +11,7 @@ class Check():
     def update_blocked(self, blockee) -> None:
         self.blocked.append(blockee.id)
         safe_dump("data/blocked.json", self.blocked)
-    
+
     def unblock(self, blockee) -> None:
         self.blocked.remove(blockee.id)
         safe_dump("data/blocked.json", self.blocked)

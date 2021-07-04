@@ -1,7 +1,8 @@
+import random
 from discord.ext import commands
+
 from modules.SentenceGenerator import loadGenerator
 from modules._json import safe_load
-import random
 
 
 class Trek(commands.Cog):
@@ -14,7 +15,8 @@ class Trek(commands.Cog):
         """Sends a Borg copypasta with an argument as Borg"""
         resp = "We are the {Borg}. "
         resp += " ".join(random.sample(self.borg_samples,
-                         k=random.randint(2, len(self.borg_samples))))
+                                       k=random.randint(2, len(self.borg_samples))
+        ))
         await ctx.send(resp.format(Borg=borg, Locutus=ctx.author.display_name.title()))
 
     @commands.command(aliases=["rt", "trek"])

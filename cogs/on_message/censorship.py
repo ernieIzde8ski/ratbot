@@ -1,8 +1,9 @@
+import re
 from discord import Message, AllowedMentions
 from discord.ext import commands
 from fuzzywuzzy import fuzz
+
 from modules.functions import reduce
-import re
 
 
 class Censorship(commands.Cog):
@@ -33,13 +34,13 @@ class Censorship(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def on_armenium(self, message: Message):
-        if message.author.bot:
-            return
         if message.channel.id != 811023978045898822 or message.author.id == 232706427045543936:
             return
 
         await message.delete()
-        await message.channel.send(f"{message.author.mention} WTF.", allowed_mentions=self.allowed_mentions, delete_after=3)
+        await message.channel.send(f"{message.author.mention} WTF.",
+                                   allowed_mentions=self.allowed_mentions,
+                                   delete_after=3)
 
     @commands.Cog.listener("on_message")
     async def on_tenor(self, message: Message):

@@ -1,17 +1,21 @@
-from textwrap import fill
 from aiohttp import ClientSession
-from discord.ext import commands
-from modules._json import safe_load, safe_dump
 from discord import Embed
+from discord.ext import commands
+from textwrap import fill
 from typing import Optional
+
+from modules._json import safe_load, safe_dump
 
 
 class Bible(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.translation_languages = {"cherokee": ["Cherokee New Testament", "Cherokee"], "kjv": ["King James Version", "English"],
-                                      "web": ["World English Bible", "English"], "clementine": ["Clementine Latin Vulgate", "Latine"],
-                                      "almeida": ["João Ferreira de Almeida", "Português"], "rccv": ["Romanian Corrected Cornilescu Bible","Română"]}
+        self.translation_languages = {"cherokee": ["Cherokee New Testament", "Cherokee"],
+                                      "kjv": ["King James Version", "English"],
+                                      "web": ["World English Bible", "English"],
+                                      "clementine": ["Clementine Latin Vulgate", "Latine"],
+                                      "almeida": ["João Ferreira de Almeida", "Português"],
+                                      "rccv": ["Romanian Corrected Cornilescu Bible", "Română"]}
         self.valid_translations = self.translation_languages.keys()
         self.data = safe_load("data/bible.json", {})
 
@@ -61,7 +65,8 @@ class Bible(commands.Cog):
             return await ctx.send(f"error: {text['error']}")
         elif text["content"].__len__() > 1000:
             reference = text["reference"].replace(' ', "%20")
-            return await ctx.send(f"error: passage is too long\ntry https://biblegateway.com/passage/?search={reference}")
+            error = f"Passage is too long\nTry https://biblegateway.com/passage/?search={reference}"
+            return await ctx.send(f"Error: {error}")
         else:
             await ctx.send(embed=self.embed_constructor(text, ctx.me.color, translation_not_set))
 
@@ -83,7 +88,8 @@ class Bible(commands.Cog):
         else:
             self.data[str(ctx.author.id)] = translation
             safe_dump("data/bible.json", self.data)
-            await ctx.send(f"Set your translation to `{self.translation_languages[translation][0]}` ({self.translation_languages[translation][1]})")
+            translation = f"`{self.translation_languages[translation][0]}` ({self.translation_languages[translation][1]})"
+            await ctx.send(f"Set your translation to {translation}")
 
 
 def setup(bot):

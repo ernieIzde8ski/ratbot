@@ -1,7 +1,8 @@
-from modules.converters import FlagConverter
 from discord.ext import commands
-from typing import Optional
 from json import dump
+from typing import Optional
+
+from modules.converters import FlagConverter
 
 
 class Cogs(commands.Cog):
@@ -9,7 +10,7 @@ class Cogs(commands.Cog):
         self.bot = bot
         self.all_extensions = []
         bot.loop.create_task(self.initialize())
-    
+
     async def initialize(self):
         await self.bot.wait_until_ready()
         self.all_extensions = list(self.bot.extensions.keys())
@@ -32,9 +33,8 @@ class Cogs(commands.Cog):
 
     @cogs.command(aliases=["l"])
     @commands.is_owner()
-    async def load(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
+    async def load(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: str):
         """Load given cog(s)"""
-        if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = self.all_extensions
         else:
@@ -49,14 +49,14 @@ class Cogs(commands.Cog):
                 resp += f"Loaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
         print(resp); await ctx.send(resp)
-        if tag.get("t") or tag.get("temporary"): return
+        if tag.get("t") or tag.get("temporary"):
+            return
         await self.dump_extensions()
 
     @cogs.command(aliases=["u"])
     @commands.is_owner()
-    async def unload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
+    async def unload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: str):
         """Unload given cog(s)"""
-        if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = self.all_extensions
         else:
@@ -70,15 +70,16 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Unloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp); await ctx.send(resp)
-        if tag.get("t") or tag.get("temporary"): return
+        print(resp)
+        await ctx.send(resp)
+        if tag.get("t") or tag.get("temporary"):
+            return
         await self.dump_extensions()
-    
+
     @cogs.command(aliases=["r"])
     @commands.is_owner()
-    async def reload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: Optional[str]):
+    async def reload(self, ctx, tag: Optional[FlagConverter] = {}, *, extensions: str):
         """Reload given cog(s)"""
-        if not extensions: await ctx.send("No parameter was given") ; return
         if extensions == "*":
             extensions = list(self.bot.extensions.keys())
         else:
@@ -92,9 +93,12 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Reloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp); await ctx.send(resp)
-        if tag.get("t") or tag.get("temporary"): return
+        print(resp)
+        await ctx.send(resp)
+        if tag.get("t") or tag.get("temporary"):
+            return
         await self.dump_extensions()
+
 
 def setup(bot):
     bot.add_cog(Cogs(bot))

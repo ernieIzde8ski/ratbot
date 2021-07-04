@@ -1,7 +1,8 @@
 from discord.ext import commands
+from typing import Optional
+
 from modules._json import safe_load, safe_dump
 from modules.converters import Percentage
-from typing import Optional
 
 
 class Settings(commands.Cog):
@@ -42,7 +43,7 @@ class Settings(commands.Cog):
             await ctx.send("Enabling tenor slaying in this server")
             self.bot.tenor_guilds.add(ctx.guild.id)
         safe_dump("data/tenor_guilds.json", list(self.bot.tenor_guilds))
-    
+
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def toggle_random_bans(self, ctx, percent: Optional[Percentage]):
