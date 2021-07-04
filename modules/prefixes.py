@@ -10,7 +10,7 @@ class Prefixes:
     async def get(self, bot, message) -> list:
         """Returns a prefix off of context"""
         if not message.guild:
-            return when_mentioned(bot, message) + self.prefix
+            return when_mentioned(bot, message) + self.prefix + [""]
         id = str(message.guild.id)
         if not self.prefixes.get(id):
             return when_mentioned(bot, message) + self.prefix
