@@ -21,7 +21,9 @@ class Randomized(commands.Cog):
     async def random_bands(self, ctx, integer: int = 3):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
-        if not (1 <= integer <= 10):
+        if not (1 <= integer <= 10 or ctx.author.id == self.bot.owner_id):
+            print(ctx.author.id)
+            print(self.bot.owner_id)
             return await ctx.send(f"{integer} is an invalid amount of bands (range from 1 to 10)")
 
         bands = await format(integer)
