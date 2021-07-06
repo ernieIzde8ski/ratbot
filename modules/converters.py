@@ -45,7 +45,8 @@ class Percentage(commands.Converter):
             return float(argument)
         except ValueError:
             try:
-                return float(sub(r"\s*%", "", argument)) / 100
+                return float(sub(r"\s*%", "", "".join(argument.split()))) / 100
             except ValueError:
                 raise commands.BadArgument(
-                    "Argument must be of the format 0.25 or 25%")
+                    "Argument must be of the format 0.P or P%"
+                )

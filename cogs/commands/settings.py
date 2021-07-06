@@ -55,9 +55,9 @@ class Settings(commands.Cog):
             self.bot.pipi_guilds.add(id)
         safe_dump("data/pipi.json", list(self.bot.pipi_guilds))
 
-    @commands.command()
+    @commands.command(aliases=["toggle_bans"])
     @commands.has_guild_permissions(administrator=True)
-    async def toggle_random_bans(self, ctx, percent: Optional[Percentage]):
+    async def toggle_random_bans(self, ctx, *, percent: Optional[Percentage]):
         """Toggle the bot randomly banning individuals"""
         id = str(ctx.guild.id)
         if id in self.bot.banning_guilds and not percent:
