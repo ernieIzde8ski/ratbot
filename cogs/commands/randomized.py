@@ -31,7 +31,8 @@ class Randomized(commands.Cog):
     async def based_meter(self, ctx, *, argument: Optional[str]):
         """Determines basedness of an argument"""
         if isinstance(argument, str):
-            argument = argument[:1000].replace("*", "").replace("`", "") + (" [...]" if argument[1000:] else "")
+            argument = argument[:1000] + (" [...]" if argument[1000:] else "")
+            argument = argument.replace("*", "").replace("`", "")
         if not argument:
             return await ctx.send("**Your are Cringe!!!!!!!!!**")
 
