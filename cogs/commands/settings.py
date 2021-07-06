@@ -9,6 +9,7 @@ class Settings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.tenor_guilds = set(safe_load("data/tenor_guilds.json", []))
+        self.bot.pipi_guilds = set(safe_load("data/pipi.json", []))
         self.bot.banning_guilds = safe_load("data/banning.json", {})
 
     @commands.command(aliases=["prefix"])
@@ -29,13 +30,10 @@ class Settings(commands.Cog):
             prefix = prefix.replace("`", "\`")
             await ctx.send(f"Updated prefix to {prefix}")
 
-    @commands.command(aliases=["toggle_tenors"])
-    @commands.has_permissions(manage_guild=True)
-    async def tenor_toggle(self, ctx):
+    @commands.command(aliases=["tenor_toggle"])
+    @commands.has_guild_permissions(manage_guild=True)
+    async def toggle_tenors(self, ctx):
         """Toggle Tenor gif deleting"""
-        if not ctx.guild:
-            return await ctx.send("You must be in a guild to run this command!")
-
         if ctx.guild.id in self.bot.tenor_guilds:
             await ctx.send("Disabling tenor slaying in this server")
             self.bot.tenor_guilds.remove(ctx.guild.id)
@@ -44,12 +42,23 @@ class Settings(commands.Cog):
             self.bot.tenor_guilds.add(ctx.guild.id)
         safe_dump("data/tenor_guilds.json", list(self.bot.tenor_guilds))
 
-    @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def toggle_random_bans(self, ctx, percent: Optional[Percentage]):
-        if not ctx.guild:
-            return await ctx.send("You need to be in a guild for this!")
+    @commands.command(aliases=["toggle_petrosyan", "toggle_pipi"])
+    @commands.has_guild_permissions(manage_guild=True)
+    async def toggle_petrosian(self, ctx):
+        """Toggles the bot DMing individuals the Petrosian copypasta"""
+        id = str(ctx.guild.id)
+        if id in self.bot.pipi_guilds:
+            await ctx.send("Reenabling the Petrosian copypasta")
+            self.bot.pipi_guilds.remove(id)
+        else:
+            await ctx.send("Disabling the Petrosian copypasta")
+            self.bot.pipi_guilds.add(id)
+        safe_dump("data/pipi.json", list(self.bot.pipi_guilds))
 
+    @commands.command()
+    @commands.has_guild_permissions(administrator=True)
+    async def toggle_random_bans(self, ctx, percent: Optional[Percentage]):
+        """Toggle the bot randomly banning individuals"""
         id = str(ctx.guild.id)
         if id in self.bot.banning_guilds and not percent:
             await ctx.send("Disabling random bans in this guild")
