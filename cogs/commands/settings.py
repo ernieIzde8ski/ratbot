@@ -13,7 +13,7 @@ class Settings(commands.Cog):
         self.bot.banning_guilds = safe_load("data/banning.json", {})
 
     @commands.command(aliases=["prefix"])
-    @commands.has_permissions(manage_guild=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_prefix(self, ctx, prefix: Optional[str]):
         """Sets a guild-wide prefix"""
         if not ctx.guild:
