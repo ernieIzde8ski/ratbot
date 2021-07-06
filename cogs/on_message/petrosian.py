@@ -14,8 +14,11 @@ class Petrosian(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if message.author.bot or (str(message.guild.id) in self.bot.pipi_guilds):
+        if message.author.bot:
             return
+        elif message.guild:
+            if str(message.guild.id) in self.bot.pipi_guilds:
+                return
         
         if not re.search(self.regex, message.content, re.ASCII + re.IGNORECASE):
             return
