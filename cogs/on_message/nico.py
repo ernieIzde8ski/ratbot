@@ -1,3 +1,4 @@
+from datetime import datetime
 from discord.ext import commands
 from fuzzywuzzy import fuzz
 
@@ -6,6 +7,7 @@ class Nico(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.Nico = None
+        self.time = None
 
     async def get_nico(self) -> None:
         await self.bot.wait_until_ready()
@@ -25,8 +27,12 @@ class Nico(commands.Cog):
         elif not self.verify(message.content):
             return
 
-        await self.Nico.send("<#488479538104369153>")
-
+        now = datetime.now().strftime("%Y-%m-%d;%H:%M")
+        if self.time == now:
+            return
+        
+        await self.Nico.send("<#758373055918899216>")
+        self.time = now
 
 def setup(bot):
     cog = Nico(bot)
