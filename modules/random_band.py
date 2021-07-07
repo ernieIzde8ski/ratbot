@@ -1,13 +1,14 @@
-from math import ceil, floor
 import re
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
+from textwrap import shorten
+
 
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
 
 
-async def get_bands(loops: int) -> list[list[str, dict]]:
+async def get_bands(loops: int) -> list[dict]:
     """Get random bands & statistics"""
     band_list = []
     async with ClientSession() as session:
@@ -25,10 +26,12 @@ async def get_bands(loops: int) -> list[list[str, dict]]:
                 stats2 = [v for k, v in enumerate(stats2) if k % 2 == 1]
 
                 stats = stats1 + stats2
-                stats = {"origin": [stats[0], stats[1]], "status": stats[2],
-                         "formed": stats[3], "genre": stats[4],
-                         "lyrics": stats[5], "label": stats[6]}
-                band_list.append([band_name, stats])
+                stats = {
+                    "origin": [stats[0], stats[1]], "status": stats[2],
+                    "formed": stats[3], "genre": stats[4], "lyrics": stats[5],
+                    "label": stats[6], "name": band_name
+                }
+                band_list.append(stats)
     return band_list
 
 
@@ -39,11 +42,13 @@ async def format(integer: int = 5):
     bands = await get_bands(integer)
 
     for band in bands:
-        len = band[0].__len__() + 2
+        band["name"] = shorten(band["name"], 30)
+        len = band["name"].__len__() + 2
         if len > max_band_spaces:
             max_band_spaces = len
 
-        len = band[1]["genre"].__len__() + 2
+        band["genre"] = shorten(band["genre"], 30)
+        len = band["genre"].__len__() + 2
         if len > max_genre_spaces:
             max_genre_spaces = len
 
@@ -56,10 +61,10 @@ async def format(integer: int = 5):
            f"Region:\n"
 
     for band in bands:
-        len1 = max_band_spaces - band[0].__len__()
-        len2 = max_genre_spaces - band[1]["genre"].__len__()
+        len1 = max_band_spaces - band["name"].__len__()
+        len2 = max_genre_spaces - band["genre"].__len__()
 
-        resp += band[0] + (" " * len1)
-        resp += f"|  {band[1]['genre']}" + (" " * len2)
-        resp += f"|  {band[1]['origin'][0]}\n"
+        resp += band["name"] + (" " * len1)
+        resp += f"|  {band['genre']}" + (" " * len2)
+        resp += f"|  {band['origin'][0]}\n"
     return resp
