@@ -34,7 +34,9 @@ class Censorship(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def on_armenium(self, message: Message):
-        if message.channel.id != 811023978045898822 or message.author.id == 232706427045543936:
+        if message.author.id == self.bot.user.id:
+            return
+        elif message.channel.id != 811023978045898822 or message.author.id == 232706427045543936:
             return
 
         await message.delete()
