@@ -1,7 +1,7 @@
 import random
 import re
 from discord.ext import commands
-from typing import Optional
+from typing import Optional, Union
 
 from modules._json import safe_load, safe_dump
 from modules.functions import reduce
@@ -63,6 +63,13 @@ class Randomized(commands.Cog):
 
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
+    
+    @commands.command(aliases=["choose"])
+    async def choice(self, ctx, *, arguments: str):
+        arguments = [argument for argument in re.split(r",\s*", arguments) if argument]
+        if not arguments:
+            return await ctx.send("Arguments are required")
+        await ctx.send("`" + random.choice(arguments).replace("`", "") + "`")
 
     @commands.group(aliases=["song"], invoke_without_command=True)
     async def random_song(self, ctx):
@@ -72,6 +79,7 @@ class Randomized(commands.Cog):
         await ctx.send("https://youtu.be/" + random.choice(self.bot.songs))
 
     @random_song.command()
+    @commands.is_owner()
     async def update(self, ctx, link: str, *, title: str):
         link = re.sub(r"&.+=.+$", "", link)
         link = link.removeprefix("https://youtu.be/").removeprefix("https://www.youtube.com/watch?v=")
