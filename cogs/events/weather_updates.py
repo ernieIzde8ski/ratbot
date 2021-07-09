@@ -1,7 +1,7 @@
 import asyncio
 import random
 from datetime import datetime
-from discord import Member
+from discord import Member, User
 from discord.ext import commands
 from pytz import timezone as tz
 from typing import Optional, Union
@@ -16,8 +16,7 @@ class WeatherUpdates(commands.Cog):
         self.bot = bot
         self.bible = safe_load("data/russian.json", [])
         self.data = safe_load("data/weather_resps.json", {})
-        self.users = safe_load(
-            "data/weather_updates.json", {"active_users": []})
+        self.users = safe_load("data/weather_updates.json", {"active_users": []})
 
     def check(self, member: Member):
         return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.bot.userlocs.get(str(member.id)) and member.id in self.users["active_users"])
@@ -98,7 +97,7 @@ class WeatherUpdates(commands.Cog):
 
     @commands.command(aliases=["wset"])
     @commands.is_owner()
-    async def weather_data_set(self, ctx, target: Optional[Member], *, flags: FlagConverter = {}):
+    async def weather_data_set(self, ctx, target: Optional[Union[Member, User]], *, flags: FlagConverter = {}):
         """
         Add a user to weather updates
         tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
@@ -109,12 +108,22 @@ class WeatherUpdates(commands.Cog):
         elif flags.get("id"):
             target = flags.pop("id")
         else:
-            return await ctx.send("Invalid user!")
+            return await ctx.send("Invalid user! (-1)")
 
-        self.users[str(target)] = flags
-        self.users[str(target)]["sent"] = False
-        if target not in self.users["active_users"]:
-            self.users["active_users"].append(target)
+        # Add a user if flags are present
+        # otherwise, try to remove a user
+        if flags:
+            self.users[str(target)] = flags
+            self.users[str(target)]["sent"] = False
+            if target not in self.users["active_users"]:
+                self.users["active_users"].append(target)
+        else:
+            if target in self.users["active_users"]:
+                self.users["active_users"].remove(target)
+            else:
+                return await ctx.send("Invalid user! (-2)")
+
+        # Save information
         safe_dump("data/weather_updates.json", self.users)
         await ctx.send(f"Updated user data for {target}")
 
