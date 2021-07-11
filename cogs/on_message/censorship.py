@@ -11,16 +11,24 @@ class Censorship(commands.Cog):
         self.bot = bot
         self.allowed_mentions = AllowedMentions.all()
 
-    @commands.Cog.listener("on_message")
-    async def on_twitter(self, message: Message):
+    async def on_twitter(self, message: Message) -> None:
         if not message.guild or message.author.bot:
             return
         elif self.bot.config["main_guild"] != message.guild.id:
             return
+
         content = reduce(message.content)
-        if fuzz.partial_ratio(content, "twiter") > 85:
+        if fuzz.partial_ratio(content, "twitter") > 85:
             await message.delete()
             await message.author.send("Trolled")
+
+    @commands.Cog.listener()
+    async def on_message(self, message: Message):
+        await self.on_twitter(message)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: Message, after: Message):
+        await self.on_twitter(after)
 
     @commands.Cog.listener("on_message")
     async def on_fanfics(self, message: Message):

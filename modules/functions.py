@@ -1,9 +1,9 @@
 def reduce(text: str) -> str:
     """Take away a string's life and soul"""
     text = "".join([c for c in text if ord(c) <= 128])
-    resp = " "
+    resp = "  "
     for i in text:
-        if i == resp[-1]:
+        if i == resp[-1] and i == resp[-2]:
             continue
         else:
             resp += i
