@@ -1,4 +1,4 @@
-from discord.errors import Forbidden, HTTPException
+from discord import Forbidden, HTTPException
 from discord.ext import commands
 from typing import Optional, Union
 
