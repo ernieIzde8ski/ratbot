@@ -25,7 +25,7 @@ class Reactions(commands.Cog):
                 await message.channel.send("Trolled")
 
         if re.search(f"(?i)lmf?ao", message.content):
-            if random() > 0.05:
+            if random() > 0.01:
                 return
             try:
                 await message.add_reaction(self.lmfao)
