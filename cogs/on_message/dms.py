@@ -1,5 +1,6 @@
 from discord import Embed, Color
 from discord.ext import commands
+import re
 
 
 class DMs(commands.Cog):
@@ -9,6 +10,8 @@ class DMs(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild or message.author.id in self.bot._check.blocked:
+            return
+        elif re.match(r"^.*\s*echo.*$", message.content):
             return
 
         if message.author.id != self.bot.user.id:

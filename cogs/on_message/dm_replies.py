@@ -78,8 +78,6 @@ class Replies(commands.Cog):
 
     @commands.Cog.listener()
     async def on_private_message(self, message: Message):
-        if re.match(r"^.*?\s*clear$", message.content):
-            return
         await self.update_message(message)
 
     @commands.Cog.listener()
@@ -88,7 +86,7 @@ class Replies(commands.Cog):
             return
         elif not self.message or message.channel != self.bot.c.DMs:
             return
-        elif re.match(r"^.*?\s*clear$", message.content):
+        elif re.match(r"^.*\s*clear.*$", message.content):
             return
 
         [resp, files, failed_files] = await self.get_resp(message)
