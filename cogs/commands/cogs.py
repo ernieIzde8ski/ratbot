@@ -25,6 +25,25 @@ class Cogs(commands.Cog):
     def trim_whitespace(string: str) -> str:
         return ''.join(string.split())
 
+    @commands.command(aliases=["uc", "cmd", "command"])
+    @commands.is_owner()
+    async def update_command(self, ctx, command_name: str, *, flags: FlagConverter = {}):
+        """Update a command's attributes
+        
+        There's the occasional 
+        """
+        try:
+            cmd = list(filter(
+                lambda cmd: command_name.lower() in cmd.aliases or command_name == cmd.name, self.bot.commands
+            ))[0]
+        except IndexError:
+            raise commands.BadArgument(
+                "Converting to command failed for parameter \"command_name\"."
+            )
+        else:
+            cmd.update(**flags)
+            await ctx.send(f"Updated command `{cmd.name}`")
+
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx):
         """Return cog list
@@ -48,7 +67,8 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Loaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp); await ctx.send(resp)
+        print(resp)
+        await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
         await self.dump_extensions()
@@ -70,7 +90,8 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Unloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp); await ctx.send(resp)
+        print(resp)
+        await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
         await self.dump_extensions()
@@ -92,7 +113,8 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Reloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp); await ctx.send(resp)
+        print(resp)
+        await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
         await self.dump_extensions()
