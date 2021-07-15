@@ -1,5 +1,5 @@
 import re
-from discord import Message, AllowedMentions
+from discord import Message, AllowedMentions, NotFound
 from discord.ext import commands
 from fuzzywuzzy import fuzz
 
@@ -12,14 +12,17 @@ class Censorship(commands.Cog):
         self.allowed_mentions = AllowedMentions.all()
 
     async def on_twitter(self, message: Message) -> None:
-        if not message.guild or message.author.bot:
+        if not message.guild or message.author.id != 368780147563823114:
             return
         elif self.bot.config["main_guild"] != message.guild.id:
             return
 
         content = reduce(message.content)
         if fuzz.partial_ratio(content, "twitter") > 85:
-            await message.delete()
+            try:
+                await message.delete()
+            except NotFound:
+                pass
             await message.author.send("Trolled")
 
     @commands.Cog.listener()
