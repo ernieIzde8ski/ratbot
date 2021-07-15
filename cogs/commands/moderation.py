@@ -25,11 +25,13 @@ class Moderation(commands.Cog):
         
         Valid flags: --ignore-humans, --ignore-bots, --ignore-webhooks,
                      --attachments, --embeds, --plaintext, --match <regex>
+        All flags with dashes can be written alternatively with
+        underscores (i.e. "--ignore_humans")
         """
         if not flags:
             def check(msg): return msg != ctx.message
         else:
-            flags = {key.lower().replace("-", "_"): value for key, value in flags.items()}
+            flags = {key.lower().replace("_", "-"): value for key, value in flags.items()}
             checks = [check for check in self.checks if check in flags]
             def check(msg: Message) -> bool:
                 print(checks)
