@@ -17,20 +17,18 @@ class Settings(commands.Cog):
     async def set_prefix(self, ctx, prefix: Optional[str]):
         """Sets a guild-wide prefix
         --reset can be used to reset the prefix to the default instead"""
-        if not ctx.guild:
-            return await ctx.send("You must be in a guild to run this command!")
         id = str(ctx.guild.id)
         if not prefix:
             if self.bot.pfx.prefixes.get(id):
                 await ctx.send(f"Your prefix is `{self.bot.pfx.prefixes[id]}`")
             else:
-                await ctx.send("Your prefix must have a length!")
+                raise commands.BadArgument("No prefix is set.")
         elif prefix == "--reset":
             if self.bot.pfx.prefixes.get(id):
                 await ctx.send(f"Resetting prefix from `{self.bot.pfx.prefixes[id]}`")
                 await self.bot.pfx.reset(id)
             else:
-                await ctx.send("There is no set prefix!")
+                raise commands.BadArgument("No prefix is set")
         else:
             await self.bot.pfx.update(id, prefix)
             prefix = prefix.replace("`", "\`")

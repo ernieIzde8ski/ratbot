@@ -12,7 +12,7 @@ class Censorship(commands.Cog):
         self.allowed_mentions = AllowedMentions.all()
 
     async def on_twitter(self, message: Message) -> None:
-        if not message.guild or message.author.id != 368780147563823114:
+        if not message.guild or message.author.id not in [368780147563823114, 700133917264445480]:
             return
         elif self.bot.config["main_guild"] != message.guild.id:
             return

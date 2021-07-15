@@ -22,9 +22,7 @@ class Randomized(commands.Cog):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
         if not (1 <= integer <= 10 or ctx.author.id == self.bot.owner_id):
-            print(ctx.author.id)
-            print(self.bot.owner_id)
-            return await ctx.send(f"{integer} is an invalid amount of bands (range from 1 to 10)")
+            raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
 
         bands = await format(integer)
         await ctx.send(f"```\n{bands}\n```")
@@ -36,7 +34,7 @@ class Randomized(commands.Cog):
             argument = argument[:1000] + (" [...]" if argument[1000:] else "")
             argument = argument.replace("*", "").replace("`", "")
         if not argument:
-            return await ctx.send("**Your are Cringe!!!!!!!!!**")
+            raise commands.BadArgument("**Your are Cringe!!!!!!!!!**")
 
         seed = reduce(argument)
         random.seed(seed)
@@ -56,7 +54,7 @@ class Randomized(commands.Cog):
         if isinstance(argument, str):
             argument = argument[:1000] + (" [...]" if argument[1000:] else "")
         if not argument:
-            return await ctx.send("**Your are 100% Gobi.**")
+            raise commands.BadArgument("**Your are 100% Gobi.**")
 
         seed = reduce(argument)
         random.seed(seed)
@@ -67,8 +65,6 @@ class Randomized(commands.Cog):
     @commands.command(aliases=["choose"])
     async def choice(self, ctx, *, arguments: str):
         arguments = [argument for argument in re.split(r",\s*", arguments) if argument]
-        if not arguments:
-            return await ctx.send("Arguments are required")
         await ctx.send("`" + random.choice(arguments).replace("`", "") + "`")
 
     @commands.group(aliases=["song"], invoke_without_command=True)

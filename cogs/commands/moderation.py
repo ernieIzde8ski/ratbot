@@ -34,7 +34,6 @@ class Moderation(commands.Cog):
             flags = {key.lower().replace("_", "-"): value for key, value in flags.items()}
             checks = [check for check in self.checks if check in flags]
             def check(msg: Message) -> bool:
-                print(checks)
                 for check in checks:
                     value = flags[check]
                     if not self.checks[check](msg, value):

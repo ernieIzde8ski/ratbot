@@ -45,7 +45,7 @@ class Guilds(commands.Cog):
             guilds = sorted(self.bot.guilds, key=lambda guild: guild.member_count, reverse=reverse)
             guilds = map(lambda guild: f"{guild} ({guild.member_count} members)", guilds)
         else:
-            return await ctx.send("Invalid sort option")
+            raise commands.BadArgument("Invalid sort option")
         await ctx.send("\n".join(guilds))
 
 

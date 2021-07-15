@@ -94,12 +94,12 @@ class Weather(commands.Cog):
         """
         if not location:
             return await ctx.send("Please see the help command for proper usage")
-        for key in location.keys():
+        for key, value in location.items():
             if key not in valid_kwargs:
-                return await ctx.send(f"Error: key {key} is not a valid weather setting")
-            elif not isinstance(location[key], valid_kwarg_types[key]):
-                return await ctx.send(f"Error: invalid type '{type(location[key]).__name__}' for key {key}")
-            if isinstance(location[key], str):
+                raise commands.BadArgument(f"key {key} is not a valid weather setting")
+            elif not isinstance(value, valid_kwarg_types[key]):
+                raise commands.BadArgument(f"invalid type '{value.__class__.__name__}' for key {key}")
+            if isinstance(value, str):
                 location[key] = location[key].title().replace("_", " ")
         else:
             id = str(ctx.author.id)
@@ -116,11 +116,13 @@ class Weather(commands.Cog):
             victim = victim.id
         victim = str(victim)
 
-        for key in location.keys():
+        for key, value in location.items():
             if key not in valid_kwargs:
-                return await ctx.send(f"Error: key {key} is not a valid weather setting")
-            elif not isinstance(location[key], valid_kwarg_types[key]):
-                return await ctx.send(f"Error: invalid type '{type(location[key]).__name__}' for key {key}")
+                raise commands.BadArgument(f"key {key} is not a valid weather setting")
+            elif not isinstance(value, valid_kwarg_types[key]):
+                raise commands.BadArgument(f"invalid type '{value.__class__.__name__}' for key {key}")
+            if isinstance(value, str):
+                location[key] = location[key].title().replace("_", " ")
         else:
             set = "Reset" if self.bot.userlocs.get(victim) else "Set"
             self.bot.userlocs[victim] = location

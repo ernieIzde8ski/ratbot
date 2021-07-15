@@ -62,11 +62,11 @@ class Bible(commands.Cog):
         text = await self.get_text(reference, translation)
 
         if text.get("error"):
-            return await ctx.send(f"error: {text['error']}")
+            raise commands.CommandError(text['error'])
         elif text["content"].__len__() > 1000:
             reference = text["reference"].replace(' ', "%20")
-            error = f"Passage is too long\nTry https://biblegateway.com/passage/?search={reference}"
-            return await ctx.send(f"Error: {error}")
+            error = f"Passage is too long.\nTry: <https://biblegateway.com/passage/?search={reference}>"
+            raise commands.CommandError(error)
         else:
             await ctx.send(embed=self.embed_constructor(text, ctx.me.color, translation_not_set))
 

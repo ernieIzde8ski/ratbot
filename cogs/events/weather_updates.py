@@ -108,7 +108,7 @@ class WeatherUpdates(commands.Cog):
         elif flags.get("id"):
             target = flags.pop("id")
         else:
-            return await ctx.send("Invalid user! (-1)")
+            raise commands.BadArgument("Could not get target user")
 
         # Add a user if flags are present
         # otherwise, try to remove a user
@@ -120,8 +120,10 @@ class WeatherUpdates(commands.Cog):
         else:
             if target in self.users["active_users"]:
                 self.users["active_users"].remove(target)
+            # Exception raised when flags are not present (not counting
+            # ID flag) and the target is not currently an active user
             else:
-                return await ctx.send("Invalid user! (-2)")
+                raise commands.BadArgument("Target is not an active user")
 
         # Save information
         safe_dump("data/weather_updates.json", self.users)

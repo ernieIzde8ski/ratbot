@@ -50,8 +50,7 @@ class XKCD(commands.Cog):
 
         xkcd = await self.get_xkcd(argument)
         if xkcd.get("error"):
-            return await ctx.send(f"Error: {xkcd['error']}")
-
+            raise commands.BadArgument(xkcd["error"])
         embed = self.embed_constructor(xkcd)
         await ctx.send(embed=embed)
 
@@ -62,7 +61,7 @@ class XKCD(commands.Cog):
 
         xkcd = await self.get_xkcd(id)
         if xkcd.get("error"):
-            return await ctx.send(f"Error: {xkcd['error']}")
+            raise commands.BadArgument(xkcd["error"])
 
         embed = self.embed_constructor(xkcd)
         await ctx.send(embed=embed)
@@ -72,7 +71,7 @@ class XKCD(commands.Cog):
         """Returns the latest XKCD"""
         xkcd = await self.get_xkcd(-1)
         if xkcd.get("error"):
-            return await ctx.send(f"Error: {xkcd['error']}")
+            raise commands.BadArgument(xkcd["error"])
 
         embed = self.embed_constructor(xkcd)
         await ctx.send(embed=embed)

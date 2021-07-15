@@ -25,7 +25,7 @@ class Stati(commands.Cog):
 
     @staticmethod
     def get_status(status: str):
-        status = str(status).lower()
+        status = status.lower()
         try:
             return getattr(Status, status)
         except AttributeError:

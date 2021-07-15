@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 
 path = Path("../data/russian.json")
-print(path)
 
 with open(path, "r", encoding="utf-8-sig") as file:
     data = json.load(file)

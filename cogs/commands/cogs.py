@@ -70,8 +70,7 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Unloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp)
-        await ctx.send(resp)
+        print(resp); await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
         await self.dump_extensions()
@@ -93,8 +92,7 @@ class Cogs(commands.Cog):
             else:
                 resp += f"Reloaded extension: {extension}\n"
         resp = "```\n" + resp.strip() + "\n```"
-        print(resp)
-        await ctx.send(resp)
+        print(resp); await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
         await self.dump_extensions()

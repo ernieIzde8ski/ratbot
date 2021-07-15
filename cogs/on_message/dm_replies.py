@@ -4,7 +4,9 @@ from asyncio import sleep
 from discord import Forbidden, HTTPException, Message, Attachment, File, AllowedMentions, User
 from discord.ext import commands
 from os import remove
-from typing import Optional
+from typing import Optional, Union
+
+from discord.member import Member
 
 from modules._json import safe_load
 
@@ -31,9 +33,9 @@ class Replies(commands.Cog):
     async def clear(self, ctx):
         """Clear the DM channel"""
         if not self.task:
-            await ctx.send("There's nothing to clear!")
+            raise commands.CommandError("No DM channel is currently open")
         else:
-            await ctx.send(f"Clearing open channel with {self.message.author}")
+            await ctx.send(f"Clearing open channel with {self.message.channel.recipient}")
             self.task.cancel()
             self.message = None
 
@@ -43,7 +45,7 @@ class Replies(commands.Cog):
         """Block a discord.User"""
         print(ctx.author.id, ctx.bot.owner_id)
         if not blockee and not self.message:
-            await ctx.send("There's no one to block!")
+            raise commands.MissingRequiredArgument("blockee is a required argument that is missing.")
         elif not blockee:
             await ctx.send(f"Blocked {self.message.author}")
             self.bot._check.update_blocked(self.message.author)
@@ -60,15 +62,12 @@ class Replies(commands.Cog):
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
-    async def unblock(self, ctx, *, blockee: Optional[User]):
-        if not blockee:
-            return await ctx.send("There's no one to unblock!")
-        elif blockee.id not in self.bot._check.blocked:
-            print(self.bot._check.blocked)
-            return await ctx.send(f"{blockee} is not blocked!")
+    async def unblock(self, ctx, *, blockee: Union[Member, User]):
+        if blockee.id not in self.bot._check.blocked:
+            raise commands.BadArgument("blockee {blockee} is not blocked")
         else:
             self.bot._check.unblock(blockee)
-            return await ctx.send(f"Unblocked {blockee}")
+            await ctx.send(f"Unblocked {blockee}")
 
     @commands.command()
     @commands.is_owner()

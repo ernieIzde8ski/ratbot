@@ -10,6 +10,9 @@ class ErrorHandling(commands.Cog):
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
         if ctx.prefix == "" and isinstance(error, commands.CommandNotFound):
             return
+        elif ctx.command:
+            if ctx.command.has_error_handler():
+                return
         
         resp = f"{error.__class__.__name__}: {str(error).removesuffix('.')}.\n"
         if isinstance(error, commands.CommandNotFound):
