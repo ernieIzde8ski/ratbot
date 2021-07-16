@@ -19,7 +19,7 @@ class WeatherUpdates(commands.Cog):
         self.users = safe_load("data/weather_updates.json", {"active_users": []})
 
     def check(self, member: Member):
-        return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.bot.userlocs.get(str(member.id)) and member.id in self.users["active_users"])
+        return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.bot.user_locations.get(str(member.id)) and member.id in self.users["active_users"])
 
     def temp_eval(self, temp: Union[int, float]) -> str:
         for num, value in self.data["temperature_resps"]:
@@ -67,7 +67,7 @@ class WeatherUpdates(commands.Cog):
         if self.users[id].get("sent") == now:
             return
 
-        weather = await get_weather(self.bot.config["weather"], **self.bot.userlocs[id])
+        weather = await get_weather(self.bot.config["weather"], **self.bot.user_locations[id])
         await after.send(self.message_constructor(self.users[id], weather))
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)

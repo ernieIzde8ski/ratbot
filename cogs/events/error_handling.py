@@ -14,7 +14,7 @@ class ErrorHandling(commands.Cog):
             if ctx.command.has_error_handler():
                 return
         
-        resp = f"{error.__class__.__name__}: {str(error).removesuffix('.')}.\n"
+        resp = f"{error.__class__.__name__}: {error}\n"
         if isinstance(error, commands.CommandNotFound):
             cmds = list(map(lambda cmd: cmd.name.lower(), ctx.bot.commands))
             cmds.sort(key=lambda cmd: fuzz.ratio(ctx.invoked_with.lower(), cmd), reverse=True)
