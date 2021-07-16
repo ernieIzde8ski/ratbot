@@ -1,3 +1,4 @@
+from asyncio import sleep
 from discord.ext import commands
 from discord import Message
 
@@ -34,6 +35,8 @@ class Moderation(commands.Cog):
             flags = {key.lower().replace("_", "-"): value for key, value in flags.items()}
             checks = [check for check in self.checks if check in flags]
             def check(msg: Message) -> bool:
+                if msg == ctx.message:
+                    return False
                 for check in checks:
                     value = flags[check]
                     if not self.checks[check](msg, value):
@@ -42,7 +45,9 @@ class Moderation(commands.Cog):
                     return True
     
         await ctx.channel.purge(limit=amount+1, check=check)
-
+        await ctx.message.add_reaction("☑️")
+        await sleep(2)
+        await ctx.message.delete()
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
