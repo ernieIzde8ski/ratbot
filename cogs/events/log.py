@@ -30,6 +30,7 @@ class Log(commands.Cog):
     async def die(self, ctx):
         """Shuts down bot"""
         self.get_channels()
+        await ctx.message.add_reaction("☑️")
         await self.bot.c.Status.send(embed=self.embed_constructor("offline"))
         await self.bot.close()
 
