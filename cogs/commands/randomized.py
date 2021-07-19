@@ -1,7 +1,9 @@
+from typing import Optional
 import random
 import re
+
 from discord.ext import commands
-from typing import Optional, Union
+from discord import Embed
 
 from modules._json import safe_load, safe_dump
 from modules.functions import reduce
@@ -61,24 +63,26 @@ class Randomized(commands.Cog):
 
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
-    
+
     @commands.command(aliases=["choose"])
     async def choice(self, ctx, *, arguments: str):
         arguments = [argument for argument in re.split(r",\s*", arguments) if argument]
+        if not arguments.__len__():
+            raise commands.ArgumentParsingError("arguments is a required argument that is missing.")
         await ctx.send("`" + random.choice(arguments).replace("`", "") + "`")
 
-    @commands.group(aliases=["song"], invoke_without_command=True)
+    @commands.group(aliases=["song", "rs"], invoke_without_command=True)
     async def random_song(self, ctx):
         """Returns a random song from a saved directory"""
         if not self.bot.songs:
-            return await ctx.send("There are no songs Lol")
+            raise commands.CommandError("Bot does not have any songs")
         await ctx.send("https://youtu.be/" + random.choice(self.bot.songs))
 
     @random_song.command()
     @commands.is_owner()
     async def update(self, ctx, link: str, *, title: str):
+        link = re.sub(r"(https?:\/\/)?(www.)?(youtube.com|youtu.be)\/(watch\?v=)?", "", link)
         link = re.sub(r"&.+=.+$", "", link)
-        link = link.removeprefix("https://youtu.be/").removeprefix("https://www.youtube.com/watch?v=")
 
         if link in self.bot.songs:
             await ctx.send(f"Overwriting `{link}`: `{self.songs[link]}`")
@@ -86,6 +90,15 @@ class Randomized(commands.Cog):
         safe_dump("data/songs.json", self.songs)
         self.bot.songs = list(self.songs.keys())
         await ctx.send(f"Set {link} to {title}")
+    
+    @random_song.command()
+    @commands.is_owner()
+    async def list(self, ctx):
+        resp = "```\nself.bot.songs:\n   " + "\n   ".join(self.bot.songs).strip()
+        items = [str(item) for item in self.songs.items()]
+        resp += "\nself.songs:\n   " + "\n   ".join(items).strip()
+        resp += "\n```"
+        await ctx.send(resp)
 
 
 def setup(bot):
