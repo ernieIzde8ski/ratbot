@@ -18,8 +18,6 @@ class Randomized(commands.Cog):
         self.bot.songs = list(self.songs.keys())
 
     @commands.command(aliases=["rb", "bands"])
-    @commands.cooldown(1, 45, commands.BucketType.user)
-    @commands.cooldown(1, 15, commands.BucketType.guild)
     async def random_bands(self, ctx, integer: int = 3):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
@@ -27,7 +25,22 @@ class Randomized(commands.Cog):
             raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
 
         bands = await format(integer)
-        await ctx.send(f"```\n{bands}\n```")
+        await self.split_message(ctx, bands)
+
+    @staticmethod
+    async def split_message(ctx: commands.Context, message: str):
+        """Takes a long message and splits it into multiple, surrounded by code blocks"""
+        if message.__len__() < 1950:
+            await ctx.send(f"```\n{message}\n```")
+
+        lines = message.split("\n")
+        resp = ""
+        for line in lines:
+            if (line.__len__() + resp.__len__() < 1950) and (line != lines[-1]):
+                resp += f"\n{line}"
+            else:
+                await ctx.send(f"```\n{resp}\n```")
+                resp = line
 
     @commands.command(aliases=["bm"])
     async def based_meter(self, ctx, *, argument: Optional[str]):
@@ -66,9 +79,11 @@ class Randomized(commands.Cog):
 
     @commands.command(aliases=["choose"])
     async def choice(self, ctx, *, arguments: str):
-        arguments = [argument for argument in re.split(r",\s*", arguments) if argument]
+        arguments = [argument for argument in re.split(
+            r",\s*", arguments) if argument]
         if not arguments.__len__():
-            raise commands.ArgumentParsingError("arguments is a required argument that is missing.")
+            raise commands.ArgumentParsingError(
+                "arguments is a required argument that is missing.")
         await ctx.send("`" + random.choice(arguments).replace("`", "") + "`")
 
     @commands.group(aliases=["song", "rs"], invoke_without_command=True)
@@ -81,7 +96,8 @@ class Randomized(commands.Cog):
     @random_song.command()
     @commands.is_owner()
     async def update(self, ctx, link: str, *, title: str):
-        link = re.sub(r"(https?:\/\/)?(www.)?(youtube.com|youtu.be)\/(watch\?v=)?", "", link)
+        link = re.sub(
+            r"(https?:\/\/)?(www.)?(youtube.com|youtu.be)\/(watch\?v=)?", "", link)
         link = re.sub(r"&.+=.+$", "", link)
 
         if link in self.bot.songs:
@@ -90,11 +106,12 @@ class Randomized(commands.Cog):
         safe_dump("data/songs.json", self.songs)
         self.bot.songs = list(self.songs.keys())
         await ctx.send(f"Set {link} to {title}")
-    
+
     @random_song.command()
     @commands.is_owner()
     async def list(self, ctx):
-        resp = "```\nself.bot.songs:\n   " + "\n   ".join(self.bot.songs).strip()
+        resp = "```\nself.bot.songs:\n   " + \
+            "\n   ".join(self.bot.songs).strip()
         items = [str(item) for item in self.songs.items()]
         resp += "\nself.songs:\n   " + "\n   ".join(items).strip()
         resp += "\n```"

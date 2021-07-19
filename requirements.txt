@@ -6,3 +6,4 @@ fuzzywuzzy >= 0.18.0
 python-Levenshtein >= 0.12.2
 beautifulsoup4 >= 4.9.3
 pytz >= 2021.1
+unidecode >= 1.2.0
