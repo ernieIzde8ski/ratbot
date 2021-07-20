@@ -15,7 +15,7 @@ class Reactions(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: Message):
 
-        if re.search(r"troll|trole|troling", message.content, re.I):
+        if re.search(r"troll|trole|troling|troel", message.content, re.I):
             try:
                 troll = choice(self.trolls)
                 await message.add_reaction(troll)
@@ -24,7 +24,7 @@ class Reactions(commands.Cog):
                     return
                 await message.channel.send("Trolled")
 
-        if re.search(f"(?i)lmf?ao", message.content):
+        if re.search(f"lmf?ao", message.content, re.I):
             if random() > 0.01:
                 return
             try:

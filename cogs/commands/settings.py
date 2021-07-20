@@ -18,21 +18,24 @@ class Settings(commands.Cog):
         """Sets a guild-wide prefix
         --reset can be used to reset the prefix to the default instead"""
         id = str(ctx.guild.id)
-        if not prefix:
-            if self.bot.pfx.prefixes.get(id):
-                await ctx.send(f"Your prefix is `{self.bot.pfx.prefixes[id]}`")
+        established_prefix = self.bot.pfx.prefixes.get(id)
+        # If no prefix argument is passed, display current prefix.
+        if prefix is None:
+            if established_prefix is not None:
+                await ctx.send(f"Your prefix is `{established_prefix}`")
             else:
                 raise commands.BadArgument("No prefix is set.")
+        # If the prefix argument is an argument to reset, reset the current prefix.
         elif prefix == "--reset":
-            if self.bot.pfx.prefixes.get(id):
-                await ctx.send(f"Resetting prefix from `{self.bot.pfx.prefixes[id]}`")
+            if established_prefix is not None:
+                await ctx.send(f"Resetting prefix from `{established_prefix}`")
                 await self.bot.pfx.reset(id)
             else:
                 raise commands.BadArgument("No prefix is set")
+        # If the prefix argument is otherwise present, update the prefix to it.
         else:
             await self.bot.pfx.update(id, prefix)
-            prefix = prefix.replace("`", "\`")
-            await ctx.send(f"Updated prefix to {prefix}")
+            await ctx.send(f"Updated prefix to {prefix}.")
 
     @commands.command(aliases=["tenor_toggle"])
     @commands.has_guild_permissions(manage_guild=True)

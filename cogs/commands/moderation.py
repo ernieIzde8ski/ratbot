@@ -44,7 +44,7 @@ class Moderation(commands.Cog):
                 else:
                     return True
     
-        await ctx.channel.purge(limit=amount+1, check=check)
+        await ctx.channel.purge(limit=amount, check=check)
         await ctx.message.add_reaction("☑️")
         await sleep(2)
         await ctx.message.delete()

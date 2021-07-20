@@ -35,7 +35,7 @@ class Guilds(commands.Cog):
             r;guilds
             r;guilds --order member_count --reverse
         """
-        order = "alphabetical" if not sort.get("order") else str(sort.get("order")).lower()
+        order = "alphabetical" if not (order := sort.get("order")) else order.lower()
         reverse = bool(sort.get("reverse"))
 
         if order == "alphabetical":

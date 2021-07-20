@@ -43,7 +43,6 @@ class Replies(commands.Cog):
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
     async def block(self, ctx, *, blockee: Optional[User]):
         """Block a discord.User"""
-        print(ctx.author.id, ctx.bot.owner_id)
         if not blockee and not self.message:
             raise commands.MissingRequiredArgument("blockee is a required argument that is missing.")
         elif not blockee:

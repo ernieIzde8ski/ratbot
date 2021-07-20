@@ -13,10 +13,10 @@ class Prefixes:
         if not message.guild:
             return when_mentioned(bot, message) + self.prefix + [""]
         id = str(message.guild.id)
-        if not self.prefixes.get(id):
+        if (prefix := self.prefixes.get(id)) is None:
             return when_mentioned(bot, message) + self.prefix
         else:
-            return when_mentioned_or(self.prefixes[id])(bot, message)
+            return when_mentioned_or(prefix)(bot, message)
 
     async def update(self, id: str, new_prefix: str) -> None:
         """Update a guild's prefix"""

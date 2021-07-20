@@ -33,7 +33,7 @@ class DMs(commands.Cog):
             message.content = message.content[:maximum_length] + " […]"
         description = f"{message.content}"
         if urls:
-            description += "\n\n\n**Attachment URLs: \n**"
+            description += "\n\n\n**Attachment URLs:** \n"
             description += "\n".join(urls)
         embed = Embed(title=title, description=description, color=color)
         if message.attachments:

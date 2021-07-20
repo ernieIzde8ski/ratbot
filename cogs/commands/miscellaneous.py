@@ -26,10 +26,8 @@ class Miscellaneous(commands.Cog):
 
         if not tz:
             id = str(ctx.author.id)
-            if self.data.get(id):
-                tz = timezone(self.data[id])
-            else:
-                tz = timezone(self.bot.config["preferred_timezone"])
+            tz = timezone(data) if (data := self.data.get(id)) else timezone(
+                self.bot.config["preferred_timezone"])
         elif isinstance(tz, str):
             raise commands.BadArgument("Converting to \"timezone\" failed for parameter \"tz\". \n"
                                        "Valid timezone list: <https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>")

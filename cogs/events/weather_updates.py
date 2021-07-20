@@ -33,8 +33,8 @@ class WeatherUpdates(commands.Cog):
         message += random.choice(self.data["greetings"]
                                  ).format(random.choice(user["aliases"]))
         message += " hope you have Exciting Day. (Just kidding your Stupid)\n\n"
-        if weather.get("error"):
-            message += f"Error occured (Because you are Stupid) (`{weather['error']}`). " \
+        if (error := weather.get("error")) is not None:
+            message += f"Error occured (Because you are Stupid) (`{error}`). " \
                        "Try resetting your Location data (using `r.w set $CITY_NAME`) and trying again tomorrow (Not today (Stupid idiot thing)) \n\n"
         else:
             [current, felt, high, low] = [round(weather['main']['temp'], 1), round(

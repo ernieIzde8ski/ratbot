@@ -1,5 +1,10 @@
 def reduce(text: str) -> str:
-    """Take away a string's life and soul"""
+    """Strips away much of a string
+    
+    In order, this function removes non-ASCII, removes
+    characters duplicated more than twice, lowercases
+    the string, and removes whitespace.
+    """
     text = "".join([c for c in text if ord(c) <= 128])
     resp = "  "
     for i in text:

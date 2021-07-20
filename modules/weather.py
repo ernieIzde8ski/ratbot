@@ -52,8 +52,8 @@ def get_weather_url(apikey: str, **kwargs) -> str:
     else:
         raise KeyError("No valid kwargs given")
 
-    if kwargs.get("units"):
-        url += f"&units={kwargs['units']}"
+    if (units := kwargs.get("units")) is not None:
+        url += f"&units={units.lower()}"
     else:
         url += "&units=metric"
 
@@ -65,7 +65,9 @@ def get_weather_url(apikey: str, **kwargs) -> str:
 
 async def get_weather(apikey: str, **kwargs) -> dict:
     """Returns a dict object with weather information
-    takes the same parameters as get_weather_url"""
+
+    takes the same parameters as get_weather_url
+    """
     try:
         url = get_weather_url(apikey, **kwargs)
     except KeyError:
@@ -77,8 +79,8 @@ async def get_weather(apikey: str, **kwargs) -> dict:
             if resp.get("message"):
                 return {"error": resp["message"]}
             else:
-                if kwargs.get("units"):
-                    units = kwargs.get("units").title()
+                if (units := kwargs.get("units")) is not None:
+                    units = units.title()
                     if units == "Imperial":
                         resp["units"] = Units.IMPERIAL.value
                     elif units == "Metric":

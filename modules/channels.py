@@ -7,6 +7,6 @@ class Channels():
         """Retrieve channels for later usage"""
         for key, value in self.channels.items():
             setattr(self, key, bot.get_channel(value))
-            if not getattr(self, key):
+            if getattr(self, key) is None:
                 print(f"Could not get channel {key} from id {value}")
         self.loaded = True

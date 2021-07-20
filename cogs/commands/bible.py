@@ -52,12 +52,11 @@ class Bible(commands.Cog):
     @commands.command(aliases=["v", "🙏"])
     async def bible_verse(self, ctx, *, reference: str = "Joshua 21:8"):
         """Returns a passage based off a reference"""
-        if self.data.get(str(ctx.author.id)):
-            translation = self.data[str(ctx.author.id)]
-            translation_not_set = False
-        else:
+        if (translation := self.data.get(str(ctx.author.id))) is None:
             translation = "KJV"
             translation_not_set = True
+        else:
+            translation_not_set = False
 
         text = await self.get_text(reference, translation)
 
