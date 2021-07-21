@@ -39,25 +39,32 @@ async def get_bands(loops: int) -> list[dict]:
     return band_list
 
 
-async def format(integer: int = 5):
+async def format(integer: int = 5, sort_method: str = "band") -> str:
     """Format random bands"""
+    bands = await get_bands(integer)
+    if (sort_method := sort_method.lower()) == "band":
+        bands.sort(key=lambda band: unidecode(band["name"].lower()))
+    elif sort_method == "genre":
+        bands.sort(key=lambda band: unidecode(band["genre"].lower()))
+    elif sort_method == "region":
+        bands.sort(key=lambda band: unidecode(band["origin"][0].lower()))
+    
+
     max_band_spaces = 7
     max_genre_spaces = 11
-    bands = await get_bands(integer)
-    bands.sort(key=lambda band: unidecode(band["name"].lower()))
-
     for band in bands:
         band["name"] = shorten(band["name"], 30)
         len = band["name"].__len__() + 2
         if len > max_band_spaces:
             max_band_spaces = len
 
-        # I abuse the textwrap module by adding a space, which will cause 
+        # I abuse the textwrap module by adding a space, which will cause
         # the genre name to be split on slashes. This prevents lines like
         # While Heaven Wept  |  Epic [...]                     |  United States
         # from occurring when genres are separated by slashes. Instead:
         # While Heaven Wept  |  Epic Progressive/Power/[...]   |  United States
-        band["genre"] = shorten(band["genre"].replace("/", "/ "), 30, replace_whitespace=False).replace("/ ", "/")
+        band["genre"] = shorten(band["genre"].replace(
+            "/", "/ "), 30, replace_whitespace=False).replace("/ ", "/")
         len = band["genre"].__len__() + 2
         if len > max_genre_spaces:
             max_genre_spaces = len

@@ -18,20 +18,22 @@ class Randomized(commands.Cog):
         self.bot.songs = list(self.songs.keys())
 
     @commands.command(aliases=["rb", "bands"])
-    async def random_bands(self, ctx, integer: int = 3):
+    @commands.cooldown(2, 45, commands.BucketType.guild)
+    async def random_bands(self, ctx, integer: int = 3, sort_method: str = "band"):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
         if not (1 <= integer <= 10 or ctx.author.id == self.bot.owner_id):
             raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
 
-        bands = await format(integer)
+        bands = await format(integer, sort_method)
         await self.split_message(ctx, bands)
 
     @staticmethod
-    async def split_message(ctx: commands.Context, message: str):
+    async def split_message(ctx: commands.Context, message: str) -> None:
         """Takes a long message and splits it into multiple, surrounded by code blocks"""
         if message.__len__() < 1950:
             await ctx.send(f"```\n{message}\n```")
+            return
 
         lines = message.split("\n")
         resp = ""
