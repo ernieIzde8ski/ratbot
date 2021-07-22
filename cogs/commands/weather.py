@@ -3,7 +3,7 @@ from discord.ext import commands
 from typing import Optional, Union
 
 from modules._json import safe_load, safe_dump
-from modules.converters import FlagConverter
+from modules.converters import FlagConverter, Coordinates
 from modules.weather import valid_kwargs, valid_kwarg_types, get_weather
 
 
@@ -163,8 +163,8 @@ class Weather(commands.Cog):
         item = list(data.items())[0]
         await ctx.send(f"Updated `{item[0]}` to `{item[1]}`.")
 
-    @set.command(aliases=["lat-long"])
-    async def coords(self, ctx, lat: Union[int, float], long: Union[int, float]):
+    @set.command(aliases=["lat-long", "c"])
+    async def coords(self, ctx, *, coords: Coordinates):
         """
         Sets latitude/longitude coordinates
         The only accepted two inputs are integers or floats; this means no funny
@@ -174,15 +174,11 @@ class Weather(commands.Cog):
         user = str(ctx.author.id)
         if not self.bot.user_locations.get(user):
             self.bot.user_locations[user] = {}
-        if abs(lat) > 90:
-            return await ctx.send(f"Error: Latitude cannot exceed 90 degrees")
-        elif abs(long) > 180:
-            return await ctx.send(f"Error: Longitude cannot exceed 180 degrees")
         else:
-            self.bot.user_locations[user]["latitude"] = lat
-            self.bot.user_locations[user]["longitude"] = long
+            self.bot.user_locations[user]["latitude"] = coords[0]
+            self.bot.user_locations[user]["longitude"] = coords[1]
         await self._update()
-        await ctx.send(f"Set `latitude`, `longitude` to {lat}, {long}")
+        await ctx.send(f"Set `latitude`, `longitude` to {coords[0]}, {coords[1]}")
 
 
 def setup(bot):

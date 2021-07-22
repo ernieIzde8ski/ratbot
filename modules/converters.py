@@ -1,7 +1,7 @@
 from discord.ext import commands
 from json import loads
 from json.decoder import JSONDecodeError
-from re import split, sub
+import re
 
 
 class FlagConverter(commands.Converter):
@@ -12,7 +12,7 @@ class FlagConverter(commands.Converter):
             raise commands.BadArgument("Arguments must begin with --")
         dict_ = {}
         arguments = arguments.replace(";", " ")
-        arguments = split(r"\s*--\s*", arguments)[1:]
+        arguments = re.split(r"\s*--\s*", arguments)[1:]
         for argument in arguments:
             if not argument:
                 raise commands.BadArgument("Argument key must exist")
@@ -45,8 +45,72 @@ class Percentage(commands.Converter):
             return float(argument)
         except ValueError:
             try:
-                return float(sub(r"\s*%", "", "".join(argument.split()))) / 100
+                return float(re.sub(r"\s*%", "", "".join(argument.split()))) / 100
             except ValueError:
                 raise commands.BadArgument(
                     "Argument must be of the format 0.P or P%"
                 )
+
+
+class Coordinates(commands.Converter):
+    """Convert an input to degrees of latitude/longitude"""
+    @staticmethod
+    def strip(string: str) -> str:
+        return "".join(string.split())
+
+    async def convert(self, ctx: commands.Context, argument: str) -> list[int]:
+        arguments = re.split(r",\s*|\s+(?=\d)", argument)
+        arguments = [self.strip(argument)
+                     for argument in arguments if argument]
+
+        if arguments.__len__() > 2:
+            raise commands.TooManyArguments(
+                "More than two coordinate arguments were passed.")
+        elif arguments.__len__() < 2:
+            raise commands.BadArgument(
+                "Less than two coordinate arguments were passed.")
+
+        arguments = [re.split(r"(?i)(?<=\d)(?:Degrees|Deg(\.)?|°)?(?!\d)", argument)
+                     for argument in arguments]
+        arguments = [[i for i in index if i] for index in arguments]
+
+        coords = [None, None]
+        for index, argument in enumerate(arguments):
+            len = argument.__len__()
+            if not (1 <= len <= 2):
+                raise commands.BadArgument(
+                    "More or less than two coordinate arguments were passed")
+
+            if len == 1:
+                try:
+                    coords[index] = float(argument[0])
+                except ValueError:
+                    raise commands.BadArgument(
+                        "Invalid coordinate arguments passed")
+            elif len == 2:
+                try:
+                    coord_name = argument[1][0].lower()
+
+                    if coord_name == "n":
+                        coords[0] = float(argument[0])
+                    elif coord_name == "e":
+                        coords[1] = float(argument[0])
+                    elif coord_name == "w":
+                        coords[1] = -float(argument[0])
+                    elif coord_name == "s":
+                        coords[0] = -float(argument[0])
+                except (ValueError, KeyError):
+                    raise commands.BadArgument(
+                        "Invalid coordinate arguments passed")
+        if coords[0] is None or coords[1] is None:
+            raise commands.BadArgument(
+                "Either latitude or longitude parameter not present")
+
+        if abs(coords[0]) > 90:
+            raise commands.BadArgument(
+                f"Latitude cannot exceed 90 degrees (given latitude: {coords[0]}).")
+        elif abs(coords[1]) > 180:
+            raise commands.BadArgument(
+                f"Longitude cannot exceed 180 degrees (given longitude: {coords[1]}).")
+
+        return coords
