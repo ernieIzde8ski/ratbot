@@ -114,3 +114,13 @@ class Coordinates(commands.Converter):
                 f"Longitude cannot exceed 180 degrees (given longitude: {coords[1]}).")
 
         return coords
+
+
+class StrictBool(commands.Converter):
+    """Convert a string to bool iff it equals True or False"""
+    async def convert(self, ctx: commands.Context, argument: str):
+        value = {"true": True, "false": False}.get(argument.lower())
+        if value is not None:
+            return value
+        else:
+            raise commands.BadBoolArgument("Could not convert argument to bool")

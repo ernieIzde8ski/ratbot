@@ -5,6 +5,7 @@ from textwrap import fill
 from typing import Optional
 
 from modules._json import safe_load, safe_dump
+from modules.converters import StrictBool
 
 
 class Bible(commands.Cog):
@@ -20,7 +21,8 @@ class Bible(commands.Cog):
         self.data = safe_load("data/bible.json", {})
 
     @staticmethod
-    async def get_text(reference, translation, characters_per_line: int = 70) -> dict:
+    async def get_text(reference, translation, characters_per_line: int = 70, display_verse_number: bool = False) -> dict:
+        """Retrieve a verse or verses & return its relevant contents"""
         async with ClientSession() as session:
             async with session.get(f"https://bible-api.com/{reference}?translation={translation}") as resp:
                 resp = await resp.json()
@@ -30,9 +32,16 @@ class Bible(commands.Cog):
                 elif isinstance(resp, str):
                     return {"error": resp}
 
+                if display_verse_number is False:
+                    content = resp["text"]
+                else:
+                    verses = [verse["text"].replace("\n", "") for verse in resp["verses"]]
+                    verses = map(lambda verse: f"**{verse['verse']}** {verse['text']}", resp["verses"])
+                    content = " ".join(verses)
+
                 return {
                     "reference": resp["reference"],
-                    "content": fill(resp["text"], width=characters_per_line),
+                    "content": fill(content, width=characters_per_line),
                     "translation": resp["translation_name"]
                 }
 
@@ -50,7 +59,7 @@ class Bible(commands.Cog):
         ).set_footer(text=footer)
 
     @commands.command(aliases=["v", "🙏"])
-    async def bible_verse(self, ctx, *, reference: str = "Joshua 21:8"):
+    async def bible_verse(self, ctx, display_verse: Optional[StrictBool] = True, *, reference: str = "Joshua 21:8"):
         """Returns a passage based off a reference"""
         if (translation := self.data.get(str(ctx.author.id))) is None:
             translation = "KJV"
@@ -58,7 +67,7 @@ class Bible(commands.Cog):
         else:
             translation_not_set = False
 
-        text = await self.get_text(reference, translation)
+        text = await self.get_text(reference, translation, display_verse_number=display_verse)
 
         if text.get("error"):
             raise commands.CommandError(text['error'])
