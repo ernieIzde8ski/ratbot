@@ -1,5 +1,7 @@
 from discord.ext import commands
 from json import dump
+
+import re
 from typing import Optional
 
 from modules.converters import FlagConverter
@@ -28,13 +30,11 @@ class Cogs(commands.Cog):
     @commands.command(aliases=["uc", "cmd", "command"])
     @commands.is_owner()
     async def update_command(self, ctx, command_name: str, *, flags: FlagConverter = {}):
-        """Update a command's attributes
-        
-        There's the occasional 
-        """
+        """Update a command's attributes"""
         try:
             cmd = list(filter(
-                lambda cmd: command_name.lower() in cmd.aliases or command_name == cmd.name, self.bot.commands
+                lambda cmd: command_name.lower(
+                ) in cmd.aliases or command_name == cmd.name, self.bot.commands
             ))[0]
         except IndexError:
             raise commands.BadArgument(
@@ -47,7 +47,9 @@ class Cogs(commands.Cog):
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx):
         """Return cog list
-        Subcommands load, unload, and reload cogs"""
+
+        Subcommands load, unload, and reload cogs
+        """
         await ctx.send(f"Loaded extensions: `{'`, `'.join(self.bot.extensions.keys())}`")
 
     @cogs.command(aliases=["l"])
@@ -57,7 +59,8 @@ class Cogs(commands.Cog):
         if extensions == "*":
             extensions = self.all_extensions
         else:
-            extensions = self.trim_whitespace(extensions).split(",")
+            extensions = re.split(r", *", extensions)
+            extensions.sort()
         resp = ""
         for extension in extensions:
             try:
@@ -80,7 +83,8 @@ class Cogs(commands.Cog):
         if extensions == "*":
             extensions = self.all_extensions
         else:
-            extensions = self.trim_whitespace(extensions).split(",")
+            extensions = re.split(r", *", extensions)
+            extensions.sort()
         resp = ""
         for extension in extensions:
             try:
@@ -103,7 +107,8 @@ class Cogs(commands.Cog):
         if extensions == "*":
             extensions = list(self.bot.extensions.keys())
         else:
-            extensions = self.trim_whitespace(extensions).split(",")
+            extensions = re.split(r", *", extensions)
+        extensions.sort()
         resp = ""
         for extension in extensions:
             try:
