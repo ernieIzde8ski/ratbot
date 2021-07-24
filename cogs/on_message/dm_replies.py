@@ -7,6 +7,7 @@ from os import remove
 from typing import Optional, Union
 
 from discord.member import Member
+from discord import DMChannel
 
 from modules._json import safe_load
 
@@ -15,13 +16,13 @@ class Replies(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.allowed_mentions = AllowedMentions.all()
-        self.message = None
+        self.bot._message = None
         self.task = None
 
     async def _update_message(self, message: Message) -> None:
-        self.message = message
+        self.bot._message = message
         await sleep(600)
-        self.message = None
+        self.bot._message = None
 
     async def update_message(self, message: Message) -> None:
         if self.task:
@@ -29,35 +30,36 @@ class Replies(commands.Cog):
         self.task = self.bot.loop.create_task(self._update_message(message))
 
     @commands.command()
-    @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs)
+    @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or (isinstance(ctx.channel, DMChannel) and ctx.channel == ctx.bot._message.channel))
     async def clear(self, ctx):
         """Clear the DM channel"""
         if not self.task:
             raise commands.CommandError("No DM channel is currently open")
         else:
-            await ctx.send(f"Clearing open channel with {self.message.channel.recipient}")
+            await ctx.send(f"Clearing open channel with {self.bot._message.channel.recipient}")
+            await sleep(0.5)
             self.task.cancel()
-            self.message = None
+            self.bot._message = None
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
     async def block(self, ctx, *, blockee: Optional[User]):
         """Block a discord.User"""
-        if not blockee and not self.message:
+        if not blockee and not self.bot._message:
             raise commands.MissingRequiredArgument("blockee is a required argument that is missing.")
         elif not blockee:
-            await ctx.send(f"Blocked {self.message.author}")
-            self.bot._check.update_blocked(self.message.author)
+            await ctx.send(f"Blocked {self.bot._message.author}")
+            self.bot._check.update_blocked(self.bot._message.author)
             if self.task:
                 self.task.cancel()
-                self.message = None
+                self.bot._message = None
         else:
             await ctx.send(f"Blocked {blockee}")
             self.bot._check.update_blocked(blockee)
-            if self.message:
-                if blockee == self.message.author:
+            if self.bot._message:
+                if blockee == self.bot._message.author:
                     self.task.cancel()
-                    self.message = None
+                    self.bot._message = None
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
@@ -82,19 +84,19 @@ class Replies(commands.Cog):
     async def on_message(self, message: Message):
         if message.author.bot or message.author.id in self.bot._check.blocked:
             return
-        elif not self.message or message.channel != self.bot.c.DMs:
+        elif not self.bot._message or message.channel != self.bot.c.DMs:
             return
         elif re.match(r"^.*\s*clear.*$", message.content):
             return
 
         [resp, files, failed_files] = await self.get_resp(message)
         try:
-            await self.message.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
+            await self.bot._message.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
         except Forbidden:
-            await message.reply(f"Error: Cannot send messages to {self.message.author}, closing the channel")
+            await message.reply(f"Error: Cannot send messages to {self.bot._message.author}, closing the channel")
             if self.task:
                 self.task.cancel()
-            self.message = None
+            self.bot._message = None
         except HTTPException as e:
             await message.reply(f"{e.__class__.__name__}: {e}")
         else:
