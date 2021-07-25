@@ -107,7 +107,7 @@ class Randomized(commands.Cog):
         self.songs[link] = title
         safe_dump("data/songs.json", self.songs)
         self.bot.songs = list(self.songs.keys())
-        await ctx.send(f"Set {link} to {title}")
+        await ctx.send(f"Set `{link}` to `{title}`")
 
     @random_song.command()
     @commands.is_owner()
