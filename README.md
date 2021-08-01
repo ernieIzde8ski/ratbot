@@ -41,7 +41,7 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
     "github": "https://github.com/ernieIzde8ski/ratbot",
     // invite to a server
     // used in cogs/commands/info.py
-    "invite": "https://discord.gg/3gfP2kYPp4",
+    "invite": "https://discord.gg/rHyt33PMmn",
     // id of the server that cogs/events/weather_updates.py checks
     "main_guild": 488475203303768065,
     // Channel IDs to send various messages to
@@ -55,3 +55,8 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
 ```
 
 #### See [CONFIGS.md](CONFIGS.md) for the various files generated in ./data/
+
+## Support
+
+Use the commands (`r.help`, `r.info`) for support. Feel free to open an issue
+or contact me personally ([ernieSerrano#4571 on Discord](https://discord.gg/rHyt33PMmn))
