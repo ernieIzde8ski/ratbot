@@ -19,13 +19,14 @@ class Randomized(commands.Cog):
 
     @commands.command(aliases=["rb", "bands"])
     @commands.cooldown(2, 45, commands.BucketType.guild)
-    async def random_bands(self, ctx, integer: int = 3, sort_method: str = "band"):
+    async def random_bands(self, ctx, integer: int = 3, sort_method: str = "band", *, filter: str = ""):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
         if not (1 <= integer <= 10 or ctx.author.id == self.bot.owner_id):
             raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
 
-        bands = await format(integer, sort_method)
+        print(filter)
+        bands = await format(integer, sort_method, filter=filter)
         await self.split_message(ctx, bands)
 
     @staticmethod
