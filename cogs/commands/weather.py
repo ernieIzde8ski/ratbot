@@ -165,12 +165,7 @@ class Weather(commands.Cog):
 
     @set.command(aliases=["lat-long", "c"])
     async def coords(self, ctx, *, coords: Coordinates):
-        """
-        Sets latitude/longitude coordinates
-        The only accepted two inputs are integers or floats; this means no funny
-        inputs like 'r;w set coords 50°S, 50°E'. This would rather be
-        represented as `r;w set coords -50 50'.
-        """
+        """Sets latitude/longitude coordinates"""
         user = str(ctx.author.id)
         if not self.bot.user_locations.get(user):
             self.bot.user_locations[user] = {}
