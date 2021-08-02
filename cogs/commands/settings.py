@@ -1,3 +1,5 @@
+import re
+
 from discord.ext import commands
 from typing import Optional
 
@@ -11,6 +13,7 @@ class Settings(commands.Cog):
         self.bot.tenor_guilds = set(safe_load("data/tenor_guilds.json", []))
         self.bot.pipi_guilds = set(safe_load("data/pipi.json", []))
         self.bot.banning_guilds = safe_load("data/banning.json", {})
+        self.bot.trollgex = re.compile(safe_load("data/trollgex.json", "(?i)troll"))
 
     @commands.command(aliases=["prefix"])
     @commands.has_guild_permissions(manage_guild=True)
@@ -78,6 +81,16 @@ class Settings(commands.Cog):
             await ctx.send(f"Enabling random bans in this guild with a {percent * 100}% chance")
             self.bot.banning_guilds[id] = percent
         safe_dump("data/banning.json", self.bot.banning_guilds)
+
+    @commands.command(aliases=["update_trollgex", "troll"])
+    @commands.is_owner()
+    async def update_troll_regex(self, ctx, *, regex: Optional[str]):
+        if regex is None:
+            await ctx.send(f"Current regex: `r\"{self.bot.trollgex.pattern}\"`")
+        else:
+            self.bot.trollgex = re.compile(regex, re.I)
+            safe_dump("data/trollgex.json", regex)
+            await ctx.send(f"Set troll regex to {regex}")
 
 
 def setup(bot):

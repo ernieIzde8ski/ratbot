@@ -11,20 +11,20 @@ class Reactions(commands.Cog):
         self.bot = bot
         self.trolls = safe_load("data/trolls.json", ["🚎"])
         self.lmfao = safe_load("data/lmfao.json", "🤬")
+        self.lmagex = re.compile("lmf?ao", re.I)
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
 
-        if re.search(r"troll|trole|troling|troel", message.content, re.I):
+        if re.search(self.bot.trollgex, message.content):
             try:
-                troll = choice(self.trolls)
-                await message.add_reaction(troll)
+                await message.add_reaction(choice(self.trolls))
             except Forbidden:
                 if message.author == self.bot.user:
                     return
                 await message.channel.send("Trolled")
 
-        if re.search(f"lmf?ao", message.content, re.I):
+        if re.search(self.lmagex, message.content):
             if random() > 0.01:
                 return
             try:
