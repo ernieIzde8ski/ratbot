@@ -9,7 +9,6 @@ from modules._json import safe_load
 class Reactions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.trolls = safe_load("data/trolls.json", ["🚎"])
         self.lmfao = safe_load("data/lmfao.json", "🤬")
         self.lmagex = re.compile("lmf?ao", re.I)
 
@@ -18,7 +17,7 @@ class Reactions(commands.Cog):
 
         if re.search(self.bot.trollgex, message.content):
             try:
-                await message.add_reaction(choice(self.trolls))
+                await message.add_reaction(choice(self.bot.trolljis))
             except Forbidden:
                 if message.author == self.bot.user:
                     return

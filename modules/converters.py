@@ -123,4 +123,16 @@ class StrictBool(commands.Converter):
         if value is not None:
             return value
         else:
-            raise commands.BadBoolArgument("Could not convert argument to bool")
+            raise commands.BadBoolArgument(
+                "Could not convert argument to bool")
+
+
+initial_list_pattern = re.compile(r"(?<!\\),\s*")
+secondary_list_pattern = re.compile(r"\s+")
+
+class EasyList(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str):
+        arguments = re.split(initial_list_pattern, argument)
+        if arguments == [argument]:
+            arguments = re.split(secondary_list_pattern, argument)
+        return [cleaned_argument for argument in arguments if (cleaned_argument := argument.strip())]

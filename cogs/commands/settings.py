@@ -1,10 +1,11 @@
-import re
-
+from discord import Forbidden, HTTPException
 from discord.ext import commands
+
+import re
 from typing import Optional
 
 from modules._json import safe_load, safe_dump
-from modules.converters import Percentage
+from modules.converters import EasyList, FlagConverter, Percentage
 
 
 class Settings(commands.Cog):
@@ -13,7 +14,8 @@ class Settings(commands.Cog):
         self.bot.tenor_guilds = set(safe_load("data/tenor_guilds.json", []))
         self.bot.pipi_guilds = set(safe_load("data/pipi.json", []))
         self.bot.banning_guilds = safe_load("data/banning.json", {})
-        self.bot.trollgex = re.compile(safe_load("data/trollgex.json", "(?i)troll"))
+        self.bot.trollgex = re.compile(safe_load("data/trollgex.json", "troll"))
+        self.bot.trolljis = safe_load("data/trolls.json", ["🚎"])
 
     @commands.command(aliases=["prefix"])
     @commands.has_guild_permissions(manage_guild=True)
@@ -91,7 +93,23 @@ class Settings(commands.Cog):
             self.bot.trollgex = re.compile(regex, re.I)
             safe_dump("data/trollgex.json", regex)
             await ctx.send(f"Set troll regex to {regex}")
-
+    
+    @commands.command(aliases=["append_trolljis", "trolfl"])
+    @commands.is_owner()
+    async def append_troll_emojis(self, ctx, flag: Optional[FlagConverter] = {}, *, trolljis: Optional[EasyList]):
+        if not trolljis:
+            await ctx.send("Currently enabled troll emojis: {}".format(", ".join(self.bot.trolljis)))
+        else:
+            try:
+                for trollji in trolljis:
+                    await ctx.message.add_reaction(trollji)
+            except (Forbidden):
+                pass
+            if flag.get("reset"):
+                self.bot.trolljis = []
+            self.bot.trolljis += trolljis
+            await ctx.send(f"Set troll emojis to: {', '.join(self.bot.trolljis)}")
+            
 
 def setup(bot):
     bot.add_cog(Settings(bot))
