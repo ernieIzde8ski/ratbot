@@ -3,30 +3,30 @@ import random
 import re
 
 from discord.ext import commands
-from discord import Embed
 
 from modules._json import safe_load, safe_dump
 from modules.functions import reduce
-from modules.random_band import format
+from modules.random_band import BandRetrieval
 
 
 class Randomized(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bands = BandRetrieval()
         self.bmed = safe_load("data/bm.json", [])
         self.songs = safe_load("data/songs.json", {})
         self.bot.songs = list(self.songs.keys())
 
     @commands.command(aliases=["rb", "bands"])
     @commands.cooldown(2, 45, commands.BucketType.guild)
-    async def random_bands(self, ctx, integer: int = 3, sort_method: str = "band", *, filter: str = ""):
+    @commands.max_concurrency(1, commands.BucketType.user)
+    async def random_bands(self, ctx, upper_limit: int = 3, sort_method: str = "band", *, _filter: str = ""):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
-        if not (1 <= integer <= 10 or ctx.author.id == self.bot.owner_id):
+        if not (1 <= upper_limit <= 10 or ctx.author.id == self.bot.owner_id):
             raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
 
-        print(filter)
-        bands = await format(integer, sort_method, filter=filter)
+        bands = await self.bands.format(str(ctx.author.id), upper_limit, sort_method, _filter=_filter, iteration_hard_limit=(upper_limit*10))
         await self.split_message(ctx, bands)
 
     @staticmethod
