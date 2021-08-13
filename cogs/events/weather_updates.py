@@ -1,10 +1,13 @@
-import asyncio
-import random
-from datetime import datetime
-from discord import Member, User
+import discord
 from discord.ext import commands
+
+from datetime import datetime
 from pytz import timezone as tz
+
 from typing import Optional, Union
+import asyncio
+
+import random
 
 from modules._json import safe_dump, safe_load
 from modules.converters import FlagConverter
@@ -18,7 +21,7 @@ class WeatherUpdates(commands.Cog):
         self.data = safe_load("data/weather_resps.json", {})
         self.users = safe_load("data/weather_updates.json", {"active_users": []})
 
-    def check(self, member: Member):
+    def check(self, member: discord.Member):
         return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.bot.user_locations.get(str(member.id)) and member.id in self.users["active_users"])
 
     def temp_eval(self, temp: Union[int, float]) -> str:
@@ -57,7 +60,7 @@ class WeatherUpdates(commands.Cog):
         return message
 
     @commands.Cog.listener()
-    async def on_member_update(self, before: Member, after: Member):
+    async def on_member_update(self, before: discord.Member, after: discord.Member):
         id = str(after.id)
         if self.check(after):
             return
@@ -68,9 +71,14 @@ class WeatherUpdates(commands.Cog):
             return
 
         weather = await get_weather(self.bot.config["weather"], **self.bot.user_locations[id])
-        await after.send(self.message_constructor(self.users[id], weather))
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
+        try:
+            await after.send(self.message_constructor(self.users[id], weather))
+        except discord.Forbidden:
+            await self.bot.c.DMs.send(f"{after} might have me blocked 😦")
+            
+            return
 
         if random.random() < 0.1:
             _m = await after.send("do you want a Song ?")
@@ -97,7 +105,7 @@ class WeatherUpdates(commands.Cog):
 
     @commands.command(aliases=["wset"])
     @commands.is_owner()
-    async def weather_data_set(self, ctx, target: Optional[Union[Member, User]], *, flags: FlagConverter = {}):
+    async def weather_data_set(self, ctx, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
         """
         Add a user to weather updates
         tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
