@@ -27,7 +27,6 @@ class Guilds(commands.Cog):
         await self.bot.c.Guilds.send(embed=embed)
 
     @commands.command()
-    @commands.is_owner()
     async def guilds(self, ctx: commands.Context, *, sort: FlagConverter = {}):
         """
         Return guild list
