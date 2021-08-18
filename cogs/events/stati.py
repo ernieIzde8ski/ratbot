@@ -21,7 +21,7 @@ class Stati(commands.Cog):
         await self.bot.change_presence(activity=activity)
 
         self.bot.app = await self.bot.application_info()
-        self.bot.owner_id = self.bot.app.owner.id
+        self.bot.owner_id = self.bot.app.owner.id if not self.bot.config.get("owner_id") else self.bot.config["owner_id"]
 
     @staticmethod
     def get_status(status: str):
