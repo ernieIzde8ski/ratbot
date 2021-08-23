@@ -81,12 +81,12 @@ class Randomized(commands.Cog):
         await ctx.send(f"{argument} are {determination}% Gobi.")
 
     @commands.command(aliases=["choose"])
-    async def choice(self, ctx, *, arguments: str):
-        arguments = [argument for argument in re.split(
-            r",\s*", arguments) if argument]
-        if not arguments.__len__():
-            raise commands.ArgumentParsingError(
-                "arguments is a required argument that is missing.")
+    async def choice(self, ctx, *arguments: str):
+        """
+        Chooses one random item split by spaces
+
+        Multiple word items can be split with quotation blocks: 'r.choose item1 "item 2" item3'
+        """
         await ctx.send("`" + random.choice(arguments).replace("`", "") + "`")
 
     @commands.group(aliases=["song", "rs"], invoke_without_command=True)
