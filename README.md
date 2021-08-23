@@ -58,6 +58,4 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
 
 ## Support
 
-Use the commands (`r.help`, `r.info`) for support. Feel free to open an issue
-or contact me personally ([ernieSerrano#4571 on Discord](https://discord.gg/rHyt33PMmn)).
-[Invite the bot with this link](https://discord.com/oauth2/authorize?client_id=807262373147574312&scope=bot&permissions=2214915137)
+Use the commands (`r.help`, `r.info`) for support. Feel free to open an issue or contact me personally ([ernieSerrano#4571 on Discord](https://discord.gg/rHyt33PMmn)). [Invite the bot with this link](https://discord.com/oauth2/authorize?client_id=807262373147574312&scope=bot&permissions=2214915137)
