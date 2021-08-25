@@ -5,7 +5,7 @@ from modules._json import safe_load
 
 
 class Log(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.emoji = safe_load("data/emoji.json", ["🐣", "🎃"])
 

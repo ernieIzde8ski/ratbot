@@ -8,7 +8,7 @@ from modules.weather import valid_kwargs, valid_kwarg_types, get_weather
 
 
 class Weather(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bot.user_locations = safe_load("data/weather_locations.json", {})
 

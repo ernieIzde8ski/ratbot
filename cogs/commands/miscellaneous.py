@@ -7,7 +7,7 @@ from modules._json import safe_load, safe_dump
 
 
 class Miscellaneous(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.data = safe_load("data/timekeeping.json", {})
 

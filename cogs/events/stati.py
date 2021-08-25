@@ -6,7 +6,7 @@ from modules.converters import FlagConverter
 
 
 class Stati(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bot.loop.create_task(self.initialize())
 

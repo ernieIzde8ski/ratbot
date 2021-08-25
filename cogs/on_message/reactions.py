@@ -7,7 +7,7 @@ from modules._json import safe_load
 
 
 class Reactions(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.lmfao = safe_load("data/lmfao.json", "🤬")
         self.lmagex = re.compile("lmf?ao", re.I)

@@ -9,7 +9,7 @@ from modules.converters import EasyList, FlagConverter, Percentage
 
 
 class Settings(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bot.tenor_guilds = set(safe_load("data/tenor_guilds.json", []))
         self.bot.pipi_guilds = set(safe_load("data/pipi.json", []))

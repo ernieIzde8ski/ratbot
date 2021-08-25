@@ -10,7 +10,7 @@ from modules.random_band import BandRetrieval
 
 
 class Randomized(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bands = BandRetrieval()
         self.bmed = safe_load("data/bm.json", [])

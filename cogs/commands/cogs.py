@@ -8,10 +8,11 @@ from modules.converters import FlagConverter
 
 
 class Cogs(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.all_extensions = []
-        bot.loop.create_task(self.initialize())
+        self.bot.loop.create_task(self.initialize())
+
 
     async def initialize(self):
         await self.bot.wait_until_ready()

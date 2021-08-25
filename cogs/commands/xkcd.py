@@ -9,7 +9,7 @@ from modules._json import safe_load, safe_dump
 
 
 class XKCD(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.xkcds = safe_load("data/xkcd.json", [{"int": -1}])
         self.update_index.start()

@@ -15,7 +15,7 @@ from modules.weather import get_weather
 
 
 class WeatherUpdates(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bible = safe_load("data/russian.json", [])
         self.data = safe_load("data/weather_resps.json", {})

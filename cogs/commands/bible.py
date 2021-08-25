@@ -9,7 +9,7 @@ from modules.converters import StrictBool
 
 
 class Bible(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.translation_languages = {"cherokee": ["Cherokee New Testament", "Cherokee"],
                                       "kjv": ["King James Version", "English"],

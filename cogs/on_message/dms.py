@@ -4,7 +4,7 @@ import re
 
 
 class DMs(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @commands.Cog.listener()
