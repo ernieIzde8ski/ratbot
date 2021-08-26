@@ -80,6 +80,11 @@ class Randomized(commands.Cog):
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
 
+    @commands.command(aliases=["hex", "rcolor", "rc"])
+    async def random_hexadecimal_color(self, ctx):
+        """Returns a randomized hexadecimal color"""
+        await ctx.send("`#" + ("%06x" % random.randint(0, 0xFFFFFF)) + "`")
+
     @commands.command(aliases=["choose"])
     async def choice(self, ctx, *arguments: str):
         """
