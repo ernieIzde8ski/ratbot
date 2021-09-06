@@ -17,7 +17,7 @@ class AEBDTheta(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def set_facts(self, ctx: commands.Context, arg: int):
-        self.armenium_facts += 1
+        self.armenium_facts = arg
         await self.channel.edit(topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}")
         safe_dump("data/facts.json", self.armenium_facts)
         await ctx.send(f"Set armenium facts to `{self.armenium_facts}`")
