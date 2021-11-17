@@ -44,7 +44,8 @@ with open("enabled_extensions.json", "r") as file:
 @bot.event
 async def on_message(message):
     valid = await bot._check.reply(message)
-    if not valid: return
+    if not valid:
+        return
 
     await bot.process_commands(message)
 

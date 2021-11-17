@@ -1,7 +1,8 @@
 from asyncio import sleep
-from discord import Message, AllowedMentions, Forbidden
-from discord.ext import commands
 from random import random
+
+from discord import AllowedMentions, Forbidden, Message
+from discord.ext import commands
 
 
 class Bans(commands.Cog):

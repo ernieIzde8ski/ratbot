@@ -1,17 +1,14 @@
+import asyncio
+import random
+from datetime import datetime
+from typing import Optional, Union
+
 import discord
 from discord.ext import commands
-
-from datetime import datetime
-from pytz import timezone as tz
-
-from typing import Optional, Union
-import asyncio
-
-import random
-
 from modules._json import safe_dump, safe_load
 from modules.converters import FlagConverter
 from modules.weather import get_weather
+from pytz import timezone as tz
 
 
 class WeatherUpdates(commands.Cog):
@@ -76,9 +73,7 @@ class WeatherUpdates(commands.Cog):
         try:
             await after.send(self.message_constructor(self.users[id], weather))
         except discord.Forbidden:
-            await self.bot.c.DMs.send(f"{after} might have me blocked 😦")
-            
-            return
+            return await self.bot.c.DMs.send(f"{after} might have me blocked 😦")
 
         if random.random() < 0.1:
             _m = await after.send("do you want a Song ?")

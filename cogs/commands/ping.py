@@ -22,7 +22,7 @@ class Ping(commands.Cog):
             await messageable.send(message)
         except (Forbidden, HTTPException) as e:
             await ctx.send(f"{e.__class__.__name__}: {e}")
-    
+
     @commands.command()
     async def ping(self, ctx):
         await ctx.send("pong")

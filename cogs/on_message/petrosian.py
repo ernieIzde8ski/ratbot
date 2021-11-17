@@ -1,8 +1,9 @@
 import re
-from discord import AllowedMentions, Message
-from discord.ext import commands
 from json import load
 from random import random
+
+from discord import AllowedMentions, Message
+from discord.ext import commands
 
 
 class Petrosian(commands.Cog):
@@ -19,7 +20,7 @@ class Petrosian(commands.Cog):
         elif message.guild:
             if str(message.guild.id) in self.bot.pipi_guilds:
                 return
-        
+
         if not re.search(self.regex, message.content, re.ASCII + re.IGNORECASE):
             return
         elif random() > 0.33:

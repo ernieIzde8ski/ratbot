@@ -1,8 +1,8 @@
 import re
-from discord import Message, AllowedMentions, NotFound
+
+from discord import AllowedMentions, Message, NotFound
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-
 from modules.functions import reduce
 
 

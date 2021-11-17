@@ -1,8 +1,8 @@
 import re
+from random import choice, random
+
 from discord import Forbidden, Message
 from discord.ext import commands
-from random import random, choice
-
 from modules._json import safe_load
 
 

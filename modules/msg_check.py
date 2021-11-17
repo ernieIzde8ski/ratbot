@@ -1,4 +1,4 @@
-from modules._json import safe_load, safe_dump
+from modules._json import safe_dump, safe_load
 
 
 class Check():

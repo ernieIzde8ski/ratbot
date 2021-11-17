@@ -1,4 +1,4 @@
-from discord import Forbidden, HTTPException
+from discord import Forbidden
 from discord.ext import commands
 
 import re
@@ -93,7 +93,7 @@ class Settings(commands.Cog):
             self.bot.trollgex = re.compile(regex, re.I)
             safe_dump("data/trollgex.json", regex)
             await ctx.send(f"Set troll regex to {regex}")
-    
+
     @commands.command(aliases=["append_trolljis", "trolfl"])
     @commands.is_owner()
     async def append_troll_emojis(self, ctx, flag: Optional[FlagConverter] = {}, *, trolljis: Optional[EasyList]):
@@ -109,7 +109,7 @@ class Settings(commands.Cog):
                 self.bot.trolljis = []
             self.bot.trolljis += trolljis
             await ctx.send(f"Set troll emojis to: {', '.join(self.bot.trolljis)}")
-            
+
 
 def setup(bot):
     bot.add_cog(Settings(bot))

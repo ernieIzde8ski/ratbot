@@ -1,6 +1,6 @@
 def reduce(text: str) -> str:
     """Strips away much of a string
-    
+
     In order, this function removes non-ASCII, removes
     characters duplicated more than twice, lowercases
     the string, and removes whitespace.

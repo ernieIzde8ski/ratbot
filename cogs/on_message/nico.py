@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from discord.ext import commands
 from fuzzywuzzy import fuzz
 
@@ -30,9 +31,10 @@ class Nico(commands.Cog):
         now = datetime.now().strftime("%Y-%m-%d;%H:%M")
         if self.time == now:
             return
-        
+
         await self.Nico.send("<#758373055918899216>")
         self.time = now
+
 
 def setup(bot):
     cog = Nico(bot)

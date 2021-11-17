@@ -26,7 +26,7 @@ class Randomized(commands.Cog):
         if not (1 <= upper_limit <= 10 or ctx.author.id == self.bot.owner_id):
             raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
 
-        bands = await self.bands.format(str(ctx.author.id), upper_limit, sort_method, _filter=_filter, iteration_hard_limit=(upper_limit*10))
+        bands = await self.bands.format(str(ctx.author.id), upper_limit, sort_method, _filter=_filter, iteration_hard_limit=(upper_limit * 10))
         await self.split_message(ctx, bands)
 
     @staticmethod

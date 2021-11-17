@@ -13,7 +13,7 @@ class ErrorHandling(commands.Cog):
         elif ctx.command:
             if ctx.command.has_error_handler():
                 return
-        
+
         resp = f"{error.__class__.__name__}: {error}\n"
         # Show the closest matching command if the error is CommandNotFound.
         if isinstance(error, commands.CommandNotFound):

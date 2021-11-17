@@ -1,5 +1,6 @@
-from aiohttp import ClientSession
 from enum import Enum
+
+from aiohttp import ClientSession
 
 valid_kwarg_types = {
     "city_id": int, "latitude": (int, float), "longitude": (int, float), "zip_code": (str, int),
@@ -37,7 +38,7 @@ def get_weather_url(apikey: str, **kwargs) -> str:
     url = "https://api.openweathermap.org/data/2.5/weather"
     if kwargs.get("city_id"):
         url += f"?id={kwargs['city_id']}"
-    elif (kwargs.get("latitude") != None) and (kwargs.get("longitude") != None):
+    elif (kwargs.get("latitude") is not None) and (kwargs.get("longitude") is not None):
         url += f"?lat={kwargs['latitude']}&lon={kwargs['longitude']}"
     elif kwargs.get("zip_code") and kwargs.get("country_code"):
         url += f"?zip={kwargs['zip_code']},{kwargs['country_code']}"

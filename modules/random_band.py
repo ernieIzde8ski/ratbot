@@ -1,18 +1,19 @@
 import re
+from textwrap import shorten
+
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
-from textwrap import shorten
 from unidecode import unidecode
-
 
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
+
 
 class BandRetrieval():
     def __init__(self):
         self.session = ClientSession()
         self.iterations = {}
-    
+
     async def _get_bands(self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50) -> list[dict]:
         """Get random bands & statistics"""
         _filter = _filter.lower()
@@ -43,7 +44,8 @@ class BandRetrieval():
             if _filter not in band['genre'].lower() and _filter not in band['name'].lower():
                 if self.iterations[index] < iteration_hard_limit:
                     band = (await self._get_bands(1, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit))
-                    if band == []: continue
+                    if band == []:
+                        continue
                     band = band[0]
                 else:
                     continue

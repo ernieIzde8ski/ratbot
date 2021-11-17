@@ -1,14 +1,11 @@
-from aiohttp.client import ClientSession
-from asyncio import sleep
-
 import re
-
-from typing import Optional, Union
+from asyncio import sleep
 from os import remove
+from typing import Optional, Union
 
 import discord
+from aiohttp.client import ClientSession
 from discord.ext import commands
-
 from modules._json import safe_load
 
 

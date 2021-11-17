@@ -130,6 +130,7 @@ class StrictBool(commands.Converter):
 initial_list_pattern = re.compile(r"(?<!\\),\s*")
 secondary_list_pattern = re.compile(r"\s+")
 
+
 class EasyList(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
         arguments = re.split(initial_list_pattern, argument)

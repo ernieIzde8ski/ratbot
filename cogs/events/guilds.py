@@ -1,6 +1,5 @@
-from discord import Guild, Embed, Color
+from discord import Color, Embed, Guild
 from discord.ext import commands
-
 from modules.converters import FlagConverter
 
 

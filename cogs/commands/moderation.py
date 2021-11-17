@@ -23,17 +23,19 @@ class Moderation(commands.Cog):
     @commands.has_guild_permissions(manage_messages=True)
     async def purge(self, ctx: commands.Context, amount: int = 50, *, flags: FlagConverter = {}):
         """Delete n messages en masse, with flags as parameters
-        
+
         Valid flags: --ignore-humans, --ignore-bots, --ignore-webhooks,
                      --attachments, --embeds, --plaintext, --match <regex>
         All flags with dashes can be written alternatively with
         underscores (i.e. "--ignore_humans")
         """
         if not flags:
-            def check(msg): return msg != ctx.message
+            def check(msg):
+                return msg != ctx.message
         else:
             flags = {key.lower().replace("_", "-"): value for key, value in flags.items()}
             checks = [check for check in self.checks if check in flags]
+
             def check(msg: Message) -> bool:
                 if msg == ctx.message:
                     return False
@@ -43,11 +45,12 @@ class Moderation(commands.Cog):
                         return False
                 else:
                     return True
-    
+
         await ctx.channel.purge(limit=amount, check=check)
         await ctx.message.add_reaction("☑️")
         await sleep(2)
         await ctx.message.delete()
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

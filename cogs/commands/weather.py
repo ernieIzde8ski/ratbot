@@ -71,7 +71,7 @@ class Weather(commands.Cog):
 
         # Raise an error if neither user data is set nor location data is provided.
         if not location and not user_data:
-            prefix = ctx.prefix.replace('`', '\`')
+            prefix = ctx.prefix.replace("`", r"\`")
             raise commands.MissingRequiredArgument(f"No weather information provided."
                                                    f"Try: \n```\n{prefix}{ctx.invoked_with} <city>\n```")
 

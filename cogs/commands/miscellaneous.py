@@ -20,7 +20,8 @@ class Miscellaneous(commands.Cog):
         )
 
     @commands.command(aliases=["nsbm"])
-    async def NSBM(self, ctx): await ctx.send("https://cdn.discordapp.com/attachments/404758309418172436/876620413701062727/ymq2us28roi61.png")
+    async def NSBM(self, ctx):
+        await ctx.send("https://cdn.discordapp.com/attachments/404758309418172436/876620413701062727/ymq2us28roi61.png")
 
     @commands.group(invoke_without_command=True, aliases=["now"])
     async def time(self, ctx, *, tz: Optional[Union[timezone, str]]):

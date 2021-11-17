@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from modules._json import safe_load, safe_dump
+from modules._json import safe_dump, safe_load
 
 
 class AEBDTheta(commands.Cog):
