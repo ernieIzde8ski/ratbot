@@ -1,9 +1,8 @@
+// Note: use npm install node-fetch@2 to install
 const fetch = require("node-fetch");
 const fs = require('fs');
 const range = require('./javascript/range');
 
-
-var data = [];
 
 get_xkcd = async int => {
     if (int == -1) {
@@ -31,34 +30,36 @@ get_xkcd = async int => {
 };
 
 get_xkcds = async () => {
-    var list = [];
-    var latest = await get_xkcd(-1);
-    var xkcds = range(stop = latest.num + 1);
+    const latest = await get_xkcd(-1);
+    console.log("Going up to", latest.num);
+    const xkcd_range = range(stop = latest.num + 1);
+    let arr_0 = [];
 
-    for (var xkcd of xkcds) {
-        xkcd = await get_xkcd(xkcd);
-        if (xkcd.error) continue;
-        list.push(xkcd);
-        if (xkcd.num % 50 == 0) {
-            console.log(xkcd.num, xkcd.title);
-        }
+    // Populate the array
+    for (const i of xkcd_range) {
+        arr_0.push(get_xkcd(i).then(comic => {
+            if (comic.num % 50 == 0) console.log(comic.num + ":", comic.title);
+            return comic;
+        }));
     }
-    return list.map(item => {
-        return {
-            name: item.title,
-            alt: item.alt,
-            int: item.num
 
-        };
+    // Wait for the array to Finish
+    arr_0 = await Promise.all(arr_0);
+
+    // Return the filtered array
+    return arr_0.filter(comic => !comic.error).map(comic => {
+        return {
+            name: comic.title,
+            alt: comic.alt,
+            int: comic.num,
+        }
     });
 };
 
 if (require.main === module) {
-    console.log('called directly');
+    get_xkcds()
+        .then(list => {
+            list = JSON.stringify(list);
+            fs.writeFile("./data/xkcd.json", list, err => console.error);
+        });
 }
-
-get_xkcds()
-    .then(list => {
-        list = JSON.stringify(list);
-        fs.writeFile("./data/xkcd.json", list, err => console.error);
-    });
