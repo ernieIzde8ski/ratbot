@@ -27,23 +27,6 @@ class Cogs(commands.Cog):
     def trim_whitespace(string: str) -> str:
         return ''.join(string.split())
 
-    @commands.command(aliases=["uc", "cmd", "command"])
-    @commands.is_owner()
-    async def update_command(self, ctx: commands.Context, command_name: str, *, flags: FlagConverter = {}):
-        """Update a command's attributes"""
-        try:
-            cmd = list(filter(
-                lambda cmd: command_name.lower(
-                ) in cmd.aliases or command_name == cmd.name, self.bot.commands
-            ))[0]
-        except IndexError:
-            raise commands.BadArgument(
-                "Converting to command failed for parameter \"command_name\"."
-            )
-        else:
-            cmd.update(**flags)
-            await ctx.send(f"Updated command `{cmd.name}`")
-
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx: commands.Context):
         """Return cog list
