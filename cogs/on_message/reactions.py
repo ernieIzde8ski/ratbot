@@ -3,11 +3,12 @@ from random import choice, random
 
 from discord import Forbidden, Message
 from discord.ext import commands
-from modules._json import safe_load
+from utils.classes import RatBot
+from utils.functions import safe_load
 
 
 class Reactions(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
         self.lmfao = safe_load("data/lmfao.json", "🤬")
         self.lmagex = re.compile("lmf?ao", re.I)
@@ -15,9 +16,9 @@ class Reactions(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: Message):
 
-        if re.search(self.bot.trollgex, message.content):
+        if re.search(self.bot.data.trollgex, message.content):
             try:
-                await message.add_reaction(choice(self.bot.trolljis))
+                await message.add_reaction(choice(self.bot.data.trolljis))
             except Forbidden:
                 if message.author == self.bot.user:
                     return
@@ -32,5 +33,5 @@ class Reactions(commands.Cog):
                 await message.channel.send("Lmao !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(Reactions(bot))

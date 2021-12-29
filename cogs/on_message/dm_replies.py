@@ -6,20 +6,20 @@ from typing import Optional, Union
 import discord
 from aiohttp.client import ClientSession
 from discord.ext import commands
-from modules._json import safe_load
+from utils.classes import RatBot
+from utils.functions import safe_load
 
 
 class Replies(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
         self.allowed_mentions = discord.AllowedMentions.all()
-        self.bot._message = None
         self.task = None
 
     async def _update_message(self, message: discord.Message) -> None:
-        self.bot._message = message
+        self.bot.data.msg = message
         await sleep(600)
-        self.bot._message = None
+        self.bot.data.msg = None
 
     async def update_message(self, message: discord.Message) -> None:
         if self.task:
@@ -28,49 +28,48 @@ class Replies(commands.Cog):
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or (isinstance(ctx.channel, discord.DMChannel) and ctx.channel == ctx.bot._message.channel))
-    async def clear(self, ctx):
+    async def clear(self, ctx: commands.Context):
         """Clear the DM channel"""
-        if not self.task:
+        if not self.task or not self.bot.data.msg:
             raise commands.CommandError("No DM channel is currently open")
         else:
-            await ctx.send(f"Clearing open channel with {self.bot._message.channel.recipient}")
+            await ctx.send(f"Clearing open channel with {self.bot.data.msg.channel.recipient}")
             await sleep(0.5)
             self.task.cancel()
-            self.bot._message = None
+            self.bot.data.msg = None
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
-    async def block(self, ctx, *, blockee: Optional[discord.User]):
+    async def block(self, ctx: commands.Context, *, blockee: Optional[discord.User]):
         """Block a discord.User"""
-        if not blockee and not self.bot._message:
-            raise commands.MissingRequiredArgument("blockee is a required argument that is missing.")
-        elif not blockee:
-            await ctx.send(f"Blocked {self.bot._message.author}")
-            self.bot._check.update_blocked(self.bot._message.author)
+        if blockee:
+            await ctx.send(f"Blocked {blockee}")
+            self.bot.block_check.update_blocked(blockee)
+            if self.task and self.bot.data.msg and blockee == self.bot.data.msg:
+                self.task.cancel()
+                self.bot.data.msg = None
+        elif self.bot.data.msg:
+            await ctx.send(f"Blocked {self.bot.data.msg.author}")
+            self.bot.block_check.update_blocked(self.bot.data.msg.author)
             if self.task:
                 self.task.cancel()
-                self.bot._message = None
+                self.bot.data.msg = None
         else:
-            await ctx.send(f"Blocked {blockee}")
-            self.bot._check.update_blocked(blockee)
-            if self.bot._message:
-                if blockee == self.bot._message.author:
-                    self.task.cancel()
-                    self.bot._message = None
+            raise commands.MissingRequiredArgument("blockee is a required argument that is missing.")
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
-    async def unblock(self, ctx, *, blockee: Union[discord.Member, discord.User]):
-        if blockee.id not in self.bot._check.blocked:
+    async def unblock(self, ctx: commands.Context, *, blockee: Union[discord.Member, discord.User]):
+        if blockee.id not in self.bot.block_check.blocked:
             raise commands.BadArgument("blockee {blockee} is not blocked")
         else:
-            self.bot._check.unblock(blockee)
+            self.bot.block_check.unblock(blockee)
             await ctx.send(f"Unblocked {blockee}")
 
     @commands.command()
     @commands.is_owner()
-    async def refresh_blocked(self, ctx):
-        self.bot._check.set_blocked(safe_load("data/blocked.json", []))
+    async def refresh_blocked(self, ctx: commands.Context):
+        self.bot.block_check.set_blocked(safe_load("data/blocked.json", []))
         await ctx.send("Refreshed block list")
 
     @commands.Cog.listener()
@@ -79,21 +78,21 @@ class Replies(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.author.bot or message.author.id in self.bot._check.blocked:
+        if message.author.bot or message.author.id in self.bot.block_check.blocked:
             return
-        elif not self.bot._message or message.channel != self.bot.c.DMs:
+        elif not self.bot.data.msg or message.channel != self.bot.status_channels.DM:
             return
         elif re.match(r"^.*\s*clear.*$", message.content):
             return
 
         [resp, files, failed_files] = await self.get_resp(message)
         try:
-            await self.bot._message.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
+            await self.bot.data.msg.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
         except discord.Forbidden:
-            await message.reply(f"Error: Cannot send messages to {self.bot._message.author}, closing the channel")
+            await message.reply(f"Error: Cannot send messages to {self.bot.data.msg.author}, closing the channel")
             if self.task:
                 self.task.cancel()
-            self.bot._message = None
+            self.bot.data.msg = None
         except discord.HTTPException as e:
             await message.reply(f"{e.__class__.__name__}: {e}")
         else:
@@ -130,5 +129,5 @@ class Replies(commands.Cog):
         return path
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(Replies(bot))

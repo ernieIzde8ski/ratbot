@@ -5,11 +5,12 @@ from aiohttp import ClientSession
 from discord import Color, Embed
 from discord.ext import commands, tasks
 from fuzzywuzzy import fuzz
-from modules._json import safe_dump, safe_load
+from utils.classes import RatBot
+from utils.functions import safe_dump, safe_load
 
 
 class XKCD(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
         self.xkcds = safe_load("data/xkcd.json", [{"int": -1}])
         self.update_index.start()
@@ -41,7 +42,7 @@ class XKCD(commands.Cog):
                 return await resp.json()
 
     @commands.group(invoke_without_command=True, aliases=["x"])
-    async def xkcd(self, ctx, *, argument: Optional[Union[int, str]]):
+    async def xkcd(self, ctx: commands.Context, *, argument: Optional[Union[int, str]]):
         """Return an XKCD from an argument"""
         if not argument:
             argument = -1
@@ -55,7 +56,7 @@ class XKCD(commands.Cog):
         await ctx.send(embed=embed)
 
     @xkcd.command(aliases=["r"])
-    async def random(self, ctx):
+    async def random(self, ctx: commands.Context):
         """Returns a random XKCD"""
         id = randint(0, self._latest["num"])
 
@@ -67,7 +68,7 @@ class XKCD(commands.Cog):
         await ctx.send(embed=embed)
 
     @xkcd.command(aliases=["l"])
-    async def latest(self, ctx):
+    async def latest(self, ctx: commands.Context):
         """Returns the latest XKCD"""
         xkcd = await self.get_xkcd(-1)
         if xkcd.get("error"):
@@ -99,5 +100,5 @@ class XKCD(commands.Cog):
         print("Updated XKCDs")
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(XKCD(bot))

@@ -4,12 +4,11 @@
   "preferred_timezone": "EST",
   "github": "https://github.com/ernieIzde8ski/ratbot",
   "invite": "https://discord.gg/3gfP2kYPp4",
-  "main_guild": 488475203303768065,
+  "primary_guild": 488475203303768065,
   "channels": {
-    "BMs": 762166605458964510,
-    "DMs": 715297562613121084,
+    "BM": 762166605458964510,
+    "DM": 715297562613121084,
     "Status": 708882977202896957,
     "Guilds": 841863106996338699
-  },
-  "owner_id": 380541859526737942
+  }
 }

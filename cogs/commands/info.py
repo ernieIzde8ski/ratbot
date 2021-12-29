@@ -1,10 +1,12 @@
+from random import choice
+
 from discord import Embed, Permissions, utils
 from discord.ext import commands
-from random import choice
+from bot import RatBot
 
 
 class Information(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
 
     @commands.command(aliases=["info", "support"])
@@ -13,7 +15,7 @@ class Information(commands.Cog):
         main = f"[GitHub]({self.bot.config['github']})\n" \
                f"[Bot Invite]({utils.oauth_url(self.bot.user.id, permissions=Permissions(2214915137))})\n" \
                f"[Server Invite]({self.bot.config['invite']})\n" \
-               f"[Random Song](https://youtu.be/{choice(self.bot.songs)})"
+               f"[Random Song](https://youtu.be/{choice(self.bot.data.songs)})"
         footer = f"Commands can be invoked with the prefix(es) " \
                  f"(default: {' || '.join(self.bot.config['prefix'])}`) " \
                  f"or with a mention (@{ctx.me})"
@@ -27,5 +29,5 @@ class Information(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(Information(bot))

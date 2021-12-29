@@ -5,21 +5,23 @@ from typing import Optional, Union
 
 import discord
 from discord.ext import commands
-from modules._json import safe_dump, safe_load
-from modules.converters import FlagConverter
-from modules.weather import get_weather
+from utils.classes import RatBot
+from utils.functions import safe_dump, safe_load
+from utils.converters import FlagConverter
 from pytz import timezone as tz
 
 
 class WeatherUpdates(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+
+    def __init__(self, bot: RatBot):
         self.bot = bot
+        self.bot.load_weather("")
         self.bible = safe_load("data/russian.json", [])
         self.data = safe_load("data/weather_resps.json", {})
         self.users = safe_load("data/weather_updates.json", {"active_users": []})
 
     def check(self, member: discord.Member):
-        return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.bot.user_locations.get(str(member.id)) and member.id in self.users["active_users"])
+        return member.bot or member.guild.id != self.bot.config["primary_guild"] or not (self.bot.weather.locs.get(str(member.id)) and member.id in self.users["active_users"])
 
     def temp_eval(self, temp: Union[int, float]) -> str:
         for num, value in self.data["temperature_resps"]:
@@ -67,13 +69,13 @@ class WeatherUpdates(commands.Cog):
         if self.users[id].get("sent") == now:
             return
 
-        weather = await get_weather(self.bot.config["weather"], **self.bot.user_locations[id])
+        weather = await self.bot.data.weather.get_weather(self.bot.config["weather"], **self.bot.user_locations[id])
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
         try:
             await after.send(self.message_constructor(self.users[id], weather))
         except discord.Forbidden:
-            return await self.bot.c.DMs.send(f"{after} might have me blocked 😦")
+            return await self.bot.status_channels.DM.send(f"{after} might have me blocked 😦")
 
         if random.random() < 0.1:
             _m = await after.send("do you want a Song ?")
@@ -94,35 +96,35 @@ class WeatherUpdates(commands.Cog):
             value = message.content.lower()[0]
             if value == "y":
                 await after.send(random.choice(["Awsom", "Based", "Yes", "Yea", "Good", "Here"]))
-                await after.send("https://youtu.be/" + random.choice(self.bot.songs))
+                await after.send("https://youtu.be/" + random.choice(self.bot.data.songs))
             elif value == "n":
                 await after.send(random.choice(["Rude", "Dam", "Cringe ?", "Troled"]))
 
     @commands.command(aliases=["wset"])
     @commands.is_owner()
-    async def weather_data_set(self, ctx, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
+    async def weather_data_set(self, ctx: commands.Context, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
         """
         Add a user to weather updates
         tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
         Usage: r;wset --id 302956027656011776 --tz America/Los_Angeles --aliases ["ernie", "Pepito"]
         """
         if target:
-            target = target.id
+            key = str(target.id)
         elif flags.get("id"):
-            target = flags.pop("id")
+            key = str(flags.pop("id"))
         else:
             raise commands.BadArgument("Could not get target user")
 
         # Add a user if flags are present
         # otherwise, try to remove a user
         if flags:
-            self.users[str(target)] = flags
-            self.users[str(target)]["sent"] = False
-            if target not in self.users["active_users"]:
-                self.users["active_users"].append(target)
+            self.users[key] = flags
+            self.users[key]["sent"] = False
+            if key not in self.users["active_users"]:
+                self.users["active_users"].append(key)
         else:
-            if target in self.users["active_users"]:
-                self.users["active_users"].remove(target)
+            if key in self.users["active_users"]:
+                self.users["active_users"].remove(key)
             # Exception raised when flags are not present (not counting
             # ID flag) and the target is not currently an active user
             else:
@@ -130,8 +132,8 @@ class WeatherUpdates(commands.Cog):
 
         # Save information
         safe_dump("data/weather_updates.json", self.users)
-        await ctx.send(f"Updated user data for {target}")
+        await ctx.send(f"Updated user data for {key}")
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(WeatherUpdates(bot))

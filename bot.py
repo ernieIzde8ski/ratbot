@@ -1,33 +1,35 @@
-from discord import AllowedMentions, Intents
-from discord.ext import commands
-from dotenv import load_dotenv
 from json import load
 from os import getenv
 
-from modules.channels import Channels
-from modules.msg_check import Check
-from modules.prefixes import Prefixes
+from discord import AllowedMentions, Intents
+from discord.ext import commands
+from dotenv import load_dotenv
+
+from utils.classes import Blocking, RatBot, RatConfig
+
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
+apikey = getenv("WEATHER_TOKEN")
 
 with open("config.json", "r", encoding="utf-8") as file:
-    config = load(file)
-    if isinstance(config.get("prefix"), str):
-        config["prefix"] = [config.get("prefix")]
+    config: RatConfig = load(file)
+    # The prefix can be a string, but code elsewhere does not account for that
+    if isinstance(config["prefix"], str):
+        config["prefix"] = [config["prefix"]]
 
-prefixes = Prefixes(config["prefix"])
 
-bot = commands.Bot(
-    command_prefix=prefixes.get,
+bot = RatBot(
     allowed_mentions=AllowedMentions.none(),
-    intents=Intents.all()
+    intents=Intents.all(),
+    config=config,
+    block_check=Blocking(),
 )
-bot.config = config
-bot.config["weather"] = getenv("WEATHER_TOKEN")
-bot.c = Channels(**config["channels"])
-bot._check = Check()
-bot.pfx = prefixes
+
+
+if apikey:
+    bot.load_weather(apikey)
+
 
 with open("enabled_extensions.json", "r") as file:
     for extension in load(file):
@@ -38,12 +40,12 @@ with open("enabled_extensions.json", "r") as file:
         else:
             print(f"Loaded extension {extension}")
     else:
-        print("Loaded all extensions")
+        print("Loaded all extensions !")
 
 
 @bot.event
 async def on_message(message):
-    valid = await bot._check.reply(message)
+    valid = await bot.block_check.reply(message)
     if not valid:
         return
 
@@ -52,7 +54,7 @@ async def on_message(message):
 
 @bot.event
 async def on_prefix_update(id, new_prefix):
-    await prefixes.update_prefixes(id, new_prefix)
+    await bot.pfx.update(id, new_prefix)
 
 
 bot.run(token)

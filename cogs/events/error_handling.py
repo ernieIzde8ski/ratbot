@@ -1,5 +1,6 @@
 from discord.ext import commands
 from fuzzywuzzy import fuzz
+from utils.classes import RatBot
 
 
 class ErrorHandling(commands.Cog):
@@ -27,5 +28,5 @@ class ErrorHandling(commands.Cog):
         await ctx.reply(resp)
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(ErrorHandling())

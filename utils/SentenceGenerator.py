@@ -22,7 +22,7 @@ import random
 import re
 
 
-class Generator(object):
+class TrekGenerator(object):
     def __init__(self, generator):
         self.generator = generator
 
@@ -97,4 +97,4 @@ def loadGenerator(filename):
     if len(diff) > 0:
         raise ValueError("Tokens %s are used but not defined" % list(diff))
 
-    return Generator(generator)
+    return TrekGenerator(generator)

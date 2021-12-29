@@ -34,9 +34,9 @@ if [ -z "$BOOL" ] ; then
 else
     CHARACTER=${BOOL:0:1}
     if [[ "$CHARACTER" == "y" || "$CHARACTER" == "Y" ]]; then
-        node modules/xkcd_cache_generator.js
-        node modules/xkcd_cache_checker.js
-        node modules/WeatherResper.js
+        node utils/xkcd_cache_generator.js
+        node utils/xkcd_cache_checker.js
+        node utils/WeatherResper.js
     else
         echo "Continuing"
     fi
@@ -58,7 +58,7 @@ fi
 
 curl -o data/russian.json https://raw.githubusercontent.com/thiagobodruk/bible/master/json/ru_synodal.json
 
-python modules/russian.py
+python utils/russian.py
 if (( $? == 0 )); then
     echo 'Downloaded a Russian bible successfully'
 else
