@@ -1,5 +1,5 @@
 from discord import Forbidden, HTTPException
-from discord.abc import Messageable
+from discord import Member, TextChannel, User
 from discord.ext import commands
 from typing import Optional
 from utils.classes import RatBot
@@ -13,14 +13,14 @@ class Ping(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def echo(self, ctx: commands.Context, messageable: Optional[Messageable], *, message: str):
+    async def echo(self, ctx: commands.Context, messageable: Optional[Member | TextChannel | User], *, message: str):
         """Echo a message
-        Optional parameter messageable determines location"""
-        messageable = messageable or ctx
+        Optional parameter messageable determines target"""
+        target = messageable or ctx
         if message.startswith("\\"):
             message = message[1:]
         try:
-            await messageable.send(message)
+            await target.send(message)
         except (Forbidden, HTTPException) as e:
             await ctx.send(f"{e.__class__.__name__}: {e}")
 

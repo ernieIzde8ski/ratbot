@@ -23,7 +23,7 @@ class Miscellaneous(commands.Cog):
             'YOUR CULTURE SUCK, YOUR HERITAGE, , IT IS BAD ,AND YOUR CHOICE ??? TERRIBLE ABSOLUTE LY WAFUL. '
             '"BIRANA" WELL DESCRIBES THE ABSOLUTE DIFFERENCE OSPOSITE OF YOU, AND YOUR EVERY THING , BECAUSE '
             '"BIRANA" BAED YOU ARE CIRNGE. BIRANA "BASED" YOU ARE "CRINGE".'.format(
-                armenium, armeniaum)
+                armenium.upper(), armeniaum.upper())
         )
 
     @commands.command(aliases=["nsbm"])
@@ -49,6 +49,7 @@ class Miscellaneous(commands.Cog):
 
     @time.command()
     async def set(self, ctx: commands.Context, *, tz: Optional[timezone]):
+        # TODO: Allow for setting timezone to Discord
         """Sets a PYTZ-compatible timezone
         Valid timezones are at available at
         https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568"""

@@ -13,7 +13,7 @@ class Bans(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if not message.guild:
+        if not message.guild or message.author == self.bot.user:
             return
 
         guild_id = str(message.guild.id)

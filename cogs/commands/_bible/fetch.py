@@ -39,7 +39,6 @@ class RawBibleResponse(TypedDict):
     translation_note: str
 
 
-@dataclass
 class CleanBibleResponse:
     reference: str
     verses: list[RawVerse]
@@ -99,6 +98,8 @@ class PassageRetrieval:
             if isinstance(result, str):
                 raise BibleError(result)
             elif err := result.get("error"):
+                if err == "not found":
+                    err = "Text not found"
                 raise BibleError(err)
             elif not isinstance(result, dict):
                 raise Exception("Something has gone horribly wrong")

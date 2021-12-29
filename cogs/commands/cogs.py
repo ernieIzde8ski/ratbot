@@ -8,6 +8,7 @@ from utils.converters import FlagConverter
 
 
 class Cogs(commands.Cog):
+    # TODO: Combine repeated functions
     def __init__(self, bot: RatBot):
         self.bot = bot
         self.all_extensions: list[str] = []
@@ -17,7 +18,7 @@ class Cogs(commands.Cog):
         await self.bot.wait_until_ready()
         self.all_extensions = list(self.bot.extensions.keys())
 
-    async def dump_extensions(self):
+    def dump_extensions(self):
         self.all_extensions = list(self.bot.extensions.keys())
         self.all_extensions.sort(key=lambda i: i.lower())
         with open("enabled_extensions.json", "w", encoding="utf-8") as file:
@@ -57,7 +58,7 @@ class Cogs(commands.Cog):
         await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
-        await self.dump_extensions()
+        self.dump_extensions()
 
     @cogs.command(aliases=["u"])
     @commands.is_owner()
@@ -81,7 +82,7 @@ class Cogs(commands.Cog):
         await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
-        await self.dump_extensions()
+        self.dump_extensions()
 
     @cogs.command(aliases=["r"])
     @commands.is_owner()
@@ -105,7 +106,7 @@ class Cogs(commands.Cog):
         await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
-        await self.dump_extensions()
+        self.dump_extensions()
 
 
 def setup(bot: RatBot):

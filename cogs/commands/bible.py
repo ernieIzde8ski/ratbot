@@ -54,7 +54,7 @@ class Bible(commands.Cog):
         ).set_footer(text=footer)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["set_version"])
+    @commands.command(aliases=["set_version", "translation", "version"])
     async def set_translation(self, ctx: commands.Context, *, translation: Optional[str]):
         """Sets a version to use in the bible_verse command
         Due to the limitations of the api I use (https://bible-api.com/),

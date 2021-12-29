@@ -1,11 +1,11 @@
+import re
 from asyncio import sleep
 from typing import Callable
-from discord.ext import commands
-from discord import Message
-from utils.classes import RatBot
 
+from discord import Message
+from discord.ext import commands
+from utils.classes import RatBot
 from utils.converters import FlagConverter
-import re
 
 
 class Moderation(commands.Cog):

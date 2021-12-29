@@ -11,7 +11,6 @@ from utils.weather import valid_kwargs, valid_kwarg_types
 class Weather(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
-        # self.retriever = WeatherRetrieval(apikey=self.bot.weather.apikey)
 
     async def _update(self):
         safe_dump("data/weather_locations.json", self.bot.weather.locs)

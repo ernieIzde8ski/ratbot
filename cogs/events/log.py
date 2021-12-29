@@ -1,3 +1,4 @@
+from typing import Literal
 from discord import Color, Embed
 from discord.ext import commands
 from utils.functions import safe_load
@@ -7,17 +8,17 @@ from utils.classes import RatBot
 class Log(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
-        self.emoji = safe_load("data/emoji.json", ["🐣", "🎃"])
+        self.wakeup, self.close = safe_load("data/emoji.json", ["🐣", "🎃"])
 
     def get_channels(self):
         if not self.bot.status_channels.loaded:
             self.bot.status_channels.get_channels(self.bot)
 
-    def embed_constructor(self, status: str):
+    def embed_constructor(self, status: Literal["online"] | Literal["offline"]):
         if status == "online":
-            return Embed(title=f"{self.emoji[0]} Online!", color=Color.dark_green())
-        elif status == "offline":
-            return Embed(title=f"{self.emoji[1]} Offline!", color=Color.from_rgb(91, 10, 0))
+            return Embed(title=f"{self.wakeup} Online!", color=Color.dark_green())
+        else:
+            return Embed(title=f"{self.close} Offline!", color=Color.from_rgb(91, 10, 0))
 
     @commands.Cog.listener()
     async def on_ready(self):

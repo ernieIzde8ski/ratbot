@@ -122,13 +122,12 @@ class WeatherUpdates(commands.Cog):
             self.users[key]["sent"] = False
             if key not in self.users["active_users"]:
                 self.users["active_users"].append(key)
+        elif key in self.users["active_users"]:
+            self.users["active_users"].remove(key)
+        # Exception raised when flags are not present (not counting
+        # ID flag) and the target is not currently an active user
         else:
-            if key in self.users["active_users"]:
-                self.users["active_users"].remove(key)
-            # Exception raised when flags are not present (not counting
-            # ID flag) and the target is not currently an active user
-            else:
-                raise commands.BadArgument("Target is not an active user")
+            raise commands.BadArgument("Target is not an active user")
 
         # Save information
         safe_dump("data/weather_updates.json", self.users)

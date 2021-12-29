@@ -4,8 +4,8 @@ from utils.classes import RatBot
 
 
 class ErrorHandling(commands.Cog):
-    def __init__(self):
-        pass
+    def __init__(self, bot: RatBot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
@@ -19,8 +19,8 @@ class ErrorHandling(commands.Cog):
         # Show the closest matching command if the error is CommandNotFound.
         if isinstance(error, commands.CommandNotFound):
             # Generate command name list, with aliases included.
-            cmds = list(map(lambda cmd: cmd.name.lower(), ctx.bot.commands))
-            aliases = list(map(lambda cmd: cmd.aliases, ctx.bot.commands))
+            cmds = list(map(lambda cmd: cmd.name.lower(), self.bot.commands))
+            aliases = list(map(lambda cmd: cmd.aliases, self.bot.commands))
             aliases = [item for elem in aliases for item in elem]
             cmds += aliases
             cmds.sort(key=lambda cmd: fuzz.ratio(ctx.invoked_with.lower(), cmd), reverse=True)
@@ -29,4 +29,4 @@ class ErrorHandling(commands.Cog):
 
 
 def setup(bot: RatBot):
-    bot.add_cog(ErrorHandling())
+    bot.add_cog(ErrorHandling(bot))

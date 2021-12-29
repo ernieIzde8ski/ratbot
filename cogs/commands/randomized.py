@@ -85,14 +85,14 @@ class Randomized(commands.Cog):
         """Returns a randomized hexadecimal color"""
         await ctx.send("`#" + ("%06x" % random.randint(0, 0xFFFFFF)) + "`")
 
-    @commands.command(aliases=["choose"])
-    async def choice(self, ctx: commands.Context, *arguments: str):
+    @commands.command(aliases=["choice", "choose"])
+    async def pick(self, ctx: commands.Context, *arguments: str):
         """
         Chooses one random item split by spaces
 
         Multiple word items can be split with quotation blocks: 'r.choose item1 "item 2" item3'
         """
-        await ctx.send("`" + random.choice(arguments).replace("`", "") + "`")
+        await ctx.send("`" + random.choice(arguments).replace("`", r"\`") + "`")
 
     @commands.group(aliases=["song", "rs"], invoke_without_command=True)
     async def random_song(self, ctx: commands.Context):
@@ -118,10 +118,8 @@ class Randomized(commands.Cog):
     @random_song.command()
     @commands.is_owner()
     async def list(self, ctx: commands.Context):
-        resp = "```\nself.bot.data.songs:\n   " + \
-            "\n   ".join(self.bot.data.songs).strip()
-        items = [str(item) for item in self.songs.items()]
-        resp += "\nself.songs:\n   " + "\n   ".join(items).strip()
+        resp = "```\n"
+        resp += "self.songs:\n   " + "\n   ".join(str(item) for item in self.songs.items()).strip()
         resp += "\n```"
         await ctx.send(resp)
 

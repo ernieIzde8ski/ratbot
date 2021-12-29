@@ -13,7 +13,7 @@ class Settings(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
 
-    @commands.command(aliases=["prefix"])
+    @commands.command(aliases=["prefix", "pfx"])
     @commands.has_guild_permissions(manage_guild=True)
     async def set_prefix(self, ctx: commands.Context, prefix: Optional[str]):
         """Sets a guild-wide prefix
@@ -59,12 +59,12 @@ class Settings(commands.Cog):
             self.bot.data.pipi_guilds.remove(id)
         else:
             await ctx.send("Disabling the Petrosian copypasta")
-            self.bot.data.pipi_guilds.add(id)
+            self.bot.data.pipi_guilds.add(id)   
         safe_dump("data/pipi.json", list(self.bot.data.pipi_guilds))
 
     @commands.command(aliases=["toggle_bans"])
     @commands.has_guild_permissions(administrator=True)
-    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Percentage | float | None):
+    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Optional[Percentage] = 0.0002):
         """Toggle the bot randomly banning individuals"""
         id = str(ctx.guild.id)
         if id in self.bot.data.banning_guilds and not percent:
