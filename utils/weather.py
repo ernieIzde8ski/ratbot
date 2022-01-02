@@ -84,7 +84,6 @@ class WeatherRetrieval:
         takes the same parameters as get_weather_url
         """
         kwargs = self.fix_kwargs(self.apikey, **kwargs)
-        print(kwargs)
         async with self.session.get(self.base_url, **{"params": kwargs}) as resp:
             resp = await resp.json()
             if resp.get("message"):
