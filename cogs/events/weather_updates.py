@@ -124,7 +124,7 @@ class WeatherUpdates(commands.Cog):
         weather = await self.bot.weather.get_weather(**self.bot.weather.locs[id])
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
-        msg = self.message_constructor(self.users[id], weather) if not weather.get("error") else self.err_msg_ctr(self.users[id], weather)
+        msg = self.message_constructor(self.users[id], weather)
         try:
             await after.send(msg)
         except discord.Forbidden:
