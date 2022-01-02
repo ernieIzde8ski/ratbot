@@ -32,11 +32,10 @@ class Replies(commands.Cog):
         """Clear the DM channel"""
         if not self.task or not self.bot.data.msg:
             raise commands.CommandError("No DM channel is currently open")
-        else:
-            await ctx.send(f"Clearing open channel with {self.bot.data.msg.channel.recipient}")
-            await sleep(0.5)
-            self.task.cancel()
-            self.bot.data.msg = None
+        await ctx.send(f"Clearing open channel with {self.bot.data.msg.channel.recipient}")
+        await sleep(0.5)
+        self.task.cancel()
+        self.bot.data.msg = None
 
     @commands.command()
     @commands.check(lambda ctx: ctx.channel == ctx.bot.status_channels.DM or ctx.author.id == ctx.bot.owner_id)
@@ -62,9 +61,8 @@ class Replies(commands.Cog):
     async def unblock(self, ctx: commands.Context, *, blockee: Union[discord.Member, discord.User]):
         if blockee.id not in self.bot.block_check.blocked:
             raise commands.BadArgument("blockee {blockee} is not blocked")
-        else:
-            self.bot.block_check.unblock(blockee)
-            await ctx.send(f"Unblocked {blockee}")
+        self.bot.block_check.unblock(blockee)
+        await ctx.send(f"Unblocked {blockee}")
 
     @commands.command()
     @commands.is_owner()
