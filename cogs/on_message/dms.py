@@ -3,14 +3,16 @@ import re
 from discord import Color, Embed
 from discord.ext import commands
 
+from utils.classes import RatBot
+
 
 class DMs(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild or message.author.id in self.bot._check.blocked:
+        if message.guild or message.author.id in self.bot.block_check.blocked:
             return
         elif re.match(r"^.*\s*echo.*$", message.content):
             return
@@ -18,12 +20,12 @@ class DMs(commands.Cog):
         if message.author.id != self.bot.user.id:
             title = f"Direct Message from {message.channel.recipient}"
             color = Color.dark_blue()
-        elif message.author.id == self.bot.user.id:
+        else:
             title = f"Direct Message to {message.channel.recipient}"
             color = Color.orange()
 
         embed = await self.embed_constructor(message, title, color)
-        await self.bot.c.DMs.send(embed=embed)
+        await self.bot.status_channels.DM.send(embed=embed)
         self.bot.dispatch("private_message", message)
 
     @staticmethod
@@ -46,5 +48,5 @@ class DMs(commands.Cog):
         return embed
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(DMs(bot))

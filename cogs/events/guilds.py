@@ -1,10 +1,11 @@
 from discord import Color, Embed, Guild
 from discord.ext import commands
-from modules.converters import FlagConverter
+from utils.classes import RatBot
+from utils.converters import FlagConverter
 
 
 class Guilds(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
 
     @commands.Cog.listener()
@@ -14,7 +15,7 @@ class Guilds(commands.Cog):
             description=f"Members: {guild.member_count}\nID: {guild.id}",
             color=Color.dark_green()
         ).set_thumbnail(url=guild.icon_url)
-        await self.bot.c.Guilds.send(embed=embed)
+        await self.bot.status_channels.Guilds.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: Guild):
@@ -23,7 +24,7 @@ class Guilds(commands.Cog):
             description=f"ID: {guild.id}",
             color=Color.dark_red()
         ).set_thumbnail(url=guild.icon_url)
-        await self.bot.c.Guilds.send(embed=embed)
+        await self.bot.status_channels.Guilds.send(embed=embed)
 
     @commands.command()
     async def guilds(self, ctx: commands.Context, *, sort: FlagConverter = {}):
@@ -47,5 +48,5 @@ class Guilds(commands.Cog):
         await ctx.send("\n".join(guilds))
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(Guilds(bot))
