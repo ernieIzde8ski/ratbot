@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import TypedDict
 
 from aiohttp import ClientSession
 
@@ -9,13 +10,30 @@ valid_kwarg_types = {
 valid_kwargs = list(valid_kwarg_types.keys())
 
 
+_STANDARD = {"dt": "UTC", "sunrise": "UTC", "sunset": "UTC", "temp": "Kelvin", "Humidity": "%", "pressure": "hPa",
+             "speed": "meter/sec", "deg": "degrees (meteorological)", "gust": "meter/sec", "all": "%", "1h": "mm", "3h": "mm"}
+_METRIC = {**_STANDARD, "temp": "Celsius"}
+_IMPERIAL = {**_STANDARD, "temp": "Fahrenheit", "speed": "miles/hour", "gust": "miles/hour"}
+
+
 class Units(Enum):
-    STANDARD = {"dt": "UTC", "sunrise": "UTC", "sunset": "UTC", "temp": "Kelvin", "Humidity": "%",
-                "pressure": "hPa", "speed": "meter/sec", "deg": "degrees (meteorological)",
-                "gust": "meter/sec", "all": "%", "1h": "mm", "3h": "mm"}
-    METRIC = {**STANDARD, "temp": "Celsius"}
-    IMPERIAL = {**STANDARD, "temp": "Fahrenheit",
-                "speed": "miles/hour", "gust": "miles/hour"}
+    """Enum of units. Deprecated? Maybe"""
+    STANDARD = _STANDARD
+    METRIC = _METRIC
+    IMPERIAL = _IMPERIAL
+
+
+class FixedKwargs(TypedDict, total=False):
+    appid: str
+
+    units: str
+    lang: str
+
+    q: str
+    id: str | int
+    lat: str | int
+    lon: str | int
+    zip: str
 
 
 class WeatherRetrieval:
@@ -24,12 +42,48 @@ class WeatherRetrieval:
         self.apikey = apikey
         self.base_url = "https://api.openweathermap.org/data/2.5/weather"
 
+    @staticmethod
+    def fix_kwargs(
+        apikey: str, *, q: str = None,
+        city_name: str = None, state_code: str = None, country_code: str = None,
+        city_id: int | str = None,
+        lat: int | str = None, lon: int | str = None,
+        zip_code: int | str = None,
+        units: str = "metric", lang: str = None,
+    ) -> FixedKwargs:
+        resp = FixedKwargs(appid=apikey)
+
+        if q:
+            resp["q"] = q
+        elif city_name:
+            query: list[str] = []
+            for i in (city_name, state_code, country_code):
+                if i:
+                    query.append(i)
+                else:
+                    break
+            resp["q"] = ",".join(query)
+        elif city_id:
+            resp["id"] = city_id
+        elif lat is not None and lon is not None:
+            resp["lat"] = lat
+            resp["lon"] = lon
+        elif zip_code:
+            resp["zip"] = ",".join(str(i) for i in (zip_code, country_code) if i)
+
+        resp["units"] = units
+        if lang:
+            resp["lang"] = lang
+
+        return resp
+
     async def get_weather(self, **kwargs) -> dict:
         """Returns a dict object with weather information
 
         takes the same parameters as get_weather_url
         """
-        kwargs["appid"] = self.apikey
+        kwargs = self.fix_kwargs(self.apikey, **kwargs)
+        print(kwargs)
         async with self.session.get(self.base_url, **{"params": kwargs}) as resp:
             resp = await resp.json()
             if resp.get("message"):
