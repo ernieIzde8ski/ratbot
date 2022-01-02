@@ -90,5 +90,4 @@ class WeatherRetrieval:
                     resp["units"] = Units.STANDARD.value
             else:
                 resp["units"] = Units.METRIC.value
-            print(resp)
             return resp
