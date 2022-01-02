@@ -4,8 +4,8 @@ from typing import TypedDict
 from aiohttp import ClientSession
 
 valid_kwarg_types = {
-    "city_id": int, "latitude": (int, float), "longitude": (int, float), "zip_code": (str, int),
-    "country_code": str, "state_code": str, "city_name": str, "units": str, "language": str
+    "city_id": int, "lat": (int, float), "lon": (int, float), "zip_code": (str, int),
+    "country_code": str, "state_code": str, "city_name": str, "units": str, "lang": str
 }
 valid_kwargs = list(valid_kwarg_types.keys())
 
@@ -48,6 +48,7 @@ class WeatherRetrieval:
         city_name: str = None, state_code: str = None, country_code: str = None,
         city_id: int | str = None,
         lat: int | str = None, lon: int | str = None,
+        latitude: int | str = None, longitude: int | str = None,
         zip_code: int | str = None,
         units: str = "metric", lang: str = None,
     ) -> FixedKwargs:

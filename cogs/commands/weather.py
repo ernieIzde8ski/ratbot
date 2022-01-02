@@ -61,36 +61,48 @@ class Weather(commands.Cog):
                 weather_data[key] = weather_data[key].title()
 
     @commands.group(invoke_without_command=True, aliases=["w"])
-    async def weather(self, ctx: commands.Context, *, location: Optional[Union[FlagConverter, str]]):
+    async def weather(self, ctx: commands.Context, *, location: Optional[Union[FlagConverter, str]] = None):
         """Returns the weather for a given location
 
         Accepts either a city as the first parameter, the same flag parameters
         as the set subcommand, or defaults to the set parameter
         """
+        print(0)
         user_data = self.bot.weather.locs.get(str(ctx.author.id))
 
+        print(1)
         # Raise an error if neither user data is set nor location data is provided.
         if not location and not user_data:
+            print("1a")
             prefix = ctx.prefix.replace("`", r"\`")
-            raise commands.MissingRequiredArgument(f"No weather information provided."
-                                                   f"Try: \n```\n{prefix}{ctx.invoked_with} <city>\n```")
+            print("1b")
+            raise commands.BadArgument(f"No weather information provided. "
+                                       f"Try: \n```\n{prefix}{ctx.invoked_with} <city>\n```")
 
+        print(2)
         # Handle a given input.
         if location is None:
+            print("2a")
             # If no given input, use the set location data.
             location = user_data
         elif isinstance(location, dict):
+            print("2b")
             self.verify_location_data(location)
         elif isinstance(location, str):
+            print("2c")
             location = {"city_name": location}
 
+        print(3)
         # Retrieve weather data.
         weather_data = await self.bot.weather.get_weather(**location)
 
+        print(4)
         # Utilize weather data.
         if weather_data.get("error"):
             raise commands.CommandError(weather_data['error'])
+        print(5)
         embed = await self.embed_constructor(weather_data=weather_data, color=ctx.me.color)
+        print(6)
         await ctx.send(embed=embed)
 
     @weather.group(invoke_without_command=True, aliases=["s"])
@@ -98,23 +110,22 @@ class Weather(commands.Cog):
         """Sets a default location
 
         The easiest usage is r;w set --city_name:city_name --units:metric [...]
-        Alternatively, subcommands exist
+        Note that this WILL override your current settings. Alternatively, subcommands exist.
 
         Valid locations:
             - city_id
-                - city.list.json.gz available at http://bulk.openweathermap.org/sample/
+                - city.list.json available at http://bulk.openweathermap.org/sample/
             - latitude, longitude
             - zip_code(, country_code)
             - city_name(, state_code(, country_code))
         Optional options:
             - units: can be any of [standard, metric, imperial], defaults to metric
-            - language: language code
-                - ie --language:pl will render in polish
+            - lang: language code
                 - see https://openweathermap.org/current#multi
         examples:
-            r;w set --city_name Warsaw  --state_code IN --country_code US --units Imperial
-            r;w set --zip_code 00-413 --country_code PL --units Standard --language ES
-            r;w set --latitude 0 --longitude 0 --units Imperial
+            r;w set --city_name Warsaw --state_code IN --country_code US --units Imperial
+            r;w set --zip_code 00-413 --country_code PL --units Standard --lang ES
+            r;w set --lat 0 --lon 0 --units Imperial
         """
         self.verify_location_data(location)
         id = str(ctx.author.id)
@@ -123,7 +134,7 @@ class Weather(commands.Cog):
         await self._update()
         await ctx.send(f"{set} information")
 
-    @set.command()
+    @set.command(aliases=["a"])
     @commands.is_owner()
     async def admin(self, ctx: commands.Context, victim: Union[int, User], *, location: FlagConverter = {}):
         """Force set a user's location settings"""
