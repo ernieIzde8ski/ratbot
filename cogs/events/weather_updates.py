@@ -1,7 +1,7 @@
 import asyncio
 import random
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, TypedDict, Union
 
 import discord
 from discord.ext import commands
@@ -9,6 +9,10 @@ from utils.classes import RatBot
 from utils.functions import safe_dump, safe_load
 from utils.converters import FlagConverter
 from pytz import timezone as tz
+
+
+class Users(TypedDict):
+    active_users: list
 
 
 class WeatherUpdates(commands.Cog):
@@ -21,7 +25,11 @@ class WeatherUpdates(commands.Cog):
         self.users = safe_load("data/weather_updates.json", {"active_users": []})
 
     def check(self, member: discord.Member):
-        return member.bot or member.guild.id != self.bot.config["primary_guild"] or not (self.bot.weather.locs.get(str(member.id)) and member.id in self.users["active_users"])
+        return (
+            member.bot
+            or not self.bot.weather.locs.get(str(member.id))
+            or member.id not in self.users["active_users"]
+        )
 
     def temp_eval(self, temp: Union[int, float]) -> str:
         for num, value in self.data["temperature_resps"]:
@@ -39,8 +47,9 @@ class WeatherUpdates(commands.Cog):
             message += f"Error occured (Because you are Stupid) (`{error}`). " \
                        "Try resetting your Location data (using `r.w set $CITY_NAME`) and trying again tomorrow (Not today (Stupid idiot thing)) \n\n"
         else:
-            [current, felt, high, low] = [round(weather['main']['temp'], 1), round(
-                weather['main']['feels_like'], 1), round(weather['main']['temp_max'], 1), round(weather['main']['temp_min'], 1)]
+
+            current, felt, high, low = (round(weather["main"][key], 1)
+                                        for key in ["temp", "feels_like", "temp_max", "temp_min"])
             felt = f" (and it feels like {felt}°)" if current != felt else ""
 
             message += f"It is currently {current} degrees {weather['units']['temp']}{felt}, with a high of {high}° and a low of {low}°. " \
@@ -69,7 +78,7 @@ class WeatherUpdates(commands.Cog):
         if self.users[id].get("sent") == now:
             return
 
-        weather = await self.bot.data.weather.get_weather(self.bot.config["weather"], **self.bot.user_locations[id])
+        weather = await self.bot.weather.get_weather(**self.bot.weather.locs[id])
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
         try:
