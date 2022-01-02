@@ -1,23 +1,41 @@
-from asyncio import sleep
-from discord.ext import commands
-from discord import Message
-
-from modules.converters import FlagConverter
 import re
+from asyncio import sleep
+from typing import Callable
+
+from discord import Message
+from discord.ext import commands
+from utils.classes import RatBot
+from utils.converters import FlagConverter
 
 
 class Moderation(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    checks: dict[str, Callable[..., bool]]
+    def __init__(self, bot: RatBot):
         self.bot = bot
         self.checks = {
-            "ignore-humans": lambda msg, value: msg.author.bot,
+            "ignore-humans": lambda msg, value: bool(msg.author.bot),
             "ignore-bots": lambda msg, value: not msg.author.bot,
             "ignore-webhooks": lambda msg, value: not msg.webhook_id,
-            "attachments": lambda msg, value: msg.attachments,
-            "embeds": lambda msg, value: msg.embeds,
+            "attachments": lambda msg, value: bool(msg.attachments),
+            "embeds": lambda msg, value: bool(msg.embeds),
             "plaintext": lambda msg, value: not msg.attachments and not msg.embeds,
-            "match": lambda msg, value: re.search(value, msg.content)
+            "match": lambda msg, value: bool(re.search(value, msg.content))
         }
+    
+    def get_check(self, flags: dict, msg: Message) -> Callable[[Message], bool]:
+        if not flags:
+            return lambda _msg: _msg != msg
+        else:
+            def check(msg: Message) -> bool:
+                if msg == msg:
+                    return False
+                for check in self.checks:
+                    value = flags[check]
+                    if not self.checks[check](msg, value):
+                        return False
+                else:
+                    return True
+            return check
 
     @commands.command(aliases=["prune", "mass_delete"])
     @commands.has_guild_permissions(manage_messages=True)
@@ -29,28 +47,12 @@ class Moderation(commands.Cog):
         All flags with dashes can be written alternatively with
         underscores (i.e. "--ignore_humans")
         """
-        if not flags:
-            def check(msg):
-                return msg != ctx.message
-        else:
-            flags = {key.lower().replace("_", "-"): value for key, value in flags.items()}
-            checks = [check for check in self.checks if check in flags]
-
-            def check(msg: Message) -> bool:
-                if msg == ctx.message:
-                    return False
-                for check in checks:
-                    value = flags[check]
-                    if not self.checks[check](msg, value):
-                        return False
-                else:
-                    return True
-
+        check = self.get_check(flags, ctx.message)
         await ctx.channel.purge(limit=amount, check=check)
         await ctx.message.add_reaction("☑️")
         await sleep(2)
         await ctx.message.delete()
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(Moderation(bot))

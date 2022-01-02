@@ -1,13 +1,18 @@
 from datetime import datetime
+import discord
+from discord.abc import User
 
 from discord.ext import commands
 from fuzzywuzzy import fuzz
 
+from utils.classes import RatBot
+
 
 class Nico(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    Nico: discord.User
+
+    def __init__(self, bot: RatBot):
         self.bot = bot
-        self.Nico = None
         self.time = None
 
     async def get_nico(self) -> None:
@@ -36,7 +41,7 @@ class Nico(commands.Cog):
         self.time = now
 
 
-def setup(bot):
+def setup(bot: RatBot):
     cog = Nico(bot)
     bot.loop.create_task(cog.get_nico())
     bot.add_cog(cog)

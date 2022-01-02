@@ -1,11 +1,14 @@
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from modules._json import safe_dump, safe_load
+from utils.classes import RatBot
+from utils.functions import safe_dump, safe_load
 
 
 class AEBDTheta(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    """Handle processes related to 0413-Theta (primary_guild in config)"""
+
+    def __init__(self, bot: RatBot):
         self.bot = bot
         self.armenium_facts: int = safe_load("data/facts.json", 0)
         self.bot.loop.create_task(self.set_channel())
@@ -17,6 +20,7 @@ class AEBDTheta(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def set_facts(self, ctx: commands.Context, arg: int):
+        """Set total Armenium Facts"""
         self.armenium_facts = arg
         await self.channel.edit(topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}")
         safe_dump("data/facts.json", self.armenium_facts)
@@ -31,5 +35,5 @@ class AEBDTheta(commands.Cog):
             await self.channel.edit(topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}")
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: RatBot) -> None:
     bot.add_cog(AEBDTheta(bot))

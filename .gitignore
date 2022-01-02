@@ -1,12 +1,12 @@
 # vscode defaults, saved data directory
 .vscode/
 data/
-modules/xkcd_cache.json
+utils/xkcd_cache.json
 
 # The price I pay for stupidity & using a combination of js files + sh files instead of a setup.py
 package-lock.json
 package.json
-node_modules/
+node_utils/
 
 # to-do list
 TODO

@@ -1,60 +1,114 @@
 import asyncio
 import random
 from datetime import datetime
-from typing import Optional, Union
+from functools import cache
+from typing import Optional, TypedDict, Union
 
 import discord
 from discord.ext import commands
-from modules._json import safe_dump, safe_load
-from modules.converters import FlagConverter
-from modules.weather import get_weather
 from pytz import timezone as tz
+from utils.classes import RatBot
+from utils.converters import FlagConverter
+from utils.functions import safe_dump, safe_load
+from utils.weather_types import WeatherResponseError, WeatherResponseType
+
+FORMAT_ERROR = """
+__**Здавстуй**__
+
+{GREETING} hope you have Exciting Day. (Just kidding your Stupid)
+
+Error occured (Because you are Stupid) (`{ERROR}`). Try resetting your Location data (using `r.w set $CITY_NAME`) and trying again tomorrow (Not today (Stupid idiot thing))
+
+**{RUSSIAN}**
+""".strip()
+
+FORMAT_UNFELT = """
+__**Здавстуй**__
+
+{GREETING} hope you have Exciting Day. (Just kidding your Stupid)
+
+It is currently {TEMP} degrees {TEMP_UNIT}, with a local maximum of {LOCAL_MAXIMUM}° and a local  of {LOCAL_MINIMUM}°. the Weather is {WEATHER_DESCRIPTION}, with a humidity at {HUMIDITY}% and windspeeds at {WIND} {WIND_UNIT}. {EVALUATION}
+
+**{RUSSIAN}**
+""".strip()
+FORMAT_FELT = """
+__**Здавстуй**__
+
+{GREETING} hope you have Exciting Day. (Just kidding your Stupid)
+
+It is currently {TEMP} degrees {TEMP_UNIT} (and it feels like {FELT}°), with a local maximum of {LOCAL_MAXIMUM}° and a local  of {LOCAL_MINIMUM}°. the Weather is {WEATHER_DESCRIPTION}, with a humidity at {HUMIDITY}% and windspeeds at {WIND} {WIND_UNIT}. {EVALUATION}
+
+**{RUSSIAN}**
+""".strip()
+
+
+class WeatherResponses(TypedDict):
+    greetings: list[str]
+    temperature_resps: list[tuple[int, str]]
 
 
 class WeatherUpdates(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+
+    def __init__(self, bot: RatBot):
         self.bot = bot
+        self.bot.load_weather("")
         self.bible = safe_load("data/russian.json", [])
-        self.data = safe_load("data/weather_resps.json", {})
+        self.resps: WeatherResponses = safe_load("data/weather_resps.json", {})
         self.users = safe_load("data/weather_updates.json", {"active_users": []})
 
-    def check(self, member: discord.Member):
-        return member.bot or member.guild.id != self.bot.config["main_guild"] or not (self.bot.user_locations.get(str(member.id)) and member.id in self.users["active_users"])
+    def check(self, member: discord.Member) -> bool:
+        """Returns true if a member should not be checked."""
+        return (
+            member.bot
+            or not self.bot.weather.locs.get(str(member.id))
+            or member.id not in self.users["active_users"]
+        )
 
-    def temp_eval(self, temp: Union[int, float]) -> str:
-        for num, value in self.data["temperature_resps"]:
+    @staticmethod
+    @cache
+    def to_celsius(num: int | float, _from: str) -> float:
+        """Converts a unit to celsius. If _from is invalid, returns input."""
+        _from = _from and _from[0].lower()
+        if _from == "f":
+            return (num - 32) * (5 / 9)
+        elif _from in ["k", "s"]:
+            return num - 273.15
+        return num
+
+    def temp_eval(self, temp: int | float) -> str:
+        for num, value in self.resps["temperature_resps"]:
             if temp <= num:
                 return value
         else:
             return "You managed to not have an evaluation . Wtf"
 
-    def message_constructor(self, user: dict, weather: dict) -> str:
-        message = "__**Zdavstuy**__ \n\n"
-        message += random.choice(self.data["greetings"]
-                                 ).format(random.choice(user["aliases"]))
-        message += " hope you have Exciting Day. (Just kidding your Stupid)\n\n"
-        if (error := weather.get("error")) is not None:
-            message += f"Error occured (Because you are Stupid) (`{error}`). " \
-                       "Try resetting your Location data (using `r.w set $CITY_NAME`) and trying again tomorrow (Not today (Stupid idiot thing)) \n\n"
-        else:
-            [current, felt, high, low] = [round(weather['main']['temp'], 1), round(
-                weather['main']['feels_like'], 1), round(weather['main']['temp_max'], 1), round(weather['main']['temp_min'], 1)]
-            felt = f" (and it feels like {felt}°)" if current != felt else ""
+    def err_msg_ctr(self, user: dict, err: WeatherResponseError) -> str:
+        greeting = random.choice(self.resps["greetings"]).format(random.choice(user["aliases"]))
+        russian = " ".join(random.sample(self.bible, k=random.randint(2, 5)))
+        return FORMAT_ERROR.format(GREETING=greeting, ERROR=err["error"], RUSSIAN=russian)
 
-            message += f"It is currently {current} degrees {weather['units']['temp']}{felt}, with a high of {high}° and a low of {low}°. " \
-                       f"the Weather is \"{weather['weather'][0]['description'].title()}\", " \
-                       f"with a humidity at {weather['main']['humidity']}% and windspeeds at {weather['wind']['speed']} {weather['units']['speed']}. "
+    def true_msg_ctr(self, user: dict, weather: WeatherResponseType) -> str:
+        greeting = random.choice(self.resps["greetings"]).format(random.choice(user["aliases"]))
+        russian = " ".join(random.sample(self.bible, k=random.randint(2, 5)))
 
-            if weather['units']['temp'] == "Fahrenheit":
-                current = (current - 32) * (5 / 9)
-            elif weather['units']['temp'] == "Kelvin":
-                current -= 273.15
-            message += self.temp_eval(current) + "\n\n"
+        current, felt, _max, _min = (round(weather["main"][key], 1) for key in ["temp", "feels_like", "temp_max", "temp_min"])
+        evaluation = self.temp_eval(self.to_celsius(current, weather["units"]["temp"]))
 
-        message += "**" + \
-                   " ".join(random.sample(self.bible, k=random.randint(2, 5))) + "**"
+        message = FORMAT_UNFELT if current == felt else FORMAT_FELT
 
-        return message
+        return message.format(
+            GREETING=greeting,
+            TEMP=current, TEMP_UNIT=weather["units"]["temp"], FELT=felt, LOCAL_MAXIMUM=_max, LOCAL_MINIMUM=_min,
+            WEATHER_DESCRIPTION=weather["weather"][0]["description"].title(),
+            HUMIDITY=weather["main"]["humidity"],
+            WIND=weather["wind"]["speed"], WIND_UNIT=weather["units"]["speed"],
+            EVALUATION=evaluation,
+            RUSSIAN=russian
+        )
+
+    def message_constructor(self, user: dict, weather: WeatherResponseType | WeatherResponseError) -> str:
+        fn = self.err_msg_ctr if weather.get("error") else self.true_msg_ctr
+        return fn(user, weather)
 
     @commands.Cog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
@@ -67,13 +121,14 @@ class WeatherUpdates(commands.Cog):
         if self.users[id].get("sent") == now:
             return
 
-        weather = await get_weather(self.bot.config["weather"], **self.bot.user_locations[id])
+        weather = await self.bot.weather.get_weather(**self.bot.weather.locs[id])
         self.users[id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
+        msg = self.message_constructor(self.users[id], weather)
         try:
-            await after.send(self.message_constructor(self.users[id], weather))
+            await after.send(msg)
         except discord.Forbidden:
-            return await self.bot.c.DMs.send(f"{after} might have me blocked 😦")
+            return await self.bot.status_channels.DM.send(f"{after} might have me blocked 😦")
 
         if random.random() < 0.1:
             _m = await after.send("do you want a Song ?")
@@ -94,44 +149,43 @@ class WeatherUpdates(commands.Cog):
             value = message.content.lower()[0]
             if value == "y":
                 await after.send(random.choice(["Awsom", "Based", "Yes", "Yea", "Good", "Here"]))
-                await after.send("https://youtu.be/" + random.choice(self.bot.songs))
+                await after.send("https://youtu.be/" + random.choice(self.bot.data.songs))
             elif value == "n":
                 await after.send(random.choice(["Rude", "Dam", "Cringe ?", "Troled"]))
 
     @commands.command(aliases=["wset"])
     @commands.is_owner()
-    async def weather_data_set(self, ctx, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
+    async def weather_data_set(self, ctx: commands.Context, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
         """
         Add a user to weather updates
         tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
         Usage: r;wset --id 302956027656011776 --tz America/Los_Angeles --aliases ["ernie", "Pepito"]
         """
         if target:
-            target = target.id
+            key = str(target.id)
         elif flags.get("id"):
-            target = flags.pop("id")
+            key = str(flags.pop("id"))
         else:
             raise commands.BadArgument("Could not get target user")
 
         # Add a user if flags are present
         # otherwise, try to remove a user
         if flags:
-            self.users[str(target)] = flags
-            self.users[str(target)]["sent"] = False
-            if target not in self.users["active_users"]:
-                self.users["active_users"].append(target)
+            self.users[key] = flags
+            self.users[key]["sent"] = False
+            if key not in self.users["active_users"]:
+                self.users["active_users"].append(key)
+        elif key in self.users["active_users"]:
+            self.users["active_users"].remove(key)
+        # Exception raised when flags are not present (not counting
+        # ID flag) and the target is not currently an active user
         else:
-            if target in self.users["active_users"]:
-                self.users["active_users"].remove(target)
-            # Exception raised when flags are not present (not counting
-            # ID flag) and the target is not currently an active user
-            else:
-                raise commands.BadArgument("Target is not an active user")
+            raise commands.BadArgument("Target is not an active user")
 
         # Save information
         safe_dump("data/weather_updates.json", self.users)
-        await ctx.send(f"Updated user data for {target}")
+        await ctx.send(f"Updated user data for {key}")
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(WeatherUpdates(bot))

@@ -2,11 +2,12 @@ from typing import Union
 
 from discord import Activity, ActivityType, Game, Status
 from discord.ext import commands
-from modules.converters import FlagConverter
+from utils.converters import FlagConverter
+from utils.classes import RatBot
 
 
 class Stati(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: RatBot):
         self.bot = bot
         self.bot.loop.create_task(self.initialize())
 
@@ -21,7 +22,7 @@ class Stati(commands.Cog):
         await self.bot.change_presence(activity=activity)
 
         self.bot.app = await self.bot.application_info()
-        self.bot.owner_id = self.bot.app.owner.id if not self.bot.config.get("owner_id") else self.bot.config["owner_id"]
+        self.bot.owner_id = self.bot.app.owner.id
 
     @staticmethod
     def get_status(status: str):
@@ -33,7 +34,7 @@ class Stati(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def set_presence(self, ctx, *, presence: Union[FlagConverter, str]):
+    async def set_presence(self, ctx: commands.Context, *, presence: Union[FlagConverter, str]):
         """Sets a presence"""
         if isinstance(presence, dict):
             activity = Game(presence.get("activity"))
@@ -45,5 +46,5 @@ class Stati(commands.Cog):
         await ctx.send(f"Set activity, status to {activity}, {status}")
 
 
-def setup(bot):
+def setup(bot: RatBot):
     bot.add_cog(Stati(bot))
