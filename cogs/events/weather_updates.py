@@ -101,10 +101,11 @@ class WeatherUpdates(commands.Cog):
     @commands.command(aliases=["wset"])
     @commands.is_owner()
     async def weather_data_set(self, ctx, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
-        """
-        Add a user to weather updates
-        tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
+        """Add a user to weather updates
+
+        timezones: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
         Usage: r;wset --id 302956027656011776 --tz America/Los_Angeles --aliases ["ernie", "Pepito"]
+        If no flags are provided, then this attempts to remove them from active_users.
         """
         if target:
             target = target.id
@@ -120,13 +121,12 @@ class WeatherUpdates(commands.Cog):
             self.users[str(target)]["sent"] = False
             if target not in self.users["active_users"]:
                 self.users["active_users"].append(target)
+        elif target in self.users["active_users"]:
+            self.users["active_users"].remove(target)
         else:
-            if target in self.users["active_users"]:
-                self.users["active_users"].remove(target)
             # Exception raised when flags are not present (not counting
             # ID flag) and the target is not currently an active user
-            else:
-                raise commands.BadArgument("Target is not an active user")
+            raise commands.BadArgument("Target is not an active user")
 
         # Save information
         safe_dump("data/weather_updates.json", self.users)
