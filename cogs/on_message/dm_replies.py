@@ -27,7 +27,7 @@ class Replies(commands.Cog):
         self.task = self.bot.loop.create_task(self._update_message(message))
 
     @commands.command()
-    @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or (isinstance(ctx.channel, discord.DMChannel) and ctx.channel == ctx.bot._message.channel))
+    @commands.check(lambda ctx: ctx.channel == ctx.bot.status_channels.DM or (isinstance(ctx.channel, discord.DMChannel) and ctx.channel == ctx.bot._message.channel))
     async def clear(self, ctx: commands.Context):
         """Clear the DM channel"""
         if not self.task or not self.bot.data.msg:
@@ -39,7 +39,7 @@ class Replies(commands.Cog):
             self.bot.data.msg = None
 
     @commands.command()
-    @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
+    @commands.check(lambda ctx: ctx.channel == ctx.bot.status_channels.DM or ctx.author.id == ctx.bot.owner_id)
     async def block(self, ctx: commands.Context, *, blockee: Optional[discord.User]):
         """Block a discord.User"""
         if blockee:
@@ -58,7 +58,7 @@ class Replies(commands.Cog):
             raise commands.MissingRequiredArgument("blockee is a required argument that is missing.")
 
     @commands.command()
-    @commands.check(lambda ctx: ctx.channel == ctx.bot.c.DMs or ctx.author.id == ctx.bot.owner_id)
+    @commands.check(lambda ctx: ctx.channel == ctx.bot.status_channels.DM or ctx.author.id == ctx.bot.owner_id)
     async def unblock(self, ctx: commands.Context, *, blockee: Union[discord.Member, discord.User]):
         if blockee.id not in self.bot.block_check.blocked:
             raise commands.BadArgument("blockee {blockee} is not blocked")
