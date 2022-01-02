@@ -1,7 +1,9 @@
 from enum import Enum
-from typing import TypedDict
 
 from aiohttp import ClientSession
+
+from utils.weather_types import (FixedKwargs, WeatherResponseError,
+                                 WeatherResponseType)
 
 valid_kwarg_types = {
     "city_id": int, "lat": (int, float), "lon": (int, float), "zip_code": (str, int),
@@ -21,19 +23,6 @@ class Units(Enum):
     STANDARD = _STANDARD
     METRIC = _METRIC
     IMPERIAL = _IMPERIAL
-
-
-class FixedKwargs(TypedDict, total=False):
-    appid: str
-
-    units: str
-    lang: str
-
-    q: str
-    id: str | int
-    lat: str | int
-    lon: str | int
-    zip: str
 
 
 class WeatherRetrieval:
@@ -69,6 +58,9 @@ class WeatherRetrieval:
         elif lat is not None and lon is not None:
             resp["lat"] = lat
             resp["lon"] = lon
+        elif latitude is not None and longitude is not None:
+            resp["lat"] = latitude
+            resp["lon"] = longitude
         elif zip_code:
             resp["zip"] = ",".join(str(i) for i in (zip_code, country_code) if i)
 
@@ -78,7 +70,7 @@ class WeatherRetrieval:
 
         return resp
 
-    async def get_weather(self, **kwargs) -> dict:
+    async def get_weather(self, **kwargs) -> WeatherResponseType | WeatherResponseError:
         """Returns a dict object with weather information
 
         takes the same parameters as get_weather_url
@@ -98,4 +90,5 @@ class WeatherRetrieval:
                     resp["units"] = Units.STANDARD.value
             else:
                 resp["units"] = Units.METRIC.value
+            print(resp)
             return resp
