@@ -1,30 +1,22 @@
 # ratbot.py
 
-The main Pythonic rat, a Discord bot developed by ernieIzde8ski
+The main version of rat, a Discord bot developed by ernieIzde8ski primarily in python.
 
 ## Requirements
 
-- Python 3.9, pip
-- Node.js (Optional)
+- Python 3.10
 
-## Running the code
+## Running
 
-- OS:
-  - Windows: run `bash`; continue
-    - if this doesn't work, good luck
-  - Linux, Mac: continue
-- `git clone https://github.com/ernieIzde8ski/ratbot.git rat.py`
-- `cd rat.py`
-- `./initialize.sh`
-  - if `-bash: ./initialize.sh: Permission denied`: `chmod u+x ./initialize.sh`
-- `nano config.json` (Highly recommended)
-  - format below
-  - edit loaded cogs with `nano enabled_extensions.json`
-- `python bot.py`
+~~~PowerShell
+python -m pip install -r requirements.txt
+python setup.py
+python index.py
+~~~
 
 ### config.json
 
-```JSONC
+~~~JSONC
 {   
     // Prefix to interpret commands with
     // either list[str] or str 
@@ -42,19 +34,19 @@ The main Pythonic rat, a Discord bot developed by ernieIzde8ski
     // used in cogs/commands/info.py
     "invite": "https://discord.gg/rHyt33PMmn",
     // id of the server that cogs/events/weather_updates.py checks
-    "main_guild": 488475203303768065,
+    "primary_guild": 488475203303768065,
     // Channel IDs to send various messages to
     "channels": {
-        "BMs": 762166605458964510,
-        "DMs": 715297562613121084,
+        "BM": 762166605458964510,
+        "DM": 715297562613121084,
         "Status": 708882977202896957,
         "Guilds": 841863106996338699
     }
 }
-```
+~~~
 
 #### See [CONFIGS.md](CONFIGS.md) for the various files generated in ./data/
 
 ## Support
 
-Use the commands (`r.help`, `r.info`) for support. Feel free to open an issue or contact me personally ([ernieSerrano#4571 on Discord](https://discord.gg/rHyt33PMmn)). [Invite the bot with this link](https://discord.com/oauth2/authorize?client_id=807262373147574312&scope=bot&permissions=2214915137)
+Use the commands (`r.help`, `r.info`) for support. Feel free to open an issue or contact me personally ([ernieSerrano#9713 on Discord](https://discord.gg/rHyt33PMmn)). [Invite the bot with this link](https://discord.com/oauth2/authorize?client_id=807262373147574312&scope=bot&permissions=2214915137)
