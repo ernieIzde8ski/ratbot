@@ -1,5 +1,8 @@
+from json import loads
 from typing import TypedDict
 import random
+
+import aiohttp
 
 
 URL = "https://raw.githubusercontent.com/thiagobodruk/bible/master/json/ru_synodal.json"
@@ -26,3 +29,10 @@ def converter(bible: Bible) -> list[str]:
     # I'm not really gonna need the *whole* bible.
     resp = random.sample(resp, 10000)
     return resp
+
+
+async def from_url(session: aiohttp.ClientSession, url: str = URL) -> list[str]:
+    """Returns a bible from the URL."""
+    async with session.get(url) as res:
+        res = await res.content.read()
+        return converter(loads(res))

@@ -1,39 +1,17 @@
 import asyncio
-import aiohttp
 import json
-from typing import Any, TypeVar, TypedDict
+from typing import Any
 
+import aiohttp
 
-fns = []
-F = TypeVar("F")
-
-
-def add_fn(fn: F) -> F:
-    fns.append(fn)
-    return fn
-
-
-def save(path: str, obj: str) -> int:
-    with open(path, "w+", encoding="utf-8") as file:
-        return file.write(obj)
+from utils.setup import *
 
 
 ### Login credentials.
 @add_fn
 async def env_setup(*args, **kwargs) -> None:
     """Setting login credentials."""
-    print("Setting .env variables. Make sure you have a token from")
-    print("https://discord.com/developers (required) && an API key from")
-    print("https://openweathermap.org/api (optional).")
-    token = input("Token?   ")
-    apikey = input("API key? ")
-    if not token:
-        raise KeyError("Expected token.")
-    resp = f"DISCORD_TOKEN = {token}\n"
-    if not apikey:
-        print("Remember to disable the weather cogs!")
-    else:
-        resp += f"WEATHER_TOKEN = {apikey}\n"
+    resp = ask_for_auth()
     save("./.env", resp)
 
 
@@ -51,62 +29,17 @@ async def save_defaults(*args, **kwargs) -> None:
 @add_fn
 async def generate_bible(*args, session: aiohttp.ClientSession, **kwargs) -> None:
     """Generating a Russian bible..."""
-    from utils.russian import converter, URL
-
-    async with session.get(URL) as res:
-        res = await res.content.read()
-        bible = converter(json.loads(res))
-        save("./data/russian.json", json.dumps(bible))
-
-
-### XKCDs.
-class XKCD(TypedDict):
-    month: str
-    num: int
-    link: str
-    year: str
-    news: str
-    safe_title: str
-    transcript: str
-    alt: str
-    img: str
-    title: str
-    day: str
-
-
-class XKCDum(TypedDict):
-    name: str
-    alt: str
-    int: int
-
-
-XKCD_URL = "https://xkcd.com/{NUM}/info.0.json"
-
-
-async def fetch_xkcd(session: aiohttp.ClientSession, i: int = None) -> XKCDum:
-    url = XKCD_URL.format(NUM=i or "")
-    async with session.get(url) as result:
-        resp: XKCD = json.loads(await result.content.read())
-        return XKCDum(name=resp["safe_title"], alt=resp["alt"], int=resp["num"])
+    bible = await from_url(session)
+    save("./data/russian.json", json.dumps(bible))
 
 
 @add_fn
 async def generate_xkcds(*args, session: aiohttp.ClientSession, **kwargs) -> None:
     """Generating XKCDs..."""
-    resp: list[XKCDum] = []
-    max = (await fetch_xkcd(session))["int"]
+    max = (await fetch_one(session))["int"]
     print(f"Going up to XKCD #{max}")
-    for i in range(1, max + 1):
-        try:
-            resp.append(await fetch_xkcd(session, i))
-        except Exception as err:
-            if i == 404:
-                print(err.__class__.__name__, i)
-            else:
-                raise err
-        if i % 50 == 0:
-            print(resp[-1]["int"], resp[-1]["name"])
-    save("./data/xkcd.json", json.dumps(resp))
+    res = await fetch_up_to(max, session)
+    save("./data/xkcd.json", json.dumps(res))
 
 
 async def main() -> None:
@@ -118,11 +51,14 @@ async def main() -> None:
         try:
             await fn(session=session)
         except Exception as err:
-            print(err)
+            print(f"{err.__class__.__name__}: {err}")
             errs.append(fn.__name__)
         else:
             sucs.append(fn.__name__)
             print("Done!")
+    if errs:
+        print("Errors occurred on:", ", ".join(errs))
+        print("The following functions succeeded:", ", ".join(sucs))
     await session.close()
 
 
