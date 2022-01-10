@@ -7,7 +7,7 @@ from discord.message import Message
 
 
 from utils.functions import safe_load, safe_dump
-from utils.weather import WeatherRetrieval
+from utils.weather_retrieval import WeatherRetrieval
 
 
 class RatConfig(TypedDict):

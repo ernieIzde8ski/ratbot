@@ -5,7 +5,7 @@ from discord.ext import commands
 from utils.classes import RatBot
 from utils.converters import Coordinates, FlagConverter
 from utils.functions import safe_dump
-from utils.weather import valid_kwarg_types, valid_kwargs
+from utils.weather_retrieval import valid_kwarg_types, valid_kwargs
 
 
 class Weather(commands.Cog):

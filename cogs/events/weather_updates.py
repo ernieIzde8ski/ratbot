@@ -10,7 +10,7 @@ from pytz import timezone as tz
 from utils.classes import RatBot
 from utils.converters import FlagConverter
 from utils.functions import safe_dump, safe_load
-from utils.weather_types import WeatherResponseError, WeatherResponseType
+from utils.weather_retrieval_types import WeatherResponseError, WeatherResponseType
 
 FORMAT_ERROR = """
 __**Здавстуй**__

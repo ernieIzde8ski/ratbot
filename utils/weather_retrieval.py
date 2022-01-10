@@ -2,7 +2,7 @@ from enum import Enum
 
 from aiohttp import ClientSession
 
-from utils.weather_types import (FixedKwargs, WeatherResponseError,
+from utils.weather_retrieval_types import (FixedKwargs, WeatherResponseError,
                                  WeatherResponseType)
 
 valid_kwarg_types = {

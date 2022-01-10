@@ -1,3 +1,4 @@
+"""The types used in .weather_retrieval; types for cogs/ weather modules go in .weather_types."""
 from typing import TypedDict
 from typing_extensions import NotRequired
 
