@@ -47,22 +47,18 @@ class WeatherResponses(TypedDict):
     temperature_resps: list[tuple[int, str]]
 
 
-class WeatherUpdates(commands.Cog):
+def log_if_pp(pos: str | int, id: str) -> None:
+    if id == 282307423530647562:
+        print("[6PP IDENTIFIED]", pos)
 
+
+class WeatherUpdates(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
         self.bot.load_weather("")
         self.bible = safe_load("data/russian.json", [])
         self.resps: WeatherResponses = safe_load("data/weather_resps.json", {})
         self.users = safe_load("data/weather_updates.json", {"active_users": []})
-
-    def check(self, member: discord.Member) -> bool:
-        """Returns true if a member should not be checked."""
-        return (
-            member.bot
-            or not self.bot.weather.locs.get(str(member.id))
-            or member.id not in self.users["active_users"]
-        )
 
     @staticmethod
     @cache
@@ -91,19 +87,26 @@ class WeatherUpdates(commands.Cog):
         greeting = random.choice(self.resps["greetings"]).format(random.choice(user["aliases"]))
         russian = " ".join(random.sample(self.bible, k=random.randint(2, 5)))
 
-        current, felt, _max, _min = (round(weather["main"][key], 1) for key in ["temp", "feels_like", "temp_max", "temp_min"])
+        current, felt, _max, _min = (
+            round(weather["main"][key], 1) for key in ["temp", "feels_like", "temp_max", "temp_min"]
+        )
         evaluation = self.temp_eval(self.to_celsius(current, weather["units"]["temp"]))
 
         message = FORMAT_UNFELT if current == felt else FORMAT_FELT
 
         return message.format(
             GREETING=greeting,
-            TEMP=current, TEMP_UNIT=weather["units"]["temp"], FELT=felt, LOCAL_MAXIMUM=_max, LOCAL_MINIMUM=_min,
+            TEMP=current,
+            TEMP_UNIT=weather["units"]["temp"],
+            FELT=felt,
+            LOCAL_MAXIMUM=_max,
+            LOCAL_MINIMUM=_min,
             WEATHER_DESCRIPTION=weather["weather"][0]["description"].title(),
             HUMIDITY=weather["main"]["humidity"],
-            WIND=weather["wind"]["speed"], WIND_UNIT=weather["units"]["speed"],
+            WIND=weather["wind"]["speed"],
+            WIND_UNIT=weather["units"]["speed"],
             EVALUATION=evaluation,
-            RUSSIAN=russian
+            RUSSIAN=russian,
         )
 
     def message_constructor(self, user: dict, weather: WeatherResponseType | WeatherResponseError) -> str:
@@ -111,12 +114,17 @@ class WeatherUpdates(commands.Cog):
         return fn(user, weather)
 
     @commands.Cog.listener()
-    async def on_member_update(self, before: discord.Member, after: discord.Member):
-        id = str(after.id)
-        if self.check(after):
-            return
-        elif before.raw_status != "offline" or after.raw_status == "offline":
-            return
+    async def on_member_update(self, before: discord.Member, member: discord.Member):
+        id = str(member.id)
+        if member.bot:
+            return log_if_pp("Bot", id)
+        elif self.bot.weather.locs.get(id) is None:
+            return log_if_pp("Weather Locations", id)
+        elif member.id not in self.users["active_users"]:
+            return log_if_pp("Not in Active Users", id)
+        elif before.raw_status != "offline" or member.raw_status == "offline":
+            return log_if_pp("Status Ineligible", id)
+            
         now = datetime.now(tz=tz(self.users[id]["tz"])).strftime("%d-%m-%Y")
         if self.users[id].get("sent") == now:
             return
@@ -126,12 +134,12 @@ class WeatherUpdates(commands.Cog):
         safe_dump("data/weather_updates.json", self.users)
         msg = self.message_constructor(self.users[id], weather)
         try:
-            await after.send(msg)
+            await member.send(msg)
         except discord.Forbidden:
-            return await self.bot.status_channels.DM.send(f"{after} might have me blocked 😦")
+            return await self.bot.status_channels.DM.send(f"{member} might have me blocked 😦")
 
         if random.random() < 0.1:
-            _m = await after.send("do you want a Song ?")
+            _m = await member.send("do you want a Song ?")
 
             def _check(m):
                 if m.channel != _m.channel or m.author == _m.author:
@@ -143,19 +151,23 @@ class WeatherUpdates(commands.Cog):
             try:
                 message = await self.bot.wait_for("message", timeout=300.0, check=_check)
             except asyncio.TimeoutError:
-                return await after.send("WHAT IS WRONG WTIH YOU ARE YOU STUPID AOR SOMETHING . OR ARE YOU JUST STUPID OR ARE YOU")
+                return await member.send(
+                    "WHAT IS WRONG WTIH YOU ARE YOU STUPID AOR SOMETHING . OR ARE YOU JUST STUPID OR ARE YOU"
+                )
 
             await asyncio.sleep(1)
             value = message.content.lower()[0]
             if value == "y":
-                await after.send(random.choice(["Awsom", "Based", "Yes", "Yea", "Good", "Here"]))
-                await after.send("https://youtu.be/" + random.choice(self.bot.data.songs))
+                await member.send(random.choice(["Awsom", "Based", "Yes", "Yea", "Good", "Here"]))
+                await member.send("https://youtu.be/" + random.choice(self.bot.data.songs))
             elif value == "n":
-                await after.send(random.choice(["Rude", "Dam", "Cringe ?", "Troled"]))
+                await member.send(random.choice(["Rude", "Dam", "Cringe ?", "Troled"]))
 
     @commands.command(aliases=["wset"])
     @commands.is_owner()
-    async def weather_data_set(self, ctx: commands.Context, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}):
+    async def weather_data_set(
+        self, ctx: commands.Context, target: Optional[Union[discord.Member, discord.User]], *, flags: FlagConverter = {}
+    ):
         """
         Add a user to weather updates
         tzs: https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568
