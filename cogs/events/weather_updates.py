@@ -48,6 +48,7 @@ class WeatherResponses(TypedDict):
 
 
 def log_if_pp(pos: str | int, id: str) -> None:
+    return None
     if id == 282307423530647562:
         print("[6PP IDENTIFIED]", pos)
 
@@ -124,7 +125,7 @@ class WeatherUpdates(commands.Cog):
             return log_if_pp("Not in Active Users", id)
         elif before.raw_status != "offline" or member.raw_status == "offline":
             return log_if_pp("Status Ineligible", id)
-            
+
         now = datetime.now(tz=tz(self.users[id]["tz"])).strftime("%d-%m-%Y")
         if self.users[id].get("sent") == now:
             return
