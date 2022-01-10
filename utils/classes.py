@@ -5,8 +5,8 @@ import discord
 from discord.ext import commands
 from discord.message import Message
 
-
-from utils.functions import safe_load, safe_dump
+from utils.functions import safe_dump, safe_load
+from ._types import WeatherUsers
 from utils.weather_retrieval import WeatherRetrieval
 
 
@@ -97,21 +97,11 @@ class Prefixes:
         self.prefixes.pop(id)
 
 
-class WeatherUser(TypedDict):
-    tz: str
-    sent: str
-
-
-class WeatherUsers(dict[str, WeatherUser]):
-    active_users: list
-    users: dict[str, WeatherUser]
-
 
 class Weather(WeatherRetrieval):
-
     def __init__(self, apikey: str, *, locations_fp: str = "data/weather_locations.json") -> None:
         super().__init__(apikey)
-        self.locs: dict = safe_load(locations_fp, {})
+        self.locs: WeatherUsers = safe_load(locations_fp, {})
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}[{self.apikey}]"
@@ -120,10 +110,17 @@ class Weather(WeatherRetrieval):
         safe_dump(locations_fp, self.locs)
 
 
-class RatData():
-    def __init__(self, *, banning_guilds_fp: str = "data/banning.json", pipi_guilds_fp: str = "data/pipi.json",
-                 tenor_guilds_fp: str = "data/tenor_guilds.json", songs_fp: str = "data/songs.json",
-                 trollgex_fp: str = "data/trollgex.json", trolljis_fp: str = "data/trolls.json",) -> None:
+class RatData:
+    def __init__(
+        self,
+        *,
+        banning_guilds_fp: str = "data/banning.json",
+        pipi_guilds_fp: str = "data/pipi.json",
+        tenor_guilds_fp: str = "data/tenor_guilds.json",
+        songs_fp: str = "data/songs.json",
+        trollgex_fp: str = "data/trollgex.json",
+        trolljis_fp: str = "data/trolls.json",
+    ) -> None:
         self.weather_loaded = False
         self.banning_guilds: dict = safe_load(banning_guilds_fp, {})
         self.pipi_guilds: set[str] = set(safe_load(pipi_guilds_fp, []))
@@ -133,9 +130,13 @@ class RatData():
         self.trolljis: list[str] = safe_load(trolljis_fp, [])
         self.msg: Message | None = None
 
-    def load_weather_configs(self, *, bible_fp: str = "data/russian.json",
-                             resps_fp: str = "data/weather_resps.json",
-                             users_fp: str = "data/weather_updates.json") -> None:
+    def load_weather_configs(
+        self,
+        *,
+        bible_fp: str = "data/russian.json",
+        resps_fp: str = "data/weather_resps.json",
+        users_fp: str = "data/weather_users.json",
+    ) -> None:
         self.bible: list = safe_load(bible_fp, [])
         self.resps: dict = safe_load(resps_fp, {})
         self.users: WeatherUsers = safe_load(users_fp, {"active_users": []})

@@ -11,9 +11,10 @@ from utils.weather_retrieval import valid_kwarg_types, valid_kwargs
 class Weather(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
+        bot.data.load_weather_configs()
 
     async def _update(self):
-        safe_dump("data/weather_locations.json", self.bot.weather.locs)
+        safe_dump("data/weather_locations.json", self.bot.data.users)
 
     @staticmethod
     async def embed_constructor(weather_data: dict, color: Color) -> Embed:
@@ -77,18 +78,17 @@ class Weather(commands.Cog):
         Accepts either a city as the first parameter, the same flag parameters
         as the set subcommand, or defaults to the set parameter
         """
-        user_data = self.bot.weather.locs.get(str(ctx.author.id))
+        user_data = self.bot.data.users["_"].get(str(ctx.author.id))
 
         # Raise an error if neither user data is set nor location data is provided.
         if not location and not user_data:
-            prefix = ctx.prefix.replace("`", r"\`")
             raise commands.BadArgument(f"No weather information provided. "
                                        f"Try: \n```\n{prefix}{ctx.invoked_with} <city>\n```")
 
         # Handle a given input.
         if location is None:
             # If no given input, use the set location data.
-            location = user_data
+            location = user_data["location"]
         elif isinstance(location, dict):
             self.verify_location_data(location)
         elif isinstance(location, str):
@@ -120,26 +120,28 @@ class Weather(commands.Cog):
         """
         self.verify_location_data(location)
         id = str(ctx.author.id)
-        set = "Reset" if self.bot.weather.locs.get(id) else "Set"
-        self.bot.weather.locs[id] = location
+        set = "Reset" if self.bot.data.users.get(id) else "Set"
+        self.bot.data.users[id] = location
         await self._update()
-        await ctx.send(f"{set} information")
+        await ctx.send(f"{set} weather information.")
 
     @set.command(aliases=["a"])
     @commands.is_owner()
     async def admin(self, ctx: commands.Context, victim: Union[int, User], *, location: FlagConverter = None):
         """Check a user's weather, or if given, replace their settings."""
         if location is None:
-            user_data = self.bot.weather.locs.get(str(victim if isinstance(victim, int) else victim.id))
+            user_data = self.bot.data.users["_"].get(str(victim if isinstance(victim, int) else victim.id))
             if user_data is None:
                 raise commands.BadArgument("No weather information has been provided.")
-            self.verify_location_data(user_data)
-            await self.assess_weather(ctx, location=user_data)
+            self.verify_location_data(user_data["location"])
+            await self.assess_weather(ctx, location=user_data["location"])
         else:
             key = str(victim if isinstance(victim, int) else victim.id)
             self.verify_location_data(location)
-            set = "Reset" if self.bot.weather.locs.get(key) else "Set"
-            self.bot.weather.locs[key] = location
+            set = "Reset" if self.bot.data.users.get(key) else "Set"
+            if not self.bot.data.users["_"].get(key):
+                self.bot.data.users["_"][key] = {"location": {}}
+            self.bot.data.users["_"][key]["location"] = location
             await self._update()
             await ctx.send(f"{set} `{victim}`'s information")
 
@@ -155,26 +157,25 @@ class Weather(commands.Cog):
 
         # Use the user ID as a dictionary key.
         key = str(ctx.author.id)
-        if self.bot.weather.locs.get(key) is None:
-            self.bot.weather.locs = {}
-
-        # Update user data.
-        self.bot.weather.locs[key].update(data)
-        safe_dump("data/weather_locations.json", self.bot.weather.locs)
+        if self.bot.data.users.get(key) is None:
+            self.bot.data.users["_"][key] = {"location": {}}
+        
+        #  Update user data.
+        self.bot.data.users["_"][key]["location"].update(data)
+        safe_dump("data/weather_locations.json", self.bot.data.users)
 
         # Return a message.
         item = list(data.items())[0]
         await ctx.send(f"Updated `{item[0]}` to `{item[1]}`.")
 
-    @set.command(aliases=["lat-long", "c"])
+    @set.command(aliases=["lat-lon", "c"])
     async def coords(self, ctx: commands.Context, *, coords: Coordinates):
         """Sets latitude/longitude coordinates"""
         user = str(ctx.author.id)
-        if not self.bot.weather.locs.get(user):
-            self.bot.weather.locs[user] = {}
-        else:
-            self.bot.weather.locs[user]["latitude"] = coords[0]
-            self.bot.weather.locs[user]["longitude"] = coords[1]
+        if not self.bot.data.users["_"].get(user):
+            self.bot.data.users["_"][user] = {"location": {}}
+        self.bot.data.users["_"][user]["location"]["lat"] = coords[0]
+        self.bot.data.users["_"][user]["location"]["lon"] = coords[1]
         await self._update()
         await ctx.send(f"Set `latitude`, `longitude` to {coords[0]}, {coords[1]}")
 

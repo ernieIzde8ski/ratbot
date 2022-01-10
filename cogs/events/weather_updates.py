@@ -2,11 +2,12 @@ import asyncio
 import random
 from datetime import datetime
 from functools import cache
-from typing import Optional, TypedDict, Union
+from typing import Optional, Union
 
 import discord
 from discord.ext import commands
 from pytz import timezone as tz
+from utils._types import Russian, WeatherResps, WeatherUsers
 from utils.classes import RatBot
 from utils.converters import FlagConverter
 from utils.functions import safe_dump, safe_load
@@ -42,24 +43,28 @@ It is currently {TEMP} degrees {TEMP_UNIT} (and it feels like {FELT}°), with a 
 """.strip()
 
 
-class WeatherResponses(TypedDict):
-    greetings: list[str]
-    temperature_resps: list[tuple[int, str]]
-
-
 def log_if_pp(pos: str | int, id: str) -> None:
     return None
-    if id == 282307423530647562:
-        print("[6PP IDENTIFIED]", pos)
+    # if id == 282307423530647562:
+    #     print("[6PP IDENTIFIED]", pos)
+
+
+UTC = tz("UTC")
+
+
+def get_tz(_tz: str = None):
+    if _tz is None:
+        return UTC
+    return tz(_tz)
 
 
 class WeatherUpdates(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
         self.bot.load_weather("")
-        self.bible = safe_load("data/russian.json", [])
-        self.resps: WeatherResponses = safe_load("data/weather_resps.json", {})
-        self.users = safe_load("data/weather_updates.json", {"active_users": []})
+        self.bible: Russian = safe_load("data/russian.json", [])
+        self.resps: WeatherResps = safe_load("data/weather_resps.json", {})
+        self.users: WeatherUsers = safe_load("data/weather_users.json", {"active_users": [], "_": {}})
 
     @staticmethod
     @cache
@@ -121,17 +126,17 @@ class WeatherUpdates(commands.Cog):
             return log_if_pp("Bot", id)
         elif self.bot.weather.locs.get(id) is None:
             return log_if_pp("Weather Locations", id)
-        elif member.id not in self.users["active_users"]:
+        elif member.id not in self.users["active"]:
             return log_if_pp("Not in Active Users", id)
         elif before.raw_status != "offline" or member.raw_status == "offline":
             return log_if_pp("Status Ineligible", id)
 
-        now = datetime.now(tz=tz(self.users[id]["tz"])).strftime("%d-%m-%Y")
+        now = datetime.now(tz=get_tz(self.users["_"][id].get("tz"))).strftime("%d-%m-%Y")
         if self.users[id].get("sent") == now:
             return
 
         weather = await self.bot.weather.get_weather(**self.bot.weather.locs[id])
-        self.users[id]["sent"] = now
+        self.users["_"][id]["sent"] = now
         safe_dump("data/weather_updates.json", self.users)
         msg = self.message_constructor(self.users[id], weather)
         try:
@@ -187,10 +192,10 @@ class WeatherUpdates(commands.Cog):
         if flags:
             self.users[key] = flags
             self.users[key]["sent"] = False
-            if key not in self.users["active_users"]:
-                self.users["active_users"].append(key)
-        elif key in self.users["active_users"]:
-            self.users["active_users"].remove(key)
+            if key not in self.users["active"]:
+                self.users["active"].append(key)
+        elif key in self.users["active"]:
+            self.users["active"].remove(key)
         # Exception raised when flags are not present (not counting
         # ID flag) and the target is not currently an active user
         else:
