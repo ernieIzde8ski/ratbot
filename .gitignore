@@ -92,3 +92,5 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env.save
+pyvenv.cfg
