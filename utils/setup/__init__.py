@@ -1,3 +1,5 @@
+from os import getcwd
+from pathlib import Path
 from typing import TypeVar
 
 from .auth import ask_for_auth
@@ -14,6 +16,9 @@ def add_fn(fn: F) -> F:
     return fn
 
 
+cwd = Path(getcwd())
+
+
 def save(path: str, obj: str) -> int:
-    with open(path, "w+", encoding="utf-8") as file:
+    with open((cwd / path).resolve(), "w+", encoding="utf-8") as file:
         return file.write(obj)
