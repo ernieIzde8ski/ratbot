@@ -48,9 +48,7 @@ class Percentage(commands.Converter):
             try:
                 return float(re.sub(r"\s*%", "", "".join(argument.split()))) / 100
             except ValueError:
-                raise commands.BadArgument(
-                    "Argument must be of the format 0.P or P%"
-                )
+                raise commands.BadArgument("Argument must be of the format 0.P or P%")
 
 
 class Coordinates(commands.Converter):
@@ -68,33 +66,27 @@ class Coordinates(commands.Converter):
 
     async def convert(self, ctx: commands.Context, argument: str) -> list[float]:
         arguments = re.split(r",\s*|\s+(?=\d)", argument)
-        arguments = [self.strip(argument)
-                     for argument in arguments if argument]
+        arguments = [self.strip(argument) for argument in arguments if argument]
 
         if arguments.__len__() > 2:
-            raise commands.TooManyArguments(
-                "More than two coordinate arguments were passed.")
+            raise commands.TooManyArguments("More than two coordinate arguments were passed.")
         elif arguments.__len__() < 2:
-            raise commands.BadArgument(
-                "Less than two coordinate arguments were passed.")
+            raise commands.BadArgument("Less than two coordinate arguments were passed.")
 
-        arguments = [re.split(r"(?i)(?<=\d)(?:Degrees|Deg(\.)?|°)?(?!\d)", argument)
-                     for argument in arguments]
+        arguments = [re.split(r"(?i)(?<=\d)(?:Degrees|Deg(\.)?|°)?(?!\d)", argument) for argument in arguments]
         arguments = [[i for i in index if i] for index in arguments]
 
         coords: list[typing.Union[float, typing.Literal[None]]] = [None, None]
         for i, arg in enumerate(arguments):
             len = arg.__len__()
             if not (1 <= len <= 2):
-                raise commands.BadArgument(
-                    "More or less than two coordinate arguments were passed")
+                raise commands.BadArgument("More or less than two coordinate arguments were passed")
 
             if len == 1:
                 try:
                     coords[i] = float(arg[0])
                 except ValueError:
-                    raise commands.BadArgument(
-                        "Invalid coordinate arguments passed")
+                    raise commands.BadArgument("Invalid coordinate arguments passed")
             elif len == 2:
                 try:
                     coord_name = arg[1][0].lower()
@@ -108,29 +100,26 @@ class Coordinates(commands.Converter):
                     elif coord_name == "s":
                         coords[0] = -float(arg[0])
                 except (ValueError, KeyError):
-                    raise commands.BadArgument(
-                        "Invalid coordinate arguments passed")
+                    raise commands.BadArgument("Invalid coordinate arguments passed")
         resp = [self.assert_float(coord) for coord in coords]
 
         if abs(resp[0]) > 90:
-            raise commands.BadArgument(
-                f"Latitude cannot exceed 90 degrees (given latitude: {resp[0]}).")
+            raise commands.BadArgument(f"Latitude cannot exceed 90 degrees (given latitude: {resp[0]}).")
         elif abs(resp[1]) > 180:
-            raise commands.BadArgument(
-                f"Longitude cannot exceed 180 degrees (given longitude: {resp[1]}).")
+            raise commands.BadArgument(f"Longitude cannot exceed 180 degrees (given longitude: {resp[1]}).")
 
         return resp
 
 
 class StrictBool(commands.Converter):
     """Convert a string to bool iff it equals True or False"""
+
     async def convert(self, ctx: commands.Context, argument: str) -> bool:
         value = {"true": True, "false": False}.get(argument.lower())
         if value is not None:
             return value
         else:
-            raise commands.BadBoolArgument(
-                "Could not convert argument to bool")
+            raise commands.BadBoolArgument("Could not convert argument to bool")
 
 
 initial_list_pattern = re.compile(r"(?<!\\),\s*")

@@ -26,7 +26,7 @@ class Cogs(commands.Cog):
 
     @staticmethod
     def trim_whitespace(string: str) -> str:
-        return ''.join(string.split())
+        return "".join(string.split())
 
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx: commands.Context):

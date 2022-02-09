@@ -20,19 +20,21 @@ class Information(commands.Cog):
     @commands.command(aliases=["info", "support"])
     async def information(self, ctx: commands.Context):
         """Provide useful information"""
-        main = f"[Server Invite]({self.bot.config['invite']})\n" \
-               f"[GitHub]({self.bot.config['github']})\n" \
-               f"[Bot Invite]({self.invite})\n" \
-               f"[Random Song](https://youtu.be/{choice(self.bot.data.songs)})"
-        footer = f"Commands can be invoked with the prefix(es) " \
-                 f"(default: {self.prefixes}`) " \
-                 f"or with a mention (@{ctx.me})"
+        main = (
+            f"[Server Invite]({self.bot.config['invite']})\n"
+            f"[GitHub]({self.bot.config['github']})\n"
+            f"[Bot Invite]({self.invite})\n"
+            f"[Random Song](https://youtu.be/{choice(self.bot.data.songs)})"
+        )
+        footer = (
+            f"Commands can be invoked with the prefix(es) "
+            f"(default: {self.prefixes}`) "
+            f"or with a mention (@{ctx.me})"
+        )
 
-        embed = Embed(
-            title="Information, Support",
-            description=main,
-            color=ctx.me.color
-        ).set_footer(text=footer, icon_url=self.bot.app.owner.avatar_url)
+        embed = Embed(title="Information, Support", description=main, color=ctx.me.color).set_footer(
+            text=footer, icon_url=self.bot.app.owner.avatar_url
+        )
 
         await ctx.send(embed=embed)
 

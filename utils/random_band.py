@@ -9,12 +9,14 @@ url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
 
 
-class BandRetrieval():
+class BandRetrieval:
     def __init__(self):
         self.session = ClientSession()
         self.iterations = {}
 
-    async def _get_bands(self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50) -> list[dict]:
+    async def _get_bands(
+        self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50
+    ) -> list[dict]:
         """Get random bands & statistics"""
         _filter = _filter.lower()
         bands = []
@@ -35,15 +37,19 @@ class BandRetrieval():
 
                     stats = stats1 + stats2
                     band = {
-                        "origin": [stats[0], stats[1]], "status": stats[2],
-                        "formed": stats[3], "genre": stats[4], "lyrics": stats[5],
-                        "label": stats[6], "name": band_name
+                        "origin": [stats[0], stats[1]],
+                        "status": stats[2],
+                        "formed": stats[3],
+                        "genre": stats[4],
+                        "lyrics": stats[5],
+                        "label": stats[6],
+                        "name": band_name,
                     }
             except IndexError:
                 band = (await self._get_bands(1, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit))[0]
-            if _filter not in band['genre'].lower() and _filter not in band['name'].lower():
+            if _filter not in band["genre"].lower() and _filter not in band["name"].lower():
                 if self.iterations[index] < iteration_hard_limit:
-                    band = (await self._get_bands(1, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit))
+                    band = await self._get_bands(1, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit)
                     if band == []:
                         continue
                     band = band[0]
@@ -52,13 +58,23 @@ class BandRetrieval():
             bands.append(band)
         return bands
 
-    async def get_bands(self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50) -> list[dict]:
+    async def get_bands(
+        self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50
+    ) -> list[dict]:
         self.iterations[index] = 0
         bands = await self._get_bands(loops, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit)
         del self.iterations[index]
         return bands
 
-    async def format(self, index: str, integer: int = 5, sort_method: str = "band", *, _filter: str = "", iteration_hard_limit: int = 50) -> str:
+    async def format(
+        self,
+        index: str,
+        integer: int = 5,
+        sort_method: str = "band",
+        *,
+        _filter: str = "",
+        iteration_hard_limit: int = 50,
+    ) -> str:
         """Format random bands"""
         bands = await self.get_bands(integer, index, _filter=_filter)
 
@@ -85,19 +101,14 @@ class BandRetrieval():
             # While Heaven Wept  |  Epic [...]                     |  United States
             # from occurring when genres are separated by slashes. Instead:
             # While Heaven Wept  |  Epic Progressive/Power/[...]   |  United States
-            band["genre"] = shorten(band["genre"].replace(
-                "/", "/ "), 30, replace_whitespace=False).replace("/ ", "/")
+            band["genre"] = shorten(band["genre"].replace("/", "/ "), 30, replace_whitespace=False).replace("/ ", "/")
             len = band["genre"].__len__() + 2
             if len > max_genre_spaces:
                 max_genre_spaces = len
 
         len1 = (max_band_spaces - 6) * " "
         len2 = (max_genre_spaces - 10) * " "
-        resp = f"Band: {len1}" \
-            f"|  " \
-            f"Genre(s): {len2}" \
-            f"|  " \
-            f"Region:\n"
+        resp = f"Band: {len1}" f"|  " f"Genre(s): {len2}" f"|  " f"Region:\n"
 
         for band in bands:
             len1 = max_band_spaces - band["name"].__len__()

@@ -14,10 +14,7 @@ class Stati(commands.Cog):
     async def initialize(self) -> None:
         await self.bot.wait_until_ready()
         activity = Activity(
-            name=self.bot.config["default_status"].format(
-                self.bot.config["prefix"][0]
-            ),
-            type=ActivityType.watching
+            name=self.bot.config["default_status"].format(self.bot.config["prefix"][0]), type=ActivityType.watching
         )
         await self.bot.change_presence(activity=activity)
 

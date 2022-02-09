@@ -7,6 +7,8 @@ from utils.classes import RatBot
 from utils.functions import strip_str
 
 tenor_pattern = re.compile(r"https{0,1}:\/\/(www.)*tenor.com\/view\/([a-z]|-)+\d+")
+
+
 class Censorship(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
@@ -52,9 +54,9 @@ class Censorship(commands.Cog):
             return
 
         await message.delete()
-        await message.channel.send(f"{message.author.mention} WTF.",
-                                   allowed_mentions=self.allowed_mentions,
-                                   delete_after=3)
+        await message.channel.send(
+            f"{message.author.mention} WTF.", allowed_mentions=self.allowed_mentions, delete_after=3
+        )
 
     @commands.Cog.listener("on_message")
     async def on_tenor(self, message: Message):

@@ -10,6 +10,7 @@ from utils.converters import FlagConverter
 
 class Moderation(commands.Cog):
     checks: dict[str, Callable[..., bool]]
+
     def __init__(self, bot: RatBot):
         self.bot = bot
         self.checks = {
@@ -19,13 +20,14 @@ class Moderation(commands.Cog):
             "attachments": lambda msg, value: bool(msg.attachments),
             "embeds": lambda msg, value: bool(msg.embeds),
             "plaintext": lambda msg, value: not msg.attachments and not msg.embeds,
-            "match": lambda msg, value: bool(re.search(value, msg.content))
+            "match": lambda msg, value: bool(re.search(value, msg.content)),
         }
-    
+
     def get_check(self, flags: dict, msg: Message) -> Callable[[Message], bool]:
         if not flags:
             return lambda _msg: _msg != msg
         else:
+
             def check(msg: Message) -> bool:
                 if msg == msg:
                     return False
@@ -35,6 +37,7 @@ class Moderation(commands.Cog):
                         return False
                 else:
                     return True
+
             return check
 
     @commands.command(aliases=["prune", "mass_delete"])

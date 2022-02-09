@@ -97,7 +97,6 @@ class Prefixes:
         self.prefixes.pop(id)
 
 
-
 class Weather(WeatherRetrieval):
     def __init__(self, apikey: str, *, locations_fp: str = "data/weather_locations.json") -> None:
         super().__init__(apikey)

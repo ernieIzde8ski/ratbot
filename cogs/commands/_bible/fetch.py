@@ -8,14 +8,14 @@ from attr import dataclass
 
 class BibleError(Exception):
     """Raised on sacrilegious defilement"""
+
     pass
 
 
 class TranslationError(Exception):
     def __init__(self, ver: str or None = None) -> None:
         self.ver = ver
-        super().__init__(
-            "Translation not found" if not ver else f"Translation '{ver}' not found")
+        super().__init__("Translation not found" if not ver else f"Translation '{ver}' not found")
 
     # def __str__(self) -> str:
     #     return self.msg if not self.ver else f"Translation {self.ver} not found"
@@ -93,7 +93,7 @@ class PassageRetrieval:
             Params["verse_numbers"] = str(verse_numbers)
 
         async with self.session.get(f"https://bible-api.com/{ref}", **{"params": Params}) as resp:
-            result: (RawBibleResponse or dict["error", str] or str) = (await resp.json())
+            result: (RawBibleResponse or dict["error", str] or str) = await resp.json()
 
             if isinstance(result, str):
                 raise BibleError(result)
@@ -106,10 +106,9 @@ class PassageRetrieval:
 
         return CleanBibleResponse(result)
 
-    async def procget(self, ref: str,
-                      translation: str = None,
-                      verse_numbers: bool = None,
-                      width: int = 70) -> ProcessedBibleResponse:
+    async def procget(
+        self, ref: str, translation: str = None, verse_numbers: bool = None, width: int = 70
+    ) -> ProcessedBibleResponse:
         """Shorthand for `await self.get(); await self.process();`."""
         resp = await self.retrieve(ref, verse_numbers=verse_numbers or False, translation=translation)
         return self.process(resp, width)

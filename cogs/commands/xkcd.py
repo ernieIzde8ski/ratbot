@@ -16,17 +16,16 @@ class XKCD(commands.Cog):
         self.update_index.start()
 
     async def get_best_match(self, string) -> int:
-        xkcds = sorted(self.xkcds, key=lambda xkcd: fuzz.ratio(
-            xkcd["name"].lower(), string), reverse=True)
+        xkcds = sorted(self.xkcds, key=lambda xkcd: fuzz.ratio(xkcd["name"].lower(), string), reverse=True)
         return xkcds[0]["int"]
 
     @staticmethod
     def embed_constructor(xkcd: dict) -> Embed:
-        return Embed(
-            title=f"{xkcd['num']}: {xkcd['title']}",
-            url=f"https://xkcd.com/{xkcd['num']}",
-            color=Color.random()
-        ).set_image(url=xkcd['img']).set_footer(text=xkcd['alt'])
+        return (
+            Embed(title=f"{xkcd['num']}: {xkcd['title']}", url=f"https://xkcd.com/{xkcd['num']}", color=Color.random())
+            .set_image(url=xkcd["img"])
+            .set_footer(text=xkcd["alt"])
+        )
 
     @staticmethod
     async def get_xkcd(id: int) -> dict:
@@ -93,9 +92,7 @@ class XKCD(commands.Cog):
             xkcd = await self.get_xkcd(i)
             if xkcd.get("error"):
                 continue
-            self.xkcds.append(
-                {"name": xkcd["title"], "alt": xkcd["alt"], "int": xkcd["num"]}
-            )
+            self.xkcds.append({"name": xkcd["title"], "alt": xkcd["alt"], "int": xkcd["num"]})
         safe_dump("data/xkcd.json", self.xkcds)
         print("Updated XKCDs")
 

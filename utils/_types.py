@@ -7,6 +7,7 @@ Bible = dict[str, str]
 Russian = list[str]
 """ A list of bible verses. Corresponds to russian.json. """
 
+
 class WeatherResps(TypedDict):
     """Corresponds to weather_resps.json"""
 

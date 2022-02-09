@@ -80,8 +80,8 @@ def loadGenerator(filename):
                 option = []
                 for token in toke_re.finditer(sub_expr):
                     token = token.group(0)
-                    if token[0] == "\"":
-                        token = token[1:-1].replace("\\\\", "\\").replace("\\\"", "\"")
+                    if token[0] == '"':
+                        token = token[1:-1].replace("\\\\", "\\").replace('\\"', '"')
                         option.append(token)
                     else:
                         if token == "NONE":

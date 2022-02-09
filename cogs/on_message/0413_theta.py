@@ -22,7 +22,9 @@ class AEBDTheta(commands.Cog):
     async def set_facts(self, ctx: commands.Context, arg: int):
         """Set total Armenium Facts"""
         self.armenium_facts = arg
-        await self.channel.edit(topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}")
+        await self.channel.edit(
+            topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}"
+        )
         safe_dump("data/facts.json", self.armenium_facts)
         await ctx.send(f"Set armenium facts to `{self.armenium_facts}`")
 
@@ -32,7 +34,9 @@ class AEBDTheta(commands.Cog):
             if fuzz.ratio(message.content.lower(), "**daily 'armenium' fact**") > 85:
                 return
             self.armenium_facts += 1
-            await self.channel.edit(topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}")
+            await self.channel.edit(
+                topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}"
+            )
 
 
 def setup(bot: RatBot) -> None:

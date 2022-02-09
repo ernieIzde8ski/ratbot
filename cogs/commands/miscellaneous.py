@@ -16,14 +16,13 @@ class Miscellaneous(commands.Cog):
     async def birana(self, ctx: commands.Context, armenium: str = "ARMENIUM", armeniaum: str = "AREMENIAUM"):
         """Return the Birana copypasta"""
         await ctx.send(
-            'SHUT THE FUCK UP {} , WHAT WOULD YOU KNOW ABOUT WHETHER A WORD IS FUNNY OR NOT ? '
-            'YOU KNOWING OF NOTHING !!! YOU ARE STUPID , STUPID LITTLE CRYBABY KID , WHO LIFT THE 50 TIME 15 BOUND '
-            '(VERY LITTLE WEIGHT , VERY LUGHT) , YOU ARE WEAK , AND PAINFUL , IT SUCKS TO BE YOU !!! '
+            "SHUT THE FUCK UP {} , WHAT WOULD YOU KNOW ABOUT WHETHER A WORD IS FUNNY OR NOT ? "
+            "YOU KNOWING OF NOTHING !!! YOU ARE STUPID , STUPID LITTLE CRYBABY KID , WHO LIFT THE 50 TIME 15 BOUND "
+            "(VERY LITTLE WEIGHT , VERY LUGHT) , YOU ARE WEAK , AND PAINFUL , IT SUCKS TO BE YOU !!! "
             '"{}" IS A SCHIT, SUCK COUNTRY BUILT OF BAD AND TERRIBLE KIDS , LIKE YOU RSELF, '
-            'YOUR CULTURE SUCK, YOUR HERITAGE, , IT IS BAD ,AND YOUR CHOICE ??? TERRIBLE ABSOLUTE LY WAFUL. '
+            "YOUR CULTURE SUCK, YOUR HERITAGE, , IT IS BAD ,AND YOUR CHOICE ??? TERRIBLE ABSOLUTE LY WAFUL. "
             '"BIRANA" WELL DESCRIBES THE ABSOLUTE DIFFERENCE OSPOSITE OF YOU, AND YOUR EVERY THING , BECAUSE '
-            '"BIRANA" BAED YOU ARE CIRNGE. BIRANA "BASED" YOU ARE "CRINGE".'.format(
-                armenium.upper(), armeniaum.upper())
+            '"BIRANA" BAED YOU ARE CIRNGE. BIRANA "BASED" YOU ARE "CRINGE".'.format(armenium.upper(), armeniaum.upper())
         )
 
     @commands.command(aliases=["nsbm"])
@@ -40,7 +39,7 @@ class Miscellaneous(commands.Cog):
             tz = timezone(data) if data else timezone(self.bot.config["preferred_timezone"])
         elif isinstance(tz, str):
             raise commands.BadArgument(
-                "Converting to \"timezone\" failed for parameter \"tz\". \n"
+                'Converting to "timezone" failed for parameter "tz". \n'
                 "Valid timezone list: <https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>"
             )
 
@@ -54,9 +53,11 @@ class Miscellaneous(commands.Cog):
         Valid timezones are at available at
         https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568"""
         if not tz:
-            return await ctx.send("Invalid timezone!\n"
-                                  "A valid list is available here: "
-                                  "<https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>")
+            return await ctx.send(
+                "Invalid timezone!\n"
+                "A valid list is available here: "
+                "<https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>"
+            )
         tz = tz.__str__()
         self.data[str(ctx.author.id)] = tz
         safe_dump("data/timekeeping.json", self.data)

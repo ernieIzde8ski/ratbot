@@ -11,7 +11,9 @@ from utils.classes import RatBot
 class Petrosian(commands.Cog):
     def __init__(self, bot: RatBot):
         self.bot = bot
-        self.regex = re.compile(r"pipi|liers|petr(o|at)s[iy]an|looser|\"w\"esley\"s\"o|firouzja|otbblitzmatch", re.ASCII + re.IGNORECASE)
+        self.regex = re.compile(
+            r"pipi|liers|petr(o|at)s[iy]an|looser|\"w\"esley\"s\"o|firouzja|otbblitzmatch", re.ASCII + re.IGNORECASE
+        )
         with open("utils/JSON/petrosian.json", "r", encoding="utf-8") as file:
             self.petrosian = load(file)
 
@@ -28,8 +30,9 @@ class Petrosian(commands.Cog):
         elif random() > 0.33:
             return
         else:
-            await message.author.send(self.petrosian.format(message.author.mention),
-                                      allowed_mentions=AllowedMentions.all())
+            await message.author.send(
+                self.petrosian.format(message.author.mention), allowed_mentions=AllowedMentions.all()
+            )
 
 
 def setup(bot: RatBot):

@@ -18,46 +18,43 @@ class Weather(commands.Cog):
 
     @staticmethod
     async def embed_constructor(weather_data: dict, color: Color) -> Embed:
-        main = f"Current: {weather_data['main']['temp']}°\n" \
-               f"Feels like: {weather_data['main']['feels_like']}°\n" \
-               f"Minimum: {weather_data['main']['temp_min']}°; " \
-               f"Maximum: {weather_data['main']['temp_max']}°"
-        footer = f"Weather: {weather_data['weather'][0]['description'].title()} | " \
-                 f"Pressure: {weather_data['main']['pressure']} hPa | " \
-                 f"Humidity: {weather_data['main']['humidity']}%"
+        main = (
+            f"Current: {weather_data['main']['temp']}°\n"
+            f"Feels like: {weather_data['main']['feels_like']}°\n"
+            f"Minimum: {weather_data['main']['temp_min']}°; "
+            f"Maximum: {weather_data['main']['temp_max']}°"
+        )
+        footer = (
+            f"Weather: {weather_data['weather'][0]['description'].title()} | "
+            f"Pressure: {weather_data['main']['pressure']} hPa | "
+            f"Humidity: {weather_data['main']['humidity']}%"
+        )
 
         main = main.replace("°", "°" + weather_data["units"]["temp"][:1])
 
-        if weather_data['sys'].get("country"):
-            country = ", " + weather_data['sys']['country'] + "."
+        if weather_data["sys"].get("country"):
+            country = ", " + weather_data["sys"]["country"] + "."
         else:
             country = "."
 
-        if weather_data['name']:
+        if weather_data["name"]:
             title = f"Weather for {weather_data['name']}" + country
         else:
-            coords = [round(weather_data["coord"]["lat"], 2),
-                      round(weather_data["coord"]["lon"], 2)]
+            coords = [round(weather_data["coord"]["lat"], 2), round(weather_data["coord"]["lon"], 2)]
             title = f"Weather at {coords[0]}° lat, {coords[1]}° long"
 
-        return Embed(
-            title=title,
-            description=main,
-            color=color
-        ).set_footer(text=footer)
+        return Embed(title=title, description=main, color=color).set_footer(text=footer)
 
     @staticmethod
     def verify_location_data(weather_data: dict) -> None:
         """Raises an error if the argument is invalid"""
         if weather_data == {}:
-            raise commands.MissingRequiredArgument(
-                "location is a required argument that is missing.")
+            raise commands.MissingRequiredArgument("location is a required argument that is missing.")
         for key, value in weather_data.items():
             if key not in valid_kwargs:
                 raise commands.BadArgument(f"key {key} is not valid")
             elif not isinstance(value, valid_kwarg_types[key]):
-                raise commands.BadArgument(
-                    f"invalid type '{value.__class__.__name__}' for key {key}")
+                raise commands.BadArgument(f"invalid type '{value.__class__.__name__}' for key {key}")
             if isinstance(value, str):
                 weather_data[key] = weather_data[key].title()
 
@@ -67,7 +64,7 @@ class Weather(commands.Cog):
 
         # Utilize weather data.
         if weather_data.get("error"):
-            raise commands.CommandError(weather_data['error'])
+            raise commands.CommandError(weather_data["error"])
         embed = await self.embed_constructor(weather_data=weather_data, color=ctx.me.color)
         await ctx.send(embed=embed)
 
@@ -82,8 +79,9 @@ class Weather(commands.Cog):
 
         # Raise an error if neither user data is set nor location data is provided.
         if not location and not user_data:
-            raise commands.BadArgument(f"No weather information provided. "
-                                       f"Try: \n```\n{prefix}{ctx.invoked_with} <city>\n```")
+            raise commands.BadArgument(
+                f"No weather information provided. " f"Try: \n```\n{prefix}{ctx.invoked_with} <city>\n```"
+            )
 
         # Handle a given input.
         if location is None:
@@ -152,14 +150,13 @@ class Weather(commands.Cog):
         if isinstance(city_name_or_id, int):
             data = {"city_id": city_name_or_id}
         elif isinstance(city_name_or_id, str):
-            data = {"city_name": city_name_or_id,
-                    "state_code": None, "country_code": None}
+            data = {"city_name": city_name_or_id, "state_code": None, "country_code": None}
 
         # Use the user ID as a dictionary key.
         key = str(ctx.author.id)
         if self.bot.data.users.get(key) is None:
             self.bot.data.users["_"][key] = {"location": {}}
-        
+
         #  Update user data.
         self.bot.data.users["_"][key]["location"].update(data)
         safe_dump("data/weather_locations.json", self.bot.data.users)

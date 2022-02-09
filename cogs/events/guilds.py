@@ -13,16 +13,14 @@ class Guilds(commands.Cog):
         embed = Embed(
             title=f"Joined guild: {guild}",
             description=f"Members: {guild.member_count}\nID: {guild.id}",
-            color=Color.dark_green()
+            color=Color.dark_green(),
         ).set_thumbnail(url=guild.icon_url)
         await self.bot.status_channels.Guilds.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: Guild):
         embed = Embed(
-            title=f"Left guild: {guild}",
-            description=f"ID: {guild.id}",
-            color=Color.dark_red()
+            title=f"Left guild: {guild}", description=f"ID: {guild.id}", color=Color.dark_red()
         ).set_thumbnail(url=guild.icon_url)
         await self.bot.status_channels.Guilds.send(embed=embed)
 

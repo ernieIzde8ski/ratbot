@@ -34,9 +34,10 @@ async def fetch_one(session: aiohttp.ClientSession, i: int = None) -> XKCDum:
         resp: XKCD = json.loads(await result.content.read())
         return XKCDum(name=resp["safe_title"], alt=resp["alt"], int=resp["num"])
 
+
 async def fetch_up_to(upper: int, session: aiohttp.ClientSession) -> list[XKCDum]:
     resp: list[XKCDum] = []
-    for i in range(1, upper+1):
+    for i in range(1, upper + 1):
         try:
             resp.append(await fetch_one(session, i))
         except Exception as err:

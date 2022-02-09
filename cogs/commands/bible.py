@@ -23,7 +23,7 @@ class Bible(commands.Cog):
             "webbe": ["World English Bible", "English (UK)"],
             "clementine": ["Clementine Latin Vulgate", "Latine"],
             "almeida": ["João Ferreira de Almeida", "Português"],
-            "rccv": ["Romanian Corrected Cornilescu Bible", "Română"]
+            "rccv": ["Romanian Corrected Cornilescu Bible", "Română"],
         }
         self.valid_translation_keys = self.valid_translations.keys()
         self.valid_translations_str = "Available translations: `" + "`, `".join(self.valid_translation_keys) + "`"
@@ -32,9 +32,8 @@ class Bible(commands.Cog):
 
     @commands.command(aliases=["v", "🙏"])
     async def bible_verse(
-            self, ctx: commands.Context,
-            display_verse: Optional[StrictBool] = True,
-            *, reference: str = "Joshua 21:8"):
+        self, ctx: commands.Context, display_verse: Optional[StrictBool] = True, *, reference: str = "Joshua 21:8"
+    ):
         """Returns a passage based off a reference"""
         translation = self.preferred_versions.get(str(ctx.author.id))
 
@@ -46,12 +45,12 @@ class Bible(commands.Cog):
 
         footer = f"Translation: {resp.tr.name}"
         if translation is None:
-            footer += " | If this version is difficult or this message too annoying," \
-                      " you can click the link or use {}set_translation KJV".format(ctx.prefix)
+            footer += (
+                " | If this version is difficult or this message too annoying,"
+                " you can click the link or use {}set_translation KJV".format(ctx.prefix)
+            )
 
-        embed = Embed(
-            title=resp.ref, description=resp.text, color=ctx.me.color, url=url
-        ).set_footer(text=footer)
+        embed = Embed(title=resp.ref, description=resp.text, color=ctx.me.color, url=url).set_footer(text=footer)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["set_version", "translation", "version"])

@@ -20,16 +20,17 @@ class Randomized(commands.Cog):
     @commands.command(aliases=["rb", "bands"])
     @commands.cooldown(2, 45, commands.BucketType.guild)
     @commands.max_concurrency(1, commands.BucketType.user)
-    async def random_bands(self, ctx: commands.Context,
-                           upper_limit: int = 3, sort_method: str = "band", *, _filter: str = ""):
+    async def random_bands(
+        self, ctx: commands.Context, upper_limit: int = 3, sort_method: str = "band", *, _filter: str = ""
+    ):
         """Return x amount of bands from metal-archives.com
         If set, the amount of bands must between 1 to 10"""
         if not (1 <= upper_limit <= 10 or ctx.author.id == self.bot.owner_id):
-            raise commands.BadArgument("Parameter \"integer\" must range from 1 to 10.")
+            raise commands.BadArgument('Parameter "integer" must range from 1 to 10.')
 
         bands = await self.bands.format(
-            str(ctx.author.id),
-            upper_limit, sort_method, _filter=_filter, iteration_hard_limit=(upper_limit * 10))
+            str(ctx.author.id), upper_limit, sort_method, _filter=_filter, iteration_hard_limit=(upper_limit * 10)
+        )
         await self.split_message(ctx, bands)
 
     @staticmethod
@@ -104,8 +105,7 @@ class Randomized(commands.Cog):
     @random_song.command()
     @commands.is_owner()
     async def update(self, ctx: commands.Context, link: str, *, title: str):
-        link = re.sub(
-            r"(https?:\/\/)?(www.)?(youtube.com|youtu.be)\/(watch\?v=)?", "", link)
+        link = re.sub(r"(https?:\/\/)?(www.)?(youtube.com|youtu.be)\/(watch\?v=)?", "", link)
         link = re.sub(r"&.+=.+$", "", link)
 
         if link in self.bot.data.songs:

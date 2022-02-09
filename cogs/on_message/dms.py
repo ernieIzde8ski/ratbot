@@ -40,11 +40,7 @@ class DMs(commands.Cog):
             description += "\n".join(urls)
         embed = Embed(title=title, description=description, color=color)
         if message.attachments:
-            embed.set_image(
-                url=message.attachments[0].url
-            ).set_footer(
-                text=f"{len(message.attachments)} attachment(s)"
-            )
+            embed.set_image(url=message.attachments[0].url).set_footer(text=f"{len(message.attachments)} attachment(s)")
         return embed
 
 

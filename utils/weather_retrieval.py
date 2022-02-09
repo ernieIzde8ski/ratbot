@@ -2,24 +2,43 @@ from enum import Enum
 
 from aiohttp import ClientSession
 
-from utils.weather_retrieval_types import (FixedKwargs, WeatherResponseError,
-                                 WeatherResponseType)
+from utils.weather_retrieval_types import FixedKwargs, WeatherResponseError, WeatherResponseType
 
 valid_kwarg_types = {
-    "city_id": int, "lat": (int, float), "lon": (int, float), "zip_code": (str, int),
-    "country_code": str, "state_code": str, "city_name": str, "units": str, "lang": str
+    "city_id": int,
+    "lat": (int, float),
+    "lon": (int, float),
+    "zip_code": (str, int),
+    "country_code": str,
+    "state_code": str,
+    "city_name": str,
+    "units": str,
+    "lang": str,
 }
 valid_kwargs = list(valid_kwarg_types.keys())
 
 
-_STANDARD = {"dt": "UTC", "sunrise": "UTC", "sunset": "UTC", "temp": "Kelvin", "Humidity": "%", "pressure": "hPa",
-             "speed": "meter/sec", "deg": "degrees (meteorological)", "gust": "meter/sec", "all": "%", "1h": "mm", "3h": "mm"}
+_STANDARD = {
+    "dt": "UTC",
+    "sunrise": "UTC",
+    "sunset": "UTC",
+    "temp": "Kelvin",
+    "Humidity": "%",
+    "pressure": "hPa",
+    "speed": "meter/sec",
+    "deg": "degrees (meteorological)",
+    "gust": "meter/sec",
+    "all": "%",
+    "1h": "mm",
+    "3h": "mm",
+}
 _METRIC = {**_STANDARD, "temp": "Celsius"}
 _IMPERIAL = {**_STANDARD, "temp": "Fahrenheit", "speed": "miles/hour", "gust": "miles/hour"}
 
 
 class Units(Enum):
     """Enum of units. Deprecated? Maybe"""
+
     STANDARD = _STANDARD
     METRIC = _METRIC
     IMPERIAL = _IMPERIAL
@@ -33,13 +52,20 @@ class WeatherRetrieval:
 
     @staticmethod
     def fix_kwargs(
-        apikey: str, *, q: str = None,
-        city_name: str = None, state_code: str = None, country_code: str = None,
+        apikey: str,
+        *,
+        q: str = None,
+        city_name: str = None,
+        state_code: str = None,
+        country_code: str = None,
         city_id: int | str = None,
-        lat: int | str = None, lon: int | str = None,
-        latitude: int | str = None, longitude: int | str = None,
+        lat: int | str = None,
+        lon: int | str = None,
+        latitude: int | str = None,
+        longitude: int | str = None,
         zip_code: int | str = None,
-        units: str = "metric", lang: str = None,
+        units: str = "metric",
+        lang: str = None,
     ) -> FixedKwargs:
         resp = FixedKwargs(appid=apikey)
 

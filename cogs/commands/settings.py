@@ -59,7 +59,7 @@ class Settings(commands.Cog):
             self.bot.data.pipi_guilds.remove(id)
         else:
             await ctx.send("Disabling the Petrosian copypasta")
-            self.bot.data.pipi_guilds.add(id)   
+            self.bot.data.pipi_guilds.add(id)
         safe_dump("data/pipi.json", list(self.bot.data.pipi_guilds))
 
     @commands.command(aliases=["toggle_bans"])
@@ -83,7 +83,7 @@ class Settings(commands.Cog):
     @commands.is_owner()
     async def update_troll_regex(self, ctx: commands.Context, *, regex: Optional[str]):
         if regex is None:
-            await ctx.send(f"Current regex: `r\"{self.bot.data.trollgex.pattern}\"`")
+            await ctx.send(f'Current regex: `r"{self.bot.data.trollgex.pattern}"`')
         else:
             self.bot.data.trollgex = re.compile(regex, re.I)
             safe_dump("data/trollgex.json", regex)
@@ -92,7 +92,8 @@ class Settings(commands.Cog):
     @commands.command(aliases=["append_trolljis", "trolfl"])
     @commands.is_owner()
     async def append_troll_emojis(
-            self, ctx: commands.Context, flag: Optional[FlagConverter] = {}, *, trolljis: Optional[EasyList]):
+        self, ctx: commands.Context, flag: Optional[FlagConverter] = {}, *, trolljis: Optional[EasyList]
+    ):
         # TODO: See if works as a tuple instead of custom list constructor. Use `extend`.
         if trolljis is None:
             await ctx.send("Currently enabled troll emojis: {}".format(", ".join(self.bot.data.trolljis)))

@@ -23,7 +23,7 @@ class Trek(commands.Cog):
     async def random_tos_plot(self, ctx: commands.Context, count: int = 1):
         """Generates a random Star Trek: The Original Series plot"""
         if not (1 <= count <= 10):
-            raise commands.BadArgument("Parameter \"count\" must range from 1 to 10.")
+            raise commands.BadArgument('Parameter "count" must range from 1 to 10.')
 
         resp = "".join(self.tos_generator.generate() + "\n" for _ in range(count))
         await ctx.send(resp)
