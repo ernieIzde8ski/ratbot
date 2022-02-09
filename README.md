@@ -10,7 +10,6 @@ The main version of rat, a Discord bot developed by ernieIzde8ski primarily in p
 
 ~~~PowerShell
 python -m pip install -r requirements.txt
-mkdir data/
 python setup.py
 python index.py
 ~~~
