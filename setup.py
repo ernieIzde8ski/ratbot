@@ -4,7 +4,7 @@ from typing import Any
 
 import aiohttp
 
-from utils.setup import *
+from utils.setup import add_fn, ask_for_auth, fetch_one, fetch_up_to, fns, from_url, Path, save
 
 
 ### Login credentials.
@@ -43,6 +43,7 @@ async def generate_xkcds(*args, session: aiohttp.ClientSession, **kwargs) -> Non
 
 
 async def main() -> None:
+    Path("./data").resolve().mkdir(exist_ok=True)
     session = aiohttp.ClientSession()
     errs: list[str] = []
     sucs: list[str] = []
