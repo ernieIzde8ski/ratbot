@@ -1,12 +1,13 @@
+import json
 from json import load
 from os import getenv
+from typing import Iterable
 
 from discord import AllowedMentions, Intents
 from discord.ext import commands
 from dotenv import load_dotenv
 
 from utils.classes import Blocking, RatBot, RatConfig
-
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
@@ -25,15 +26,20 @@ bot = RatBot(
     block_check=Blocking(),
 )
 
-
-with open("enabled_extensions.json", "r") as file:
-    for extension in load(file):
+# TODO: Disabled extensions, instead of enabled extensions
+ENABLED_EXTS_PATH = "enabled_extensions.json"
+with open(ENABLED_EXTS_PATH, "r") as f1:
+    exts: set[str] = load(f1)
+    if len(exts) != len(exts := set(exts)):
+        with open(ENABLED_EXTS_PATH, "w") as f2:
+            json.dump(sorted(exts), f2)
+    for ext in exts:
         try:
-            bot.load_extension(extension)
+            bot.load_extension(ext)
         except (commands.ExtensionError, ModuleNotFoundError) as error:
             print(f"{error.__class__.__name__}: {error}")
         else:
-            print(f"Loaded extension {extension}")
+            print(f"Loaded extension {ext}")
     print("Loaded all extensions !")
 
 
