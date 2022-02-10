@@ -34,8 +34,7 @@ with open("enabled_extensions.json", "r") as file:
             print(f"{error.__class__.__name__}: {error}")
         else:
             print(f"Loaded extension {extension}")
-    else:
-        print("Loaded all extensions !")
+    print("Loaded all extensions !")
 
 
 @bot.event
