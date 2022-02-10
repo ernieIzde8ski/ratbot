@@ -6,8 +6,6 @@ from discord.ext import commands
 from discord.message import Message
 
 from utils.functions import safe_dump, safe_load
-from ._types import WeatherUsers
-from utils.weather_retrieval import WeatherRetrieval
 
 
 class RatConfig(TypedDict):
@@ -97,18 +95,6 @@ class Prefixes:
         self.prefixes.pop(id)
 
 
-class Weather(WeatherRetrieval):
-    def __init__(self, apikey: str, *, locations_fp: str = "data/weather_locations.json") -> None:
-        super().__init__(apikey)
-        self.locs: WeatherUsers = safe_load(locations_fp, {})
-
-    def __str__(self) -> str:
-        return f"{self.__class__.__name__}[{self.apikey}]"
-
-    def save(self, *, locations_fp: str = "data/weather_locations.json") -> None:
-        safe_dump(locations_fp, self.locs)
-
-
 class RatData:
     def __init__(
         self,
@@ -120,7 +106,6 @@ class RatData:
         trollgex_fp: str = "data/trollgex.json",
         trolljis_fp: str = "data/trolls.json",
     ) -> None:
-        self.weather_loaded = False
         self.banning_guilds: dict = safe_load(banning_guilds_fp, {})
         self.pipi_guilds: set[str] = set(safe_load(pipi_guilds_fp, []))
         self.tenor_guilds: set[int] = set(safe_load(tenor_guilds_fp, []))
@@ -128,17 +113,6 @@ class RatData:
         self.trollgex: Pattern[str] = re.compile(safe_load(trollgex_fp, "(?i)troll"))
         self.trolljis: list[str] = safe_load(trolljis_fp, [])
         self.msg: Message | None = None
-
-    def load_weather_configs(
-        self,
-        *,
-        bible_fp: str = "data/russian.json",
-        resps_fp: str = "data/weather_resps.json",
-        users_fp: str = "data/weather_users.json",
-    ) -> None:
-        self.bible: list = safe_load(bible_fp, [])
-        self.resps: dict = safe_load(resps_fp, {})
-        self.users: WeatherUsers = safe_load(users_fp, {"active_users": []})
 
 
 class RatBot(commands.Bot):
@@ -157,11 +131,3 @@ class RatBot(commands.Bot):
         await self.wait_until_ready()
         self.app = await self.application_info()
         print(f"Retrieved application info! (owner: {self.app.owner})")
-
-    def load_weather(self, apikey: str | None) -> None:
-        if getattr(self, "weather", None) is not None:
-            print("Ignoring attempt to reload weather class")
-        elif apikey is None:
-            raise ValueError("Apikey must have a value")
-        else:
-            self.weather = Weather(apikey)

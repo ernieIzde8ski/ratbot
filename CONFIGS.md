@@ -25,10 +25,10 @@ Main config file
     // link to a repo
     // used in cogs/commands/info.py
     "github": "https://github.com/ernieIzde8ski/ratbot",
-    // invite to a server
+    // invite to a guild
     // used in cogs/commands/info.py
     "invite": "https://discord.gg/3gfP2kYPp4",
-    // id of the server that cogs/events/weather_updates.py checks
+    // id of the above guild
     "main_guild": 488475203303768065,
     // Channel IDs to send various messages to
     "channels": {
@@ -53,7 +53,7 @@ These extensions contain base features:
 Other extensions are dependent on these:
 
 ```JSON
-["cogs.commands.randomized", "cogs.commands.settings", "cogs.commands.weather"]
+["cogs.commands.randomized", "cogs.commands.settings"]
 ```
 
 ## ./utils/JSON/
@@ -167,48 +167,6 @@ A list of troll emojis to react with.
 
 ```JSON
 ["<:untroll:857332422584172566>", "<:trort:857330947174957057>", "<:trollsmoothest:857330981702467644>", "<:trollsad:857332238109376553>", "<:trollexcited:857331745119535144>", "<:trollcraft:857328836329078815>", "<:troll:857331191034937364>", "<:trolfl:857328783345319936>", "<:tro:857330854538510346>", "<:redditroll:857332382343102514>", "<:celeste_granny:830955083692113920>", "<:eltroll:859149163145330708>"]
-```
-
-### weather_locations.json
-
-A dictionary of user weather locations.
-
-```JSON
-{"302956027656011776": {"city_name": "South Bend"}, "232706427045543936": {"city_id": 4164138, "units": "Imperial"}, "282307423530647562": {"latitude": 70, "longitude": 70, "units": "metric"}}
-```
-
-### weather_resps.json
-
-A dictionary of weather responses used in cogs/events/weather_updates.py
-
-```JSON
-{
-    "greetings": ["Good morning {},", "Dzień dobry {},"],
-    "temperature_resps": [
-        [0, "It is below 0 degrees celsius."],
-        [100, "It is below 100 degrees celsius."],
-        [1000, "At this temperature, water boils."]
-    ]
-}
-```
-
-### weather_updates.json
-
-A dictionary of users to receive weather updates.
-
-```JSONC
-{
-// List of users currently receiving updates
-"active_users": [302956027656011776],
-// One specific user
-"302956027656011776": {
-    // Timezone to check if day has changed
-    "tz": "America/Los_Angeles",
-    // Date to check in conjunction with timezone
-    "sent": "29-06-2021",
-    // Nicknames used
-    "aliases": ["ernie", "pepito"]
-}}
 ```
 
 ### xkcd.json
