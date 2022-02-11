@@ -20,12 +20,14 @@ def strip_str(text: str) -> str:
     return resp
 
 
-def safe_load(fp: str, backup: Any) -> Any:
+def safe_load(fp: str, backup: Any = None) -> Any:
     """Load a file & create it from the backup variable if it doesn't exist"""
     try:
         with open(fp, "r", encoding="utf-8") as file:
             return json.load(file)
-    except FileNotFoundError:
+    except FileNotFoundError as err:
+        if backup is None:
+            raise err from err
         with open(fp, "x", encoding="utf-8") as file:
             json.dump(backup, file)
             return backup

@@ -4,6 +4,7 @@ from typing import Pattern, TypedDict, Union
 import discord
 from discord.ext import commands
 from discord.message import Message
+from pydantic import BaseModel
 
 from utils.functions import safe_dump, safe_load
 
@@ -115,7 +116,36 @@ class RatData:
         self.msg: Message | None = None
 
 
+class WeatherUsers(BaseModel):
+    active: list[int]
+    all: list[str]
+
+
+class WeatherJson(BaseModel):
+    users: dict
+
+
+class RatWeather:
+    fp: str
+
+    def __init__(
+        self,
+        fp: str = "data/weather.json",
+    ) -> None:
+        self.fp = fp
+        print(0, fp)
+        data = safe_load(fp)
+        print(1, data)
+        self.data = WeatherJson(**data)
+        print(2, self.data)
+
+    def save(self) -> None:
+        return safe_dump(self.fp, self.data.json())
+
+
 class RatBot(commands.Bot):
+    weather: RatWeather
+
     def __init__(self, *args, config: RatConfig, block_check: Blocking, **kwargs):
         self.pfx = Prefixes(config["prefix"])
         super().__init__(*args, command_prefix=self.pfx.get, **kwargs)
@@ -126,6 +156,11 @@ class RatBot(commands.Bot):
         self.block_check = block_check
 
         self.loop.create_task(self.on_complete())
+
+    def reset_weather(self) -> None:
+        self.weather = RatWeather()
+        print(self.weather.data.json())
+        print("Reloaded weather class!")
 
     async def on_complete(self) -> None:
         await self.wait_until_ready()
