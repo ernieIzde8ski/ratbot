@@ -1,12 +1,11 @@
 from discord import Color, Embed, Guild
 from discord.ext import commands
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.converters import FlagConverter
 
 
-class Guilds(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Guilds(RatCog):
+    """Guild status logging"""
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: Guild):

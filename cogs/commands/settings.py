@@ -1,17 +1,15 @@
-from discord import Forbidden
-from discord.ext import commands
-
 import re
 from typing import Optional
-from utils.classes import RatBot
 
-from utils.functions import safe_dump
+from discord import Forbidden
+from discord.ext import commands
+from utils.classes import RatBot, RatCog
 from utils.converters import EasyList, FlagConverter, Percentage
+from utils.functions import safe_dump
 
 
-class Settings(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Settings(RatCog):
+    """Bot-wide settings management"""
 
     @commands.command(aliases=["prefix", "pfx"])
     @commands.has_guild_permissions(manage_guild=True)

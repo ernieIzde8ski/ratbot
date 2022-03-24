@@ -3,7 +3,7 @@ import typing
 import discord
 from discord.ext import commands
 from utils._types import MaybeUser
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.converters import Coordinates
 from utils.openweathermap import CurrentWeatherStatus, NamedCoords, RatWeather, WUser
 
@@ -19,9 +19,8 @@ rwth: RatWeather
 # TODO: Just move the openweathermap module into here hopefully
 
 
-class WeatherCommands(commands.Cog):
-    def __init__(self, bot: RatBot) -> None:
-        self.bot = bot
+class WeatherCommands(RatCog):
+    """Commands to get the weather and set your location."""
 
     @staticmethod
     def message_embed(status: CurrentWeatherStatus) -> discord.Embed:

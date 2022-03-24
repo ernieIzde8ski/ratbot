@@ -3,19 +3,15 @@ from json import dump
 from typing import Optional
 
 from discord.ext import commands
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.converters import FlagConverter
 
 
-class Cogs(commands.Cog):
+class Cogs(RatCog):
+    all_extensions: list[str]
     # TODO: Combine repeated functions
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.all_extensions: list[str] = []
-        self.bot.loop.create_task(self.initialize())
 
-    async def initialize(self):
-        await self.bot.wait_until_ready()
+    async def _on_ready(self):
         self.all_extensions = list(self.bot.extensions.keys())
 
     def dump_extensions(self):

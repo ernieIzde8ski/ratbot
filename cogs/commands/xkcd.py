@@ -5,13 +5,17 @@ from aiohttp import ClientSession
 from discord import Color, Embed
 from discord.ext import commands, tasks
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.functions import safe_dump, safe_load
 
 
-class XKCD(commands.Cog):
+class XKCD(RatCog):
+    """Interactions with XKCD comics"""
+
+    # TODO: Rewrite
+
     def __init__(self, bot: RatBot):
-        self.bot = bot
+        super().__init__(bot=bot)
         self.xkcds = safe_load("data/xkcd.json", [{"int": -1}])
         self.update_index.start()
 

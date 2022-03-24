@@ -1,32 +1,35 @@
-import typing
 from typing import Optional
 
 from discord import Embed
 from discord.ext import commands
-from utils.classes import RatBot
-from utils.functions import safe_dump, safe_load
+from utils.classes import RatBot, RatCog
 from utils.converters import StrictBool
+from utils.functions import safe_dump, safe_load
 
 from cogs.commands._bible.fetch import BibleError, PassageRetrieval
 
 
-class Bible(commands.Cog):
+valid_translations = {
+    "cherokee": ["Cherokee New Testament", "Cherokee"],
+    "bbe": ["Bible in Basic English", "English"],
+    "kjv": ["King James Version", "English"],
+    "oeb-us": ["Open English Bible", "English (US)"],
+    "oeb-cw": ["Open English Bible", "English (UK)"],
+    "web": ["World English Bible", "English"],
+    "webbe": ["World English Bible", "English (UK)"],
+    "clementine": ["Clementine Latin Vulgate", "Latine"],
+    "almeida": ["João Ferreira de Almeida", "Português"],
+    "rccv": ["Romanian Corrected Cornilescu Bible", "Română"],
+}
+
+valid_translation_keys = valid_translations.keys()
+valid_translations_str = "Available translations: `" + "`, `".join(valid_translations) + "`"
+
+
+class Bible(RatCog):
+    # TODO: Maybe make an API for this too
     def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.valid_translations = {
-            "cherokee": ["Cherokee New Testament", "Cherokee"],
-            "bbe": ["Bible in Basic English", "English"],
-            "kjv": ["King James Version", "English"],
-            "oeb-us": ["Open English Bible", "English (US)"],
-            "oeb-cw": ["Open English Bible", "English (UK)"],
-            "web": ["World English Bible", "English"],
-            "webbe": ["World English Bible", "English (UK)"],
-            "clementine": ["Clementine Latin Vulgate", "Latine"],
-            "almeida": ["João Ferreira de Almeida", "Português"],
-            "rccv": ["Romanian Corrected Cornilescu Bible", "Română"],
-        }
-        self.valid_translation_keys = self.valid_translations.keys()
-        self.valid_translations_str = "Available translations: `" + "`, `".join(self.valid_translation_keys) + "`"
+        super().__init__(bot=bot)
         self.preferred_versions: dict[str, str] = safe_load("data/bible.json", {})
         self.session = PassageRetrieval()
 
@@ -60,16 +63,16 @@ class Bible(commands.Cog):
         there's only a few functional translations (displayed by invoking
         the command)."""
         if not translation:
-            return await ctx.send(self.valid_translations_str)
+            return await ctx.send(valid_translations_str)
 
         translation = translation.lower()
 
-        if translation not in self.valid_translation_keys:
-            return await ctx.send("Invalid translation!\n" + self.valid_translations_str)
+        if translation not in valid_translations:
+            return await ctx.send("Invalid translation!\n" + valid_translations_str)
 
         self.preferred_versions[str(ctx.author.id)] = translation
         safe_dump("data/bible.json", self.preferred_versions)
-        translation = f"`{self.valid_translations[translation][0]}` [{self.valid_translations[translation][1]}]"
+        translation = f"`{valid_translations[translation][0]}` [{valid_translations[translation][1]}]"
         await ctx.send(f"Set your translation to {translation}")
 
 

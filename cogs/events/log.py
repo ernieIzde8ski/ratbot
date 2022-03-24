@@ -1,13 +1,16 @@
 from typing import Literal
+
 from discord import Color, Embed
 from discord.ext import commands
+from utils.classes import RatBot, RatCog
 from utils.functions import safe_load
-from utils.classes import RatBot
 
 
-class Log(commands.Cog):
+class Log(RatCog):
+    """Online/offline status logging"""
+
     def __init__(self, bot: RatBot):
-        self.bot = bot
+        super().__init__(bot=bot)
         self.wakeup, self.close = safe_load("data/emoji.json", ["🐣", "🎃"])
 
     def get_channels(self):

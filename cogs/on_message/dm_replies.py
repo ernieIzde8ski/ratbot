@@ -6,15 +6,12 @@ from typing import Optional, Union
 import discord
 from aiohttp.client import ClientSession
 from discord.ext import commands
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.functions import safe_load
 
 
-class Replies(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.allowed_mentions = discord.AllowedMentions.all()
-        self.task = None
+class Replies(RatCog):
+    """Handles replies to DMs in a given channel"""
 
     async def _update_message(self, message: discord.Message) -> None:
         self.bot.data.msg = message
@@ -88,7 +85,7 @@ class Replies(commands.Cog):
 
         [resp, files, failed_files] = await self.get_resp(message)
         try:
-            await self.bot.data.msg.channel.send(resp, files=files, allowed_mentions=self.allowed_mentions)
+            await self.bot.data.msg.channel.send(resp, files=files, allowed_mentions=self.bot._all_mentions)
         except discord.Forbidden:
             await message.reply(f"Error: Cannot send messages to {self.bot.data.msg.author}, closing the channel")
             if self.task:

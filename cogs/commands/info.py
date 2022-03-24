@@ -1,19 +1,19 @@
 from random import choice
 
+from bot import RatBot
 from discord import Embed, Permissions, utils
 from discord.ext import commands
-from bot import RatBot
+
+from utils.classes import RatCog
+
 
 PERMISSIONS = Permissions(2214915137)
 
 
-class Information(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.bot.loop.create_task(self.initialize())
+class Information(RatCog):
+    """A single informatic command pertaining to RatBot"""
 
-    async def initialize(self) -> None:
-        await self.bot.wait_until_ready()
+    async def _on_ready(self) -> None:
         self.invite = utils.oauth_url(self.bot.user.id, permissions=PERMISSIONS)
         self.prefixes = " || ".join(self.bot.config["prefix"])
 

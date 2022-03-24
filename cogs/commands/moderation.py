@@ -4,26 +4,26 @@ from typing import Callable
 
 from discord import Message
 from discord.ext import commands
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.converters import FlagConverter
 
 
-class Moderation(commands.Cog):
-    checks: dict[str, Callable[..., bool]]
+PruneChecks: dict[str, Callable[..., bool]] = {
+    "ignore-humans": lambda msg, value: bool(msg.author.bot),
+    "ignore-bots": lambda msg, value: not msg.author.bot,
+    "ignore-webhooks": lambda msg, value: not msg.webhook_id,
+    "attachments": lambda msg, value: bool(msg.attachments),
+    "embeds": lambda msg, value: bool(msg.embeds),
+    "plaintext": lambda msg, value: not msg.attachments and not msg.embeds,
+    "match": lambda msg, value: bool(re.search(value, msg.content)),
+}
 
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.checks = {
-            "ignore-humans": lambda msg, value: bool(msg.author.bot),
-            "ignore-bots": lambda msg, value: not msg.author.bot,
-            "ignore-webhooks": lambda msg, value: not msg.webhook_id,
-            "attachments": lambda msg, value: bool(msg.attachments),
-            "embeds": lambda msg, value: bool(msg.embeds),
-            "plaintext": lambda msg, value: not msg.attachments and not msg.embeds,
-            "match": lambda msg, value: bool(re.search(value, msg.content)),
-        }
 
-    def get_check(self, flags: dict, msg: Message) -> Callable[[Message], bool]:
+class Moderation(RatCog):
+    """Just a prune command, at the moment"""
+
+    @staticmethod
+    def get_check(flags: dict, msg: Message) -> Callable[[Message], bool]:
         if not flags:
             return lambda _msg: _msg != msg
         else:
@@ -31,9 +31,9 @@ class Moderation(commands.Cog):
             def check(msg: Message) -> bool:
                 if msg == msg:
                     return False
-                for check in self.checks:
+                for check in PruneChecks:
                     value = flags[check]
-                    if not self.checks[check](msg, value):
+                    if not PruneChecks[check](msg, value):
                         return False
                 else:
                     return True

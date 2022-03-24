@@ -1,15 +1,13 @@
-from discord import Forbidden, HTTPException
-from discord import Member, TextChannel, User
-from discord.ext import commands
 from typing import Optional
-from utils.classes import RatBot
 
+from discord import Forbidden, HTTPException, Member, TextChannel, User
+from discord.ext import commands
+from utils.classes import RatBot, RatCog
 from utils.converters import FlagConverter
 
 
-class Ping(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Ping(RatCog):
+    """Testing commands"""
 
     @commands.command()
     @commands.is_owner()
@@ -17,8 +15,7 @@ class Ping(commands.Cog):
         """Echo a message
         Optional parameter messageable determines target"""
         target = messageable or ctx
-        if message.startswith("\\"):
-            message = message[1:]
+        message = message.removeprefix("\\")
         try:
             await target.send(message)
         except (Forbidden, HTTPException) as e:

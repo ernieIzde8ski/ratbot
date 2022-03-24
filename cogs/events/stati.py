@@ -2,16 +2,14 @@ from typing import Union
 
 from discord import Activity, ActivityType, Game, Status
 from discord.ext import commands
+from utils.classes import RatBot, RatCog
 from utils.converters import FlagConverter
-from utils.classes import RatBot
 
 
-class Stati(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.bot.loop.create_task(self.initialize())
+class Stati(RatCog):
+    """Status management"""
 
-    async def initialize(self) -> None:
+    async def _on_ready(self) -> None:
         await self.bot.wait_until_ready()
         activity = Activity(
             name=self.bot.config["default_status"].format(self.bot.config["prefix"][0]), type=ActivityType.watching

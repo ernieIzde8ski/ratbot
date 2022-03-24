@@ -1,5 +1,5 @@
 import re
-from typing import Pattern, TypedDict, Union
+from typing import Callable, Coroutine, Pattern, TypedDict, Union
 import aiohttp
 
 import discord
@@ -131,6 +131,7 @@ class RatBot(commands.Bot):
         self.block_check = block_check
         self.weather_apikey = weather_apikey
         self.session = aiohttp.ClientSession()
+        self._all_mentions = discord.AllowedMentions.all()
 
         self.loop.create_task(self.on_complete())
 
@@ -146,3 +147,20 @@ class RatBot(commands.Bot):
         await self.wait_until_ready()
         self.app = await self.application_info()
         print(f"Retrieved application info! (owner: {self.app.owner})")
+
+
+class RatCog(commands.Cog):
+    """Generic cog that all RatBot cogs can inherit from."""
+
+    _on_ready: Callable[[], Coroutine] | None = None
+
+    def __init__(self, bot: RatBot):
+        self.bot = bot
+        if self._on_ready:
+            self.bot.loop.create_task(self.__on_ready__())
+
+    async def __on_ready__(self):
+        if not self._on_ready:  # satisfying the typechecker
+            raise KeyError
+        await self.bot.wait_until_ready()
+        await self._on_ready()

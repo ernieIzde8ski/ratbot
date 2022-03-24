@@ -4,16 +4,17 @@ from random import random
 
 from discord import AllowedMentions, Message
 from discord.ext import commands
+from utils.classes import RatBot, RatCog
 
-from utils.classes import RatBot
+
+PipiPattern = re.compile(
+    r"pipi|liers|petr(o|at)s[iy]an|looser|\"w\"esley\"s\"o|firouzja|otbblitzmatch", re.ASCII + re.IGNORECASE
+)
 
 
-class Petrosian(commands.Cog):
+class Petrosian(RatCog):
     def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.regex = re.compile(
-            r"pipi|liers|petr(o|at)s[iy]an|looser|\"w\"esley\"s\"o|firouzja|otbblitzmatch", re.ASCII + re.IGNORECASE
-        )
+        super().__init__(bot=bot)
         with open("utils/JSON/petrosian.json", "r", encoding="utf-8") as file:
             self.petrosian = load(file)
 
@@ -25,7 +26,7 @@ class Petrosian(commands.Cog):
             if str(message.guild.id) in self.bot.data.pipi_guilds:
                 return
 
-        if not re.search(self.regex, message.content):
+        if not re.search(PipiPattern, message.content):
             return
         elif random() > 0.33:
             return

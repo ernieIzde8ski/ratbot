@@ -3,13 +3,11 @@ from random import random
 
 from discord import AllowedMentions, Forbidden, Message
 from discord.ext import commands
+from utils.classes import RatBot, RatCog
 
-from utils.classes import RatBot
 
-
-class Bans(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Bans(RatCog):
+    """Random bans serviced by your local Rat Bot"""
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):

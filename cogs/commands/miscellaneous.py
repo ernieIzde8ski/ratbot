@@ -3,13 +3,15 @@ from typing import Optional, Union
 
 from discord.ext import commands
 from pytz import BaseTzInfo, timezone
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.functions import safe_dump, safe_load
 
 
-class Miscellaneous(commands.Cog):
+class Miscellaneous(RatCog):
+    """Random commands (but not randomized)"""
+
     def __init__(self, bot: RatBot):
-        self.bot = bot
+        super().__init__(bot=bot)
         self.data: dict[str, str] = safe_load("data/timekeeping.json", {})
 
     @commands.command()

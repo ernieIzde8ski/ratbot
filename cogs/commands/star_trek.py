@@ -2,12 +2,13 @@ import random
 from discord.ext import commands
 
 from utils.SentenceGenerator import loadGenerator
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.functions import safe_load
 
 
-class Trek(commands.Cog):
-    def __init__(self):
+class Trek(RatCog):
+    def __init__(self, bot: RatBot):
+        super().__init__(bot=bot)
         self.tos_generator = loadGenerator("utils/JSON/Star_Trek.meow")
         self.borg_samples = safe_load("utils/JSON/borg.json", [])
         self.borglen = len(self.borg_samples)
@@ -30,4 +31,4 @@ class Trek(commands.Cog):
 
 
 def setup(bot: RatBot):
-    bot.add_cog(Trek())
+    bot.add_cog(Trek(bot))

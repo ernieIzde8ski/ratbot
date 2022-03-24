@@ -1,17 +1,16 @@
-from typing import Optional
 import random
 import re
+from typing import Optional
 
 from discord.ext import commands
-
-from utils.classes import RatBot
+from utils.classes import RatBot, RatCog
 from utils.functions import safe_dump, safe_load, strip_str
 from utils.random_band import BandRetrieval
 
 
-class Randomized(commands.Cog):
+class Randomized(RatCog):
     def __init__(self, bot: RatBot):
-        self.bot = bot
+        super().__init__(bot=bot)
         self.bands = BandRetrieval()
         self.bmed: list[str] = safe_load("data/bm.json", [])
         self.songs: dict[str, str] = safe_load("data/songs.json", {})
