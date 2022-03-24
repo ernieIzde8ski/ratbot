@@ -1,5 +1,5 @@
 {
-  "prefix": ["r.", "r!"],
+  "prefix": ["r;"],
   "default_status": "{}help",
   "preferred_timezone": "EST",
   "github": "https://github.com/ernieIzde8ski/ratbot",
