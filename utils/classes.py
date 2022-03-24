@@ -16,7 +16,7 @@ class RatConfig(TypedDict):
     preferred_timezone: str
     github: str
     invite: str
-    primary_guild: str
+    primary_guild: int
     channels: dict[str, Union[int, discord.TextChannel]]
 
 

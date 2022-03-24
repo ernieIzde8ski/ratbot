@@ -14,27 +14,27 @@ UnitConversions: dict[RawUnits, Units] = {
     "imperial": StandardUnits.IMPERIAL,
 }
 
-NamedCoords = NamedTuple("Coords", lat=float, lon=float)
+NamedCoords = NamedTuple("NamedCoords", lat=float, lon=float)
 
 
-class _User(BaseModel):
+class WUser(BaseModel):
     coords: NamedCoords
     units: RawUnits = "metric"
     # TODO: Un-hardcode this
-    server: int = 488475203303768065
+    guild_id: int = 488475203303768065
 
 
-class _Users(BaseModel):
+class WUsers(BaseModel):
     active: list[int]
-    all: dict[int, _User]
+    all: dict[int, WUser]
 
 
 class RatWeatherData(BaseModel):
     path: str
     """Path to weather file"""
-    active_users: list[int]
+    active_users: set[int]
     """List of users to receive daily weather notifications."""
-    configs: dict[int, _User]
+    configs: dict[int, WUser]
     """User location/unit preference data"""
 
     def save(self) -> None:
@@ -48,21 +48,28 @@ class RatWeather:
     data: RatWeatherData
     client: CurrentWeather
 
-    users: _Users
+    users: WUsers
 
     def __init__(
         self, session: aiohttp.ClientSession | None = None, appid: str | None = None, path: str = "data/weather.json"
     ) -> None:
-        self.data = RatWeatherData(**safe_load(path), path=path)
+        data = safe_load(path, None) or dict(active_users=[], configs={})
+        self.data = RatWeatherData(**data, path=path)
         self.client = CurrentWeather(client=session, appid=appid)
 
     def save(self) -> None:
         """Equivalent to obj.data.save"""
         self.data.save()
 
+    @staticmethod
+    def _units(__s: str) -> Units:
+        __s = __s.lower()
+        if __s not in UnitConversions:
+            raise ValueError(f"Unit '{__s}' is invalid")
+        return UnitConversions[__s]  # type: ignore
+
     async def fetch(self, *args, **kwargs):
         """Equivalent to obj.client.get"""
-        print("i")
         return await self.client.get(*args, **kwargs)
 
     async def fetch_user(self, _usr: int) -> CurrentWeatherStatus:
