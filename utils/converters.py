@@ -1,3 +1,4 @@
+from contextlib import suppress
 import typing
 from discord.ext import commands
 from json import loads
@@ -28,11 +29,8 @@ class FlagConverter(commands.Converter):
                 try:
                     value = loads(value)
                 except JSONDecodeError:
-                    try:
+                    with suppress(JSONDecodeError):
                         value = loads(value.lower())
-                    except JSONDecodeError:
-                        pass
-
             resp[key] = value
 
         return resp
@@ -47,8 +45,8 @@ class Percentage(commands.Converter):
         except ValueError:
             try:
                 return float(re.sub(r"\s*%", "", "".join(argument.split()))) / 100
-            except ValueError:
-                raise commands.BadArgument("Argument must be of the format 0.P or P%")
+            except ValueError as err:
+                raise commands.BadArgument("Argument must be of the format 0.P or P%") from err
 
 
 class Coordinates(commands.Converter):
