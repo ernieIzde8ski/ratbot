@@ -2,9 +2,7 @@ from typing import Optional
 
 from discord import Embed
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import StrictBool
-from utils.functions import safe_dump, safe_load
+from utils import RatBot, RatCog, StrictBool, safe_dump, safe_load
 
 from cogs.commands._bible.fetch import BibleError, PassageRetrieval
 

@@ -1,4 +1,4 @@
-from typing import Any, Coroutine, Literal, NamedTuple
+from typing import Literal, NamedTuple
 
 import aiohttp
 from owmpy.current import CurrentWeather, CurrentWeatherStatus, StandardUnits, Units

@@ -1,7 +1,6 @@
 from discord import Color, Embed, Guild
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import FlagConverter
+from utils import FlagConverter, RatBot, RatCog
 
 
 class Guilds(RatCog):

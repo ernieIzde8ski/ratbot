@@ -3,8 +3,7 @@ import re
 from discord import AllowedMentions, Message, NotFound
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot, RatCog
-from utils.functions import strip_str
+from utils import RatBot, RatCog, strip_str
 
 
 tenor_pattern = re.compile(r"https{0,1}:\/\/(www.)*tenor.com\/view\/([a-z]|-)+\d+")

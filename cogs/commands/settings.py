@@ -1,11 +1,8 @@
-import re
 from typing import Optional
 
 from discord import Forbidden
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import EasyList, FlagConverter, Percentage
-from utils.functions import safe_dump
+from utils import EasyList, FlagConverter, Percentage, RatBot, RatCog, safe_dump
 
 
 class Settings(RatCog):
@@ -76,7 +73,6 @@ class Settings(RatCog):
             await ctx.send(f"Enabling random bans in this guild with a {percent * 100}% chance")
             self.bot.data.banning_guilds[id] = percent
         safe_dump("data/banning.json", self.bot.data.banning_guilds)
-
 
     @commands.command(aliases=["append_trolljis", "trolfl"])
     @commands.is_owner()

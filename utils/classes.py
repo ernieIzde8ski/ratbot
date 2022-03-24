@@ -1,13 +1,12 @@
-import re
-from typing import Callable, Coroutine, Pattern, TypedDict, Union
-import aiohttp
+from typing import Callable, Coroutine, TypedDict, Union
 
+import aiohttp
 import discord
 from discord.ext import commands
 from discord.message import Message
 
 from utils.functions import safe_dump, safe_load
-from utils.openweathermap import RatWeather
+from utils.wowmpy import RatWeather
 
 
 class RatConfig(TypedDict):

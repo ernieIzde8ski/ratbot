@@ -3,7 +3,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot, RatCog
+from utils import RatBot, RatCog
 
 
 class Nico(RatCog):

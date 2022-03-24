@@ -6,8 +6,7 @@ from typing import Optional, Union
 import discord
 from aiohttp.client import ClientSession
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.functions import safe_load
+from utils import RatBot, RatCog, safe_load
 
 
 class Replies(RatCog):

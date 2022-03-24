@@ -3,8 +3,7 @@ from json import dump
 from typing import Optional
 
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import FlagConverter
+from utils import FlagConverter, RatBot, RatCog
 
 
 class Cogs(RatCog):

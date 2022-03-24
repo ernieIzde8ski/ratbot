@@ -1,7 +1,9 @@
 import json
 from typing import Any, TypeVar, overload
 
+
 T = TypeVar("T")
+
 
 def strip_str(text: str) -> str:
     """Strips away much of a string
@@ -20,13 +22,18 @@ def strip_str(text: str) -> str:
     resp = "".join(resp.lower().split())
     return resp
 
-@overload
-def safe_load(fp: str) -> Any: ...
 
 @overload
-def safe_load(fp: str, backup: T) -> T: ...
+def safe_load(fp: str) -> Any:
+    ...
 
-def safe_load(fp: str, backup = ...) -> Any:
+
+@overload
+def safe_load(fp: str, backup: T) -> T | Any:
+    ...
+
+
+def safe_load(fp: str, backup=...):
     """Load a file & create it from the backup variable if it doesn't exist"""
     try:
         with open(fp, "r", encoding="utf-8") as file:

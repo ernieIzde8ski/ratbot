@@ -5,6 +5,7 @@ from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 
+
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
 

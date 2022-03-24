@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot, RatCog
-from utils.functions import safe_dump
+from utils import RatBot, RatCog, safe_dump
 
 
 class AEBDTheta(RatCog):

@@ -3,9 +3,7 @@ import re
 from typing import Optional
 
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.functions import safe_dump, safe_load, strip_str
-from utils.random_band import BandRetrieval
+from utils import BandRetrieval, RatBot, RatCog, safe_dump, safe_load, strip_str
 
 
 class Randomized(RatCog):

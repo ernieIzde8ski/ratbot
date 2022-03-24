@@ -5,8 +5,7 @@ from aiohttp import ClientSession
 from discord import Color, Embed
 from discord.ext import commands, tasks
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot, RatCog
-from utils.functions import safe_dump, safe_load
+from utils import RatBot, RatCog, safe_dump, safe_load
 
 
 class XKCD(RatCog):

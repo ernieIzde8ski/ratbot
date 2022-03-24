@@ -2,8 +2,7 @@ from typing import Optional
 
 from discord import Forbidden, HTTPException, Member, TextChannel, User
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import FlagConverter
+from utils import RatBot, RatCog, FlagConverter
 
 
 class Ping(RatCog):

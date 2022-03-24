@@ -3,8 +3,7 @@ from random import choice, random
 
 from discord import Forbidden, Message
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.functions import safe_load
+from utils import RatBot, RatCog, safe_load
 
 
 LaughPattern = re.compile(r"lmf?ao", re.IGNORECASE)

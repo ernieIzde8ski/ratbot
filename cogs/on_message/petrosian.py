@@ -4,7 +4,7 @@ from random import random
 
 from discord import AllowedMentions, Message
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
+from utils import RatBot, RatCog
 
 
 PipiPattern = re.compile(

@@ -1,10 +1,9 @@
 from random import choice
 
-from bot import RatBot
 from discord import Embed, Permissions, utils
 from discord.ext import commands
 
-from utils.classes import RatCog
+from utils import RatBot, RatCog
 
 
 PERMISSIONS = Permissions(2214915137)

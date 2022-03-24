@@ -2,8 +2,7 @@ from typing import Union
 
 from discord import Activity, ActivityType, Game, Status
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import FlagConverter
+from utils import FlagConverter, RatBot, RatCog
 
 
 class Stati(RatCog):

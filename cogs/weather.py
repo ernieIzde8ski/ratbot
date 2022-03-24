@@ -2,10 +2,7 @@ import typing
 
 import discord
 from discord.ext import commands
-from utils._types import MaybeUser
-from utils.classes import RatBot, RatCog
-from utils.converters import Coordinates
-from utils.openweathermap import CurrentWeatherStatus, NamedCoords, RatWeather, WUser
+from utils import Coordinates, MaybeUser, RatBot, RatCog, wowmpy
 
 DescriptionFormat = """
 Temperature (Real): {temp}{temp_unit}
@@ -13,7 +10,7 @@ Temperature (Felt): {felt}{temp_unit}
 {hum}% Humidity with {vis} Visibility
 """.strip()
 
-rwth: RatWeather
+rwth: wowmpy.RatWeather
 """An alias of bot.weather so I don't have ridiculous lines like
 `if target.id not in self.bot.weather.data.active_users`"""
 # TODO: Just move the openweathermap module into here hopefully
@@ -23,7 +20,7 @@ class WeatherCommands(RatCog):
     """Commands to get the weather and set your location."""
 
     @staticmethod
-    def message_embed(status: CurrentWeatherStatus) -> discord.Embed:
+    def message_embed(status: wowmpy.CurrentWeatherStatus) -> discord.Embed:
         """Generates an embed for weather"""
         description = DescriptionFormat.format(
             temp=status.main.temp,
@@ -65,9 +62,9 @@ class WeatherCommands(RatCog):
             raise ValueError
 
         if target not in rwth.data.configs:
-            target_coords = NamedCoords(lat=0, lon=0)
+            target_coords = wowmpy.NamedCoords(lat=0, lon=0)
             target_guild_id: int = getattr(ctx.guild, "id", None) or self.bot.config["primary_guild"]
-            rwth.data.configs[target] = WUser(coords=NamedCoords(lat=0, lon=0), guild_id=target_guild_id)
+            rwth.data.configs[target] = wowmpy.WUser(coords=wowmpy.NamedCoords(lat=0, lon=0), guild_id=target_guild_id)
             await ctx.send(
                 f"Initialized {target} data at coordinates `{target_coords=}` and guild `{target_guild_id=}`"
             )
@@ -80,7 +77,7 @@ class WeatherCommands(RatCog):
             usr.guild_id = ctx.guild.id  # type: ignore
             await ctx.send(f"Set guild_id to `{usr.guild_id}`.")
         elif isinstance(value, list):
-            usr.coords = NamedCoords(*value)
+            usr.coords = wowmpy.NamedCoords(*value)
             await ctx.send(f"Set coords to `{usr.coords}`.")
         elif isinstance(value, str):
             units = rwth._units(value).api_name

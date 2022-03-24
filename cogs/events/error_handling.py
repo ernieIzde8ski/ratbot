@@ -1,6 +1,6 @@
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot, RatCog
+from utils import RatBot, RatCog
 
 
 class ErrorHandling(RatCog):

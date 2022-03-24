@@ -1,11 +1,10 @@
+import asyncio
 import re
-from asyncio import sleep
 from typing import Callable
 
 from discord import Message
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
-from utils.converters import FlagConverter
+from utils import FlagConverter, RatBot, RatCog
 
 
 PruneChecks: dict[str, Callable[..., bool]] = {
@@ -53,7 +52,7 @@ class Moderation(RatCog):
         check = self.get_check(flags, ctx.message)
         await ctx.channel.purge(limit=amount, check=check)
         await ctx.message.add_reaction("☑️")
-        await sleep(2)
+        await asyncio.sleep(2)
         await ctx.message.delete()
 
 
