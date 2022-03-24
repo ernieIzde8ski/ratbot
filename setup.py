@@ -84,9 +84,13 @@ async def main() -> None:
         else:
             sucs.append(fn.__name__)
             print("Done!")
+
     if errs:
         print("Errors occurred on:", ", ".join(errs))
         print("The following functions succeeded:", ", ".join(sucs))
+    else:
+        print("Completed setup with 0 errors!")
+
     await session.close()
 
 
