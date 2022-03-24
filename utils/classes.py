@@ -1,12 +1,13 @@
 import re
 from typing import Pattern, TypedDict, Union
+import aiohttp
 
 import discord
 from discord.ext import commands
 from discord.message import Message
-from pydantic import BaseModel
 
 from utils.functions import safe_dump, safe_load
+from utils.openweathermap import RatWeather
 
 
 class RatConfig(TypedDict):
@@ -29,7 +30,7 @@ class StatusChannels:
         self.channels = channels
         self.loaded = False
 
-    def get_channels(self, bot) -> None:
+    def get_channels(self, bot: "RatBot") -> None:
         """Retrieve channels for later usage"""
         for k, v in self.channels.items():
             c = bot.get_channel(v)
@@ -47,23 +48,23 @@ class Blocking:
         self.blocked = blocked
 
     def update_blocked(self, blockee: discord.User | discord.Member) -> None:
-        self.blocked.append(blockee.id)
+        self.blocked.append(blockee.id)  # type: ignore
         safe_dump("data/blocked.json", self.blocked)
 
     def unblock(self, blockee: discord.User | discord.Member) -> None:
-        self.blocked.remove(blockee.id)
+        self.blocked.remove(blockee.id)  # type: ignore
         safe_dump("data/blocked.json", self.blocked)
 
     async def reply(self, message: discord.Message) -> bool:
         """Returns whether or not a message is good for command parsing"""
-        if message.author.bot:
+        if message.author.bot:  # type: ignore
             return False
         elif message.guild:
             if message.channel.name == "rat" and (message.content != "rat" or message.attachments):
                 await message.delete()
                 return False
 
-        if message.author.id in self.blocked:
+        if message.author.id in self.blocked:  # type: ignore
             return False
 
         elif "rat" in message.content.split():
@@ -76,11 +77,11 @@ class Prefixes:
         self.prefix = default_prefix
         self.prefixes: dict[str, str] = safe_load("data/prefixes.json", {})
 
-    async def get(self, bot: commands.Bot, message: discord.Message) -> list:
+    async def get(self, bot: "RatBot", message: discord.Message) -> list:
         """Return a prefix off of context"""
         if message.guild is None:
             return commands.when_mentioned(bot, message) + self.prefix + [""]
-        prefix = self.prefixes.get(str(message.guild.id))
+        prefix = self.prefixes.get(str(message.guild.id))  # type: ignore
         if prefix is None:
             return commands.when_mentioned(bot, message) + self.prefix
         else:
@@ -116,37 +117,11 @@ class RatData:
         self.msg: Message | None = None
 
 
-class WeatherUsers(BaseModel):
-    active: list[int]
-    all: list[str]
-
-
-class WeatherJson(BaseModel):
-    users: dict
-
-
-class RatWeather:
-    fp: str
-
-    def __init__(
-        self,
-        fp: str = "data/weather.json",
-    ) -> None:
-        self.fp = fp
-        print(0, fp)
-        data = safe_load(fp)
-        print(1, data)
-        self.data = WeatherJson(**data)
-        print(2, self.data)
-
-    def save(self) -> None:
-        return safe_dump(self.fp, self.data.json())
-
-
 class RatBot(commands.Bot):
     weather: RatWeather
+    weather_apikey: str | None
 
-    def __init__(self, *args, config: RatConfig, block_check: Blocking, **kwargs):
+    def __init__(self, *args, config: RatConfig, block_check: Blocking, weather_apikey: str | None = None, **kwargs):
         self.pfx = Prefixes(config["prefix"])
         super().__init__(*args, command_prefix=self.pfx.get, **kwargs)
 
@@ -154,13 +129,18 @@ class RatBot(commands.Bot):
         self.data = RatData()
         self.status_channels = StatusChannels(**config["channels"])
         self.block_check = block_check
+        self.weather_apikey = weather_apikey
+        self.session = aiohttp.ClientSession()
 
         self.loop.create_task(self.on_complete())
 
-    def reset_weather(self) -> None:
-        self.weather = RatWeather()
+    def reset_weather(self, apikey: str | None = None) -> None:
+        self.weather_apikey = apikey or self.weather_apikey
+        if not self.weather_apikey:
+            raise TypeError("WEATHER_KEY is not set")
+        self.weather = RatWeather(session=self.session, appid=self.weather_apikey)
         print(self.weather.data.json())
-        print("Reloaded weather class!")
+        print("Loaded weather class!")
 
     async def on_complete(self) -> None:
         await self.wait_until_ready()

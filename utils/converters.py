@@ -85,8 +85,8 @@ class Coordinates(commands.Converter):
             if len == 1:
                 try:
                     coords[i] = float(arg[0])
-                except ValueError:
-                    raise commands.BadArgument("Invalid coordinate arguments passed")
+                except ValueError as e:
+                    raise commands.BadArgument("Invalid coordinate arguments passed") from e
             elif len == 2:
                 try:
                     coord_name = arg[1][0].lower()
@@ -99,8 +99,8 @@ class Coordinates(commands.Converter):
                         coords[1] = -float(arg[0])
                     elif coord_name == "s":
                         coords[0] = -float(arg[0])
-                except (ValueError, KeyError):
-                    raise commands.BadArgument("Invalid coordinate arguments passed")
+                except (ValueError, KeyError) as e:
+                    raise commands.BadArgument("Invalid coordinate arguments passed") from e
         resp = [self.assert_float(coord) for coord in coords]
 
         if abs(resp[0]) > 90:

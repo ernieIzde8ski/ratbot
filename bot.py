@@ -1,7 +1,6 @@
 import json
 from json import load
 from os import getenv
-from typing import Iterable
 
 from discord import AllowedMentions, Intents
 from discord.ext import commands
@@ -11,6 +10,7 @@ from utils.classes import Blocking, RatBot, RatConfig
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
+apikey = getenv("WEATHER_TOKEN")
 
 with open("config.json", "r", encoding="utf-8") as file:
     config: RatConfig = load(file)
@@ -24,6 +24,7 @@ bot = RatBot(
     intents=Intents.all(),
     config=config,
     block_check=Blocking(),
+    weather_apikey=apikey,
 )
 
 # TODO: Disabled extensions, instead of enabled extensions
@@ -56,5 +57,10 @@ async def on_message(message):
 async def on_prefix_update(id, new_prefix):
     await bot.pfx.update(id, new_prefix)
 
+
+import sys
+
+if "-DIE" in sys.argv:
+    exit()
 
 bot.run(token)
