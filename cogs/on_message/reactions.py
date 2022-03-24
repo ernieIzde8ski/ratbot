@@ -7,7 +7,8 @@ from utils.classes import RatBot, RatCog
 from utils.functions import safe_load
 
 
-LaughPattern = re.compile(r"lmf?ao", re.I)
+LaughPattern = re.compile(r"lmf?ao", re.IGNORECASE)
+TrollPattern = re.compile(r"trol(l|i|e)", re.IGNORECASE)
 
 
 class Reactions(RatCog):
@@ -18,7 +19,7 @@ class Reactions(RatCog):
     @commands.Cog.listener()
     async def on_message(self, message: Message):
 
-        if re.search(self.bot.data.trollgex, message.content):
+        if re.search(TrollPattern, message.content):
             try:
                 await message.add_reaction(choice(self.bot.data.trolljis))
             except Forbidden:

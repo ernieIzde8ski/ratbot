@@ -105,14 +105,12 @@ class RatData:
         pipi_guilds_fp: str = "data/pipi.json",
         tenor_guilds_fp: str = "data/tenor_guilds.json",
         songs_fp: str = "data/songs.json",
-        trollgex_fp: str = "data/trollgex.json",
         trolljis_fp: str = "data/trolls.json",
     ) -> None:
         self.banning_guilds: dict = safe_load(banning_guilds_fp, {})
         self.pipi_guilds: set[str] = set(safe_load(pipi_guilds_fp, []))
         self.tenor_guilds: set[int] = set(safe_load(tenor_guilds_fp, []))
         self.songs: list[str] = safe_load(songs_fp, [])
-        self.trollgex: Pattern[str] = re.compile(safe_load(trollgex_fp, "(?i)troll"))
         self.trolljis: list[str] = safe_load(trolljis_fp, [])
         self.msg: Message | None = None
 

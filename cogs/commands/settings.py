@@ -77,15 +77,6 @@ class Settings(RatCog):
             self.bot.data.banning_guilds[id] = percent
         safe_dump("data/banning.json", self.bot.data.banning_guilds)
 
-    @commands.command(aliases=["update_trollgex", "troll"])
-    @commands.is_owner()
-    async def update_troll_regex(self, ctx: commands.Context, *, regex: Optional[str]):
-        if regex is None:
-            await ctx.send(f'Current regex: `r"{self.bot.data.trollgex.pattern}"`')
-        else:
-            self.bot.data.trollgex = re.compile(regex, re.I)
-            safe_dump("data/trollgex.json", regex)
-            await ctx.send(f"Set troll regex to {regex}")
 
     @commands.command(aliases=["append_trolljis", "trolfl"])
     @commands.is_owner()
