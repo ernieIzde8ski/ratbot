@@ -10,3 +10,6 @@ unidecode >= 1.2.0
 typing_extensions >= 4.0.1
 owmpy>=0.3.2
 pydantic>=1.9.0
+
+# dev tools
+black>=22.1.0
