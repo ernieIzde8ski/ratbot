@@ -10,9 +10,9 @@ def ask_for_auth() -> str:
     apikey = input("API key? ")
     if not token:
         raise KeyError("Expected token.")
-    resp = f"DISCORD_TOKEN = {token}\n"
+    resp = f"DISCORD_TOKEN='{token}'\n"
     if not apikey:
         print("Remember to disable the weather cogs!")
     else:
-        resp += f"WEATHER_TOKEN = {apikey}\n"
+        resp += f"CURRENT_WEATHER_TOKEN='{apikey}'\n"
     return resp

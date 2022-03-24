@@ -10,7 +10,7 @@ from utils.classes import Blocking, RatBot, RatConfig
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
-apikey = getenv("WEATHER_TOKEN")
+apikey = getenv("CURRENT_WEATHER_TOKEN")
 
 with open("config.json", "r", encoding="utf-8") as file:
     config: RatConfig = load(file)
