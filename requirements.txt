@@ -1,4 +1,5 @@
-# These versions are the ones currently used to test
+# These versions are the ones used in development
+# lower versions very well could work, I wouldn't know
 discord.py >= 1.7.3
 python-dotenv >= 0.17.1
 fuzzywuzzy >= 0.18.0
@@ -8,3 +9,4 @@ pytz >= 2021.1
 unidecode >= 1.2.0
 typing_extensions >= 4.0.1
 owmpy>=0.3.2
+pydantic>=1.9.0
