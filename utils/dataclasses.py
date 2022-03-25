@@ -2,6 +2,7 @@ from collections import defaultdict
 from functools import partial
 from typing import Literal, NamedTuple
 
+from pathlib import Path
 from pydantic import BaseModel, Field
 
 
@@ -60,6 +61,26 @@ class RatSettings(SaveableModel):
 ## config.json
 
 
+def get_all_cogs(cog_dir: Path = Path("./cogs")):
+    cog_dir = cog_dir.absolute()
+    posix = cog_dir.as_posix()
+
+    def fix(p: Path):
+        """Turns a filepath into something importable from the project directory"""
+        # Remove the first part of the filepath, then the leading slash/trailing suffix, and finally coerce into import format
+        resp = p.as_posix().removeprefix(posix)
+        resp = resp[1:-3]
+        return "cogs." + resp.replace("/", ".")
+
+    for p0 in cog_dir.iterdir():
+        if p0.is_dir():
+            for p1 in p0.iterdir():
+                if not p1.is_dir() and p1.suffix == ".py":
+                    yield fix(p1)
+        elif p0.suffix == ".py":
+            yield fix(p0)
+
+
 class RatConfigChannels(BaseModel):
     BM: int = 762166605458964510
     """For dumping new based_meter arguments into"""
@@ -77,7 +98,7 @@ class RatConfig(SaveableModel):
     prefix: list[str] = ["r.", "r!"]
     """Bot prefix"""
     status: str = "{}help"
-    """Default status to load"""
+    """Default status to load. {} params will be replaced with prefix."""
     tz: str = "EST"
     """Default timezone, PYTZ compatible. I'm not quite sure where this is used anymore."""
     github: str = "https://github.com/ernieIzde8ski/ratbot"
@@ -88,7 +109,8 @@ class RatConfig(SaveableModel):
     """Invite to the primary guild."""
     channels: RatConfigChannels = Field(default_factory=RatConfigChannels)
     """IDs of various channels inside the primary guild."""
-
+    enabled_extensions: set[str] = Field(default_factory=partial(set, get_all_cogs))
+    """Extensions to load on startup."""
 
 ## Weather Classes
 
