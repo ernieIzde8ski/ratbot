@@ -16,10 +16,10 @@ def add_fn(fn: F) -> F:
     return fn
 
 
-cwd = Path(getcwd())
+CWD = Path(getcwd())
 
 
 def save(path: str | Path, obj: str) -> int:
 
-    with open((cwd / path).resolve(), "w+", encoding="utf-8") as file:
+    with open((CWD / path).resolve(), "w+", encoding="utf-8") as file:
         return file.write(obj)

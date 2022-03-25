@@ -1,5 +1,7 @@
-import discord
 import typing
+
+import discord
+
 
 Bible = dict[str, str]
 """A dictionary mapping member ID to translation. Corresponds to bible.json."""

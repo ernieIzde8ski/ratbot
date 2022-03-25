@@ -1,20 +1,20 @@
 import random
 
 from discord.ext import commands
-from utils import RatBot, RatCog, load_generator, safe_load
+from utils import RatBot, RatCog, SentenceGenerator, safe_load
 
 
 class Trek(RatCog):
     def __init__(self, bot: RatBot):
         super().__init__(bot=bot)
-        self.tos_generator = load_generator("utils/JSON/Star_Trek.meow")
+        self.tos_generator = SentenceGenerator.loadGenerator("utils/JSON/Star_Trek.meow")
         self.borg_samples = safe_load("utils/JSON/borg.json", [])
         self.borglen = len(self.borg_samples)
 
     @commands.command()
     async def borg(self, ctx: commands.Context, *, borg: str = "Borg"):
         """Sends a Borg copypasta with an argument as Borg"""
-        resp = random.choices(["We are the {Borg}. ", "I am {Locutus} of {Borg}. "], [5, 3], k=1)[0]
+        resp = random.choices(["We are the {Borg}. ", "I am {Locutus} of {Borg}. "], [2, 1], k=1)[0]
         resp += " ".join(random.sample(self.borg_samples, k=random.randint(2, self.borglen)))
         await ctx.send(resp.format(Borg=borg, Locutus=ctx.author.display_name.title()))
 

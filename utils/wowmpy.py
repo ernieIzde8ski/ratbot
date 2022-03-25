@@ -1,3 +1,8 @@
+"""
+Wrapper for owmpy. 
+
+Yes, this means I wrote a wrapper for the wrapper that I maintain. Cry about it
+"""
 from typing import Literal, NamedTuple
 
 import aiohttp

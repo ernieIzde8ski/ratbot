@@ -1,22 +1,20 @@
-from typing import Callable, Coroutine, TypedDict, Union
-
+import typing
 import aiohttp
 import discord
 from discord.ext import commands
-from discord.message import Message
 
-from utils.functions import safe_dump, safe_load
-from utils.wowmpy import RatWeather
+from .functions import safe_dump, safe_load
+from .wowmpy import RatWeather
 
 
-class RatConfig(TypedDict):
+class RatConfig(typing.TypedDict):
     prefix: list[str]
     default_status: str
     preferred_timezone: str
     github: str
     invite: str
     primary_guild: int
-    channels: dict[str, Union[int, discord.TextChannel]]
+    channels: dict[str, typing.Union[int, discord.TextChannel]]
 
 
 class StatusChannels:
@@ -111,7 +109,7 @@ class RatData:
         self.tenor_guilds: set[int] = set(safe_load(tenor_guilds_fp, []))
         self.songs: list[str] = safe_load(songs_fp, [])
         self.trolljis: list[str] = safe_load(trolljis_fp, [])
-        self.msg: Message | None = None
+        self.msg: discord.Message | None = None
 
 
 class RatBot(commands.Bot):
@@ -149,7 +147,7 @@ class RatBot(commands.Bot):
 class RatCog(commands.Cog):
     """Generic cog that all RatBot cogs can inherit from."""
 
-    _on_ready: Callable[[], Coroutine] | None = None
+    _on_ready: typing.Callable[[], typing.Coroutine] | None = None
 
     def __init__(self, bot: RatBot):
         self.bot = bot
