@@ -20,7 +20,7 @@ class DirectMessages(RatCog):
     def embed_constructor(self, message: discord.Message) -> discord.Embed:
         bot_is_author = self.bot.user == message.author
 
-        title = f"Direct Message {'to' if bot_is_author else 'from'} {message.channel}"
+        title = str(message.channel)
         color = _color_outgoing if bot_is_author else _color_incoming
 
         urls = "\n".join(att.url for att in message.attachments[:5])
