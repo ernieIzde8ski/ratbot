@@ -37,5 +37,4 @@ class AEBDTheta(RatCog):
             )
 
 
-def setup(bot: RatBot) -> None:
-    bot.add_cog(AEBDTheta(bot))
+setup = AEBDTheta.basic_setup

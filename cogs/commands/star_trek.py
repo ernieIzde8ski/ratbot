@@ -28,5 +28,4 @@ class Trek(RatCog):
         await ctx.send(resp)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Trek(bot))
+setup = Trek.basic_setup

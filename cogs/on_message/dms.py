@@ -8,7 +8,7 @@ from utils.classes import RatBot, RatCog
 class DMs(RatCog):
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild or message.author.id in self.bot.block_check.blocked:
+        if message.guild or message.author.id in self.bot.blocking.blocked:
             return
         elif re.match(r"^.*\s*echo.*$", message.content):
             return
@@ -40,5 +40,4 @@ class DMs(RatCog):
         return embed
 
 
-def setup(bot: RatBot):
-    bot.add_cog(DMs(bot))
+setup = DMs.basic_setup

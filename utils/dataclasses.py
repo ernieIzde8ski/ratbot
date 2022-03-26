@@ -1,9 +1,13 @@
 from collections import defaultdict
-from functools import partial
-from typing import Literal, NamedTuple
-
+from functools import cache, partial
 from pathlib import Path
+from typing import Any, Iterable, Literal, TypeVar
+
 from pydantic import BaseModel, Field
+
+from .functions import safe_load
+
+T = TypeVar("T")
 
 
 class SaveableModel(BaseModel):
@@ -11,6 +15,13 @@ class SaveableModel(BaseModel):
 
     path: str
     """Path to a saved instance of the model."""
+
+    @classmethod
+    def load(cls, path: str, default_kwargs: Any = ...):
+        """Loads the class from its filepath or a given one."""
+        path = path or cls.path
+        kwargs = safe_load(path, default_kwargs)
+        return cls(path=path, **kwargs)
 
     def save(self, mode="w+", *__additional_exclusions: str) -> int:
         """Saves the current model to the path, returning the operation's exit code."""
@@ -81,7 +92,8 @@ def get_all_cogs(cog_dir: Path = Path("./cogs")):
             yield fix(p0)
 
 
-class RatConfigChannels(BaseModel):
+class config_channels(BaseModel):
+    __all__ = ("BM", "DM", "Status", "Guilds")
     BM: int = 762166605458964510
     """For dumping new based_meter arguments into"""
     DM: int = 715297562613121084
@@ -91,12 +103,19 @@ class RatConfigChannels(BaseModel):
     Guilds: int = 841863106996338699
     """For notifying of guilds joined and left"""
 
+    def __iter__(self):
+        yield from self.__all__
+
+    def items(self) -> Iterable[tuple[str, int]]:
+        for attr in self.__all__:
+            yield attr, getattr(self, attr)
+
 
 class RatConfig(SaveableModel):
     """Config from config.json"""
 
     prefix: list[str] = ["r.", "r!"]
-    """Bot prefix"""
+    """Default bot prefix"""
     status: str = "{}help"
     """Default status to load. {} params will be replaced with prefix."""
     tz: str = "EST"
@@ -107,17 +126,18 @@ class RatConfig(SaveableModel):
     """ID of the bot owner's guild."""
     invite: str = "https://discord.gg/3gfP2kYPp4"
     """Invite to the primary guild."""
-    channels: RatConfigChannels = Field(default_factory=RatConfigChannels)
+    channels: config_channels = Field(default_factory=config_channels)
     """IDs of various channels inside the primary guild."""
     enabled_extensions: set[str] = Field(default_factory=partial(set, get_all_cogs))
     """Extensions to load on startup."""
+
 
 ## Weather Classes
 
 RawUnits = Literal["standard", "metric", "imperial"]
 
 
-class NamedCoords(BaseModel):
+class WUserCoords(BaseModel):
     """Some issues occurred with NamedTuple and I stopped thinking about it"""
 
     lat: float = 0.0
@@ -129,8 +149,8 @@ class NamedCoords(BaseModel):
 
 
 class WUser(BaseModel):
-    coords: NamedCoords = Field(default_factory=NamedCoords)
-    units: RawUnits = "metric"
+    coords: WUserCoords = Field(default_factory=WUserCoords)
+    units: RawUnits = "standard"
     guild_id: int = 488475203303768065
     tz: str = "GMT"
     last_sent: int = 0

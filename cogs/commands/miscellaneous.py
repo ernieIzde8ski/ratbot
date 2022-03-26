@@ -3,27 +3,17 @@ from typing import Optional, Union
 
 from discord.ext import commands
 from pytz import BaseTzInfo, timezone
-from utils import RatBot, RatCog, safe_dump, safe_load
+from utils import RatBot, RatCog, safe_dump
 
 
 class Miscellaneous(RatCog):
     """Random commands (but not randomized)"""
 
-    def __init__(self, bot: RatBot):
-        super().__init__(bot=bot)
-        self.data: dict[str, str] = safe_load("data/timekeeping.json", {})
-
     @commands.command()
     async def birana(self, ctx: commands.Context, armenium: str = "ARMENIUM", armeniaum: str = "AREMENIAUM"):
         """Return the Birana copypasta"""
         await ctx.send(
-            "SHUT THE FUCK UP {} , WHAT WOULD YOU KNOW ABOUT WHETHER A WORD IS FUNNY OR NOT ? "
-            "YOU KNOWING OF NOTHING !!! YOU ARE STUPID , STUPID LITTLE CRYBABY KID , WHO LIFT THE 50 TIME 15 BOUND "
-            "(VERY LITTLE WEIGHT , VERY LUGHT) , YOU ARE WEAK , AND PAINFUL , IT SUCKS TO BE YOU !!! "
-            '"{}" IS A SCHIT, SUCK COUNTRY BUILT OF BAD AND TERRIBLE KIDS , LIKE YOU RSELF, '
-            "YOUR CULTURE SUCK, YOUR HERITAGE, , IT IS BAD ,AND YOUR CHOICE ??? TERRIBLE ABSOLUTE LY WAFUL. "
-            '"BIRANA" WELL DESCRIBES THE ABSOLUTE DIFFERENCE OSPOSITE OF YOU, AND YOUR EVERY THING , BECAUSE '
-            '"BIRANA" BAED YOU ARE CIRNGE. BIRANA "BASED" YOU ARE "CRINGE".'.format(armenium.upper(), armeniaum.upper())
+            f'SHUT THE FUCK UP {armenium.upper()} , WHAT WOULD YOU KNOW ABOUT WHETHER A WORD IS FUNNY OR NOT ? YOU KNOWING OF NOTHING !!! YOU ARE STUPID , STUPID LITTLE CRYBABY KID , WHO LIFT THE 50 TIME 15 BOUND (VERY LITTLE WEIGHT , VERY LUGHT) , YOU ARE WEAK , AND PAINFUL , IT SUCKS TO BE YOU !!! "{armeniaum.upper()}" IS A SCHIT, SUCK COUNTRY BUILT OF BAD AND TERRIBLE KIDS , LIKE YOU RSELF, YOUR CULTURE SUCK, YOUR HERITAGE, , IT IS BAD ,AND YOUR CHOICE ??? TERRIBLE ABSOLUTE LY WAFUL. "BIRANA" WELL DESCRIBES THE ABSOLUTE DIFFERENCE OSPOSITE OF YOU, AND YOUR EVERY THING , BECAUSE "BIRANA" BAED YOU ARE CIRNGE. BIRANA "BASED" YOU ARE "CRINGE".'
         )
 
     @commands.command(aliases=["nsbm"])
@@ -36,8 +26,8 @@ class Miscellaneous(RatCog):
         Returns the time based off either a given or set timezone"""
 
         if tz is None:
-            data = self.data.get(str(ctx.author.id))
-            tz = timezone(data) if data else timezone(self.bot.config["preferred_timezone"])
+            utz = self.users[ctx.author.id].tz
+            tz = timezone(utz or self.config.tz)
         elif isinstance(tz, str):
             raise commands.BadArgument(
                 'Converting to "timezone" failed for parameter "tz". \n'
@@ -60,8 +50,8 @@ class Miscellaneous(RatCog):
                 "<https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>"
             )
         tz = tz.__str__()
-        self.data[str(ctx.author.id)] = tz
-        safe_dump("data/timekeeping.json", self.data)
+        self.users[ctx.author.id] = tz
+        self.bot.settings.save()
         await ctx.send(f"Set your timezone to {tz}")
 
 

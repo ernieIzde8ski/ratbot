@@ -3,7 +3,7 @@ from random import random
 
 import discord
 from discord.ext import commands
-from utils import RatBot, RatCog
+from utils import RatCog
 
 
 class Bans(RatCog):
@@ -11,13 +11,12 @@ class Bans(RatCog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if not message.guild or message.author == self.bot.user:
-            return
-
-        guild_id = str(message.guild.id)
-        if guild_id not in self.bot.data.banning_guilds:
-            return
-        elif random() > self.bot.data.banning_guilds[guild_id]:
+        if (
+            not message.guild
+            or message.author == self.bot.user
+            or (chance := self.guilds[message.guild.id].ban_chance) is None
+            or random() > chance
+        ):
             return
 
         message = await message.reply("Uh Oh", allowed_mentions=self.bot._all_mentions)
@@ -28,5 +27,4 @@ class Bans(RatCog):
             await message.reply("OK Nevermind", allowed_mentions=self.bot._all_mentions)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Bans(bot))
+setup = Bans.basic_setup

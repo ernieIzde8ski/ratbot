@@ -5,9 +5,9 @@ Yes, this means I wrote a wrapper for the wrapper that I maintain. Cry about it
 """
 
 import aiohttp
-from owmpy.current import CurrentWeather, CurrentWeatherStatus, StandardUnits, Units
+from owmpy.current import (CurrentWeather, CurrentWeatherStatus, StandardUnits,Units)
 
-from .dataclasses import RatWeatherData, RawUnits
+from .dataclasses import (RatWeatherData, RatWeatherResponses, RawUnits, WUser, WUserCoords, WUsers)
 from .functions import safe_load
 
 UnitConversions: dict[RawUnits, Units] = {
@@ -44,5 +44,5 @@ class RatWeather:
         return await self.client.get(*args, **kwargs)
 
     async def fetch_user(self, __id: int) -> CurrentWeatherStatus:
-        user = self.data.users[__id]
-        return await self.client.get(coords=user.coords, units=self.validate_units(user.units))
+        user = self.data.users.all[__id]
+        return await self.client.get(coords=tuple(user.coords), units=self.validate_units(user.units))

@@ -2,7 +2,7 @@ from typing import Optional
 
 from discord import Forbidden, HTTPException, Member, TextChannel, User
 from discord.ext import commands
-from utils import RatBot, RatCog, FlagConverter
+from utils import FlagConverter, RatCog
 
 
 class Ping(RatCog):
@@ -35,8 +35,7 @@ class Ping(RatCog):
     @commands.command(hidden=True)
     async def songs(self, ctx: commands.Context):
         """Return the entire song list"""
-        await ctx.send(self.bot.data.songs)
+        await ctx.send(self.bot.settings.songs)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Ping(bot))
+setup = Ping.basic_setup

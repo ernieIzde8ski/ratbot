@@ -27,5 +27,4 @@ class ErrorHandling(RatCog):
         await ctx.reply(resp)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(ErrorHandling(bot))
+setup = ErrorHandling.basic_setup

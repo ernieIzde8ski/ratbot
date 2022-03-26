@@ -2,10 +2,9 @@ import re
 from json import load
 from random import random
 
-from discord import AllowedMentions, Message
+from discord import Message
 from discord.ext import commands
 from utils import RatBot, RatCog
-
 
 PipiPattern = re.compile(
     r"pipi|liers|petr(o|at)s[iy]an|looser|\"w\"esley\"s\"o|firouzja|otbblitzmatch", re.ASCII + re.IGNORECASE
@@ -20,21 +19,18 @@ class Petrosian(RatCog):
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if message.author.bot:
+        if (
+            message.author.bot
+            or not message.guild
+            or not self.guilds[message.guild.id].pipi_enabled
+            or not re.search(PipiPattern, message.content)
+            or re.search(PipiPattern, message.content)
+            or random() > 0.33
+        ):
             return
-        elif message.guild:
-            if str(message.guild.id) in self.bot.data.pipi_guilds:
-                return
-
-        if not re.search(PipiPattern, message.content):
-            return
-        elif random() > 0.33:
-            return
-        else:
-            await message.author.send(
-                self.petrosian.format(message.author.mention), allowed_mentions=AllowedMentions.all()
-            )
+        await message.author.send(
+            self.petrosian.format(message.author.mention), allowed_mentions=self.bot._all_mentions
+        )
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Petrosian(bot))
+setup = Petrosian.basic_setup

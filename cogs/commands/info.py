@@ -2,9 +2,7 @@ from random import choice
 
 from discord import Embed, Permissions, utils
 from discord.ext import commands
-
 from utils import RatBot, RatCog
-
 
 PERMISSIONS = Permissions(2214915137)
 
@@ -14,16 +12,16 @@ class Information(RatCog):
 
     async def _on_ready(self) -> None:
         self.invite = utils.oauth_url(self.bot.user.id, permissions=PERMISSIONS)
-        self.prefixes = " || ".join(self.bot.config["prefix"])
+        self.prefixes = " || ".join(self.bot.config.prefix)
 
     @commands.command(aliases=["info", "support"])
     async def information(self, ctx: commands.Context):
         """Provide useful information"""
         main = (
-            f"[Server Invite]({self.bot.config['invite']})\n"
-            f"[GitHub]({self.bot.config['github']})\n"
+            f"[Server Invite]({self.bot.config.invite})\n"
+            f"[GitHub]({self.bot.config.github})\n"
             f"[Bot Invite]({self.invite})\n"
-            f"[Random Song](https://youtu.be/{choice(self.bot.data.songs)})"
+            f"[Random Song](https://youtu.be/{choice(list(self.bot.settings.songs))})"
         )
         footer = (
             f"Commands can be invoked with the prefix(es) "
@@ -38,5 +36,4 @@ class Information(RatCog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Information(bot))
+setup = Information.basic_setup

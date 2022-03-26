@@ -2,29 +2,25 @@ from typing import Literal
 
 from discord import Color, Embed
 from discord.ext import commands
-from utils import RatBot, RatCog, safe_load
+from utils import RatBot, RatCog
 
 
 class Log(RatCog):
     """Online/offline status logging"""
 
-    def __init__(self, bot: RatBot):
-        super().__init__(bot=bot)
-        self.wakeup, self.close = safe_load("data/emoji.json", ["🐣", "🎃"])
+    # TODO: Rewrite as cogs.power
 
-    def get_channels(self):
-        if not self.bot.status_channels.loaded:
-            self.bot.status_channels.get_channels(self.bot)
+    async def _on_ready(self):
+        self.bot.status_channels.get_channels(self.bot)
 
-    def embed_constructor(self, status: Literal["online"] | Literal["offline"]):
+    def embed_constructor(self, status: Literal["online", "offline"]):
         if status == "online":
-            return Embed(title=f"{self.wakeup} Online!", color=Color.dark_green())
+            return Embed(title=f"{self.emojis.power_on} Online!", color=Color.dark_green())
         else:
-            return Embed(title=f"{self.close} Offline!", color=Color.from_rgb(91, 10, 0))
+            return Embed(title=f"{self.emojis.power_off} Offline!", color=Color.from_rgb(91, 10, 0))
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.get_channels()
         print(f"{self.bot.user.name}#{self.bot.user.discriminator} online!")
         await self.bot.status_channels.Status.send(embed=self.embed_constructor("online"))
 
@@ -32,14 +28,9 @@ class Log(RatCog):
     @commands.is_owner()
     async def die(self, ctx: commands.Context):
         """Shuts down bot"""
-        self.get_channels()
         await ctx.message.add_reaction("☑️")
         await self.bot.status_channels.Status.send(embed=self.embed_constructor("offline"))
         await self.bot.close()
 
 
-def setup(bot: RatBot):
-    cog = Log(bot)
-    if bot.user:
-        cog.get_channels()
-    bot.add_cog(cog)
+setup = Log.basic_setup

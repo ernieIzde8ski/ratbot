@@ -2,7 +2,7 @@ from typing import Union
 
 from discord import Activity, ActivityType, Game, Status
 from discord.ext import commands
-from utils import FlagConverter, RatBot, RatCog
+from utils import FlagConverter, RatCog
 
 
 class Stati(RatCog):
@@ -10,9 +10,7 @@ class Stati(RatCog):
 
     async def _on_ready(self) -> None:
         await self.bot.wait_until_ready()
-        activity = Activity(
-            name=self.bot.config["default_status"].format(self.bot.config["prefix"][0]), type=ActivityType.watching
-        )
+        activity = Activity(name=self.bot.config.status.format(self.bot.config.prefix[0]), type=ActivityType.watching)
         await self.bot.change_presence(activity=activity)
 
         self.bot.app = await self.bot.application_info()
@@ -40,5 +38,4 @@ class Stati(RatCog):
         await ctx.send(f"Set activity, status to {activity}, {status}")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Stati(bot))
+setup = Stati.basic_setup

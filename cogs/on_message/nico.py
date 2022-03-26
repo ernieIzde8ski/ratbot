@@ -3,7 +3,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils import RatBot, RatCog
+from utils import RatCog
 
 
 class Nico(RatCog):
@@ -23,7 +23,7 @@ class Nico(RatCog):
         return fuzz.ratio(s1, s2) > min or fuzz.partial_ratio(s1, s2) > (min + 10)
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         # ignore incorrect channels/authors, failing grades
         if message.channel.id != 758373055918899216 or message.author.id != 544274326002860033:
             return
@@ -38,5 +38,4 @@ class Nico(RatCog):
         self.time = now
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Nico(bot))
+setup = Nico.basic_setup

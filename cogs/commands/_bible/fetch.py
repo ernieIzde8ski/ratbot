@@ -13,12 +13,9 @@ class BibleError(Exception):
 
 
 class TranslationError(Exception):
-    def __init__(self, ver: str or None = None) -> None:
+    def __init__(self, ver: str | None = None) -> None:
         self.ver = ver
-        super().__init__("Translation not found" if not ver else f"Translation '{ver}' not found")
-
-    # def __str__(self) -> str:
-    #     return self.msg if not self.ver else f"Translation {self.ver} not found"
+        super().__init__(f"Translation '{ver}' not found" if ver else "Translation not found")
 
 
 @dataclass
@@ -73,7 +70,7 @@ class ProcessedBibleResponse:
 
 
 class PassageRetrieval:
-    def __init__(self, session: ClientSession = None) -> None:
+    def __init__(self, session: ClientSession | None = None) -> None:
         self.session = session or ClientSession()
 
     @staticmethod
@@ -85,7 +82,9 @@ class PassageRetrieval:
             tr=Translation(clean.translation_id, clean.translation_name),
         )
 
-    async def retrieve(self, ref: str, *, translation: str = None, verse_numbers: bool = False) -> CleanBibleResponse:
+    async def retrieve(
+        self, ref: str, *, translation: str | None = None, verse_numbers: bool | None = False
+    ) -> CleanBibleResponse:
         Params = {}
         if translation:
             Params["translation"] = translation
@@ -102,12 +101,12 @@ class PassageRetrieval:
                     err = "Text not found"
                 raise BibleError(err)
             elif not isinstance(result, dict):
-                raise Exception("Something has gone horribly wrong")
+                raise BibleError("Something has gone horribly wrong")
 
         return CleanBibleResponse(result)
 
     async def procget(
-        self, ref: str, translation: str = None, verse_numbers: bool = None, width: int = 70
+        self, ref: str, translation: str | None = None, verse_numbers: bool | None = None, width: int = 70
     ) -> ProcessedBibleResponse:
         """Shorthand for `await self.get(); await self.process();`."""
         resp = await self.retrieve(ref, verse_numbers=verse_numbers or False, translation=translation)

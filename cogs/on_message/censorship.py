@@ -1,3 +1,4 @@
+from contextlib import suppress
 import re
 
 from discord import AllowedMentions, Message, NotFound
@@ -16,15 +17,13 @@ class Censorship(RatCog):
     async def on_twitter(self, message: Message) -> None:
         if not message.guild or message.author.id not in [368780147563823114, 700133917264445480]:
             return
-        elif self.bot.config["primary_guild"] != message.guild.id:
+        elif self.config.primary_guild != message.guild.id:
             return
 
         content = strip_str(message.content)
         if fuzz.partial_ratio(content, "twitter") > 85:
-            try:
+            with suppress(NotFound):
                 await message.delete()
-            except NotFound:
-                pass
             await message.author.send("Trolled")
 
     @commands.Cog.listener()
@@ -55,16 +54,5 @@ class Censorship(RatCog):
         await message.delete()
         await message.channel.send(f"{message.author.mention} WTF.", allowed_mentions=allowed_mentions, delete_after=3)
 
-    @commands.Cog.listener("on_message")
-    async def on_tenor(self, message: Message):
-        if message.author.bot or not message.guild:
-            return
-        elif message.guild.id not in self.bot.data.tenor_guilds:
-            return
-        elif re.match(tenor_pattern, message.content):
-            await message.delete()
-            await message.channel.send(f"{message.author.mention} Stupid", allowed_mentions=allowed_mentions)
 
-
-def setup(bot: RatBot):
-    bot.add_cog(Censorship(bot))
+setup = Censorship.basic_setup

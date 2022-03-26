@@ -34,8 +34,7 @@ class Moderation(RatCog):
                     value = flags[check]
                     if not PruneChecks[check](msg, value):
                         return False
-                else:
-                    return True
+                return True
 
             return check
 
@@ -56,5 +55,4 @@ class Moderation(RatCog):
         await ctx.message.delete()
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Moderation(bot))
+setup = Moderation.basic_setup

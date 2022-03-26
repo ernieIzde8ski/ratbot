@@ -100,5 +100,4 @@ class XKCD(RatCog):
         print("Updated XKCDs")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(XKCD(bot))
+setup = XKCD.basic_setup
