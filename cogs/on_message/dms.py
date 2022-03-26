@@ -2,17 +2,13 @@ import re
 
 from discord import Color, Embed
 from discord.ext import commands
+from utils import RatCog
 
-from utils.classes import RatBot
 
-
-class DMs(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-
+class DMs(RatCog):
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild or message.author.id in self.bot.block_check.blocked:
+        if message.guild or message.author.id in self.bot.blocking.blocked:
             return
         elif re.match(r"^.*\s*echo.*$", message.content):
             return
@@ -44,5 +40,4 @@ class DMs(commands.Cog):
         return embed
 
 
-def setup(bot: RatBot):
-    bot.add_cog(DMs(bot))
+setup = DMs.basic_setup

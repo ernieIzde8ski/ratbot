@@ -1,8 +1,10 @@
+import re
 import typing
-from discord.ext import commands
+from contextlib import suppress
 from json import loads
 from json.decoder import JSONDecodeError
-import re
+
+from discord.ext import commands
 
 
 class FlagConverter(commands.Converter):
@@ -28,11 +30,8 @@ class FlagConverter(commands.Converter):
                 try:
                     value = loads(value)
                 except JSONDecodeError:
-                    try:
+                    with suppress(JSONDecodeError):
                         value = loads(value.lower())
-                    except JSONDecodeError:
-                        pass
-
             resp[key] = value
 
         return resp
@@ -47,8 +46,8 @@ class Percentage(commands.Converter):
         except ValueError:
             try:
                 return float(re.sub(r"\s*%", "", "".join(argument.split()))) / 100
-            except ValueError:
-                raise commands.BadArgument("Argument must be of the format 0.P or P%")
+            except ValueError as err:
+                raise commands.BadArgument("Argument must be of the format 0.P or P%") from err
 
 
 class Coordinates(commands.Converter):
@@ -85,8 +84,8 @@ class Coordinates(commands.Converter):
             if len == 1:
                 try:
                     coords[i] = float(arg[0])
-                except ValueError:
-                    raise commands.BadArgument("Invalid coordinate arguments passed")
+                except ValueError as e:
+                    raise commands.BadArgument("Invalid coordinate arguments passed") from e
             elif len == 2:
                 try:
                     coord_name = arg[1][0].lower()
@@ -99,8 +98,8 @@ class Coordinates(commands.Converter):
                         coords[1] = -float(arg[0])
                     elif coord_name == "s":
                         coords[0] = -float(arg[0])
-                except (ValueError, KeyError):
-                    raise commands.BadArgument("Invalid coordinate arguments passed")
+                except (ValueError, KeyError) as e:
+                    raise commands.BadArgument("Invalid coordinate arguments passed") from e
         resp = [self.assert_float(coord) for coord in coords]
 
         if abs(resp[0]) > 90:

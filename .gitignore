@@ -1,6 +1,8 @@
-# vscode defaults, saved data directory
+# vscode defaults, saved configs
 .vscode/
 data/
+backup-data/
+config.json
 utils/xkcd_cache.json
 
 # The price I pay for stupidity & using a combination of js files + sh files instead of a setup.py
@@ -11,7 +13,7 @@ node_utils/
 # to-do list
 TODO
 
-# I have no goddamn clue what this folder does or what generates it, nor do I feel like I care
+# I have no goddamn clue what this folder does, nor what generates it, and nor do I feel like I care
 # enough to bother to find out
 target/
 

@@ -1,11 +1,10 @@
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot
+from utils import RatCog
 
 
-class ErrorHandling(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class ErrorHandling(RatCog):
+    """Error handling."""
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
@@ -28,5 +27,4 @@ class ErrorHandling(commands.Cog):
         await ctx.reply(resp)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(ErrorHandling(bot))
+setup = ErrorHandling.basic_setup

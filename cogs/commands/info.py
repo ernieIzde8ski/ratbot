@@ -2,29 +2,26 @@ from random import choice
 
 from discord import Embed, Permissions, utils
 from discord.ext import commands
-from bot import RatBot
+from utils import RatCog
 
 PERMISSIONS = Permissions(2214915137)
 
 
-class Information(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.bot.loop.create_task(self.initialize())
+class Information(RatCog):
+    """A single informatic command pertaining to RatBot"""
 
-    async def initialize(self) -> None:
-        await self.bot.wait_until_ready()
+    async def _on_ready(self) -> None:
         self.invite = utils.oauth_url(self.bot.user.id, permissions=PERMISSIONS)
-        self.prefixes = " || ".join(self.bot.config["prefix"])
+        self.prefixes = " || ".join(self.bot.config.prefix)
 
     @commands.command(aliases=["info", "support"])
     async def information(self, ctx: commands.Context):
         """Provide useful information"""
         main = (
-            f"[Server Invite]({self.bot.config['invite']})\n"
-            f"[GitHub]({self.bot.config['github']})\n"
+            f"[Server Invite]({self.bot.config.invite})\n"
+            f"[GitHub]({self.bot.config.github})\n"
             f"[Bot Invite]({self.invite})\n"
-            f"[Random Song](https://youtu.be/{choice(self.bot.data.songs)})"
+            f"[Random Song](https://youtu.be/{choice(list(self.bot.settings.songs))})"
         )
         footer = (
             f"Commands can be invoked with the prefix(es) "
@@ -39,5 +36,4 @@ class Information(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Information(bot))
+setup = Information.basic_setup

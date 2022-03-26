@@ -1,31 +1,31 @@
+from contextlib import suppress
 import re
 
 from discord import AllowedMentions, Message, NotFound
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot
-from utils.functions import strip_str
+from utils import RatBot, RatCog, strip_str
+
 
 tenor_pattern = re.compile(r"https{0,1}:\/\/(www.)*tenor.com\/view\/([a-z]|-)+\d+")
+allowed_mentions = AllowedMentions.all()
 
 
-class Censorship(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.allowed_mentions = AllowedMentions.all()
+class Censorship(RatCog):
+    """Allows me to delete things I don't like"""
 
     async def on_twitter(self, message: Message) -> None:
-        if not message.guild or message.author.id not in [368780147563823114, 700133917264445480]:
-            return
-        elif self.bot.config["primary_guild"] != message.guild.id:
+        if (
+            not message.guild
+            or message.author.id not in {368780147563823114, 700133917264445480}
+            or self.config.primary_guild != message.guild.id
+        ):
             return
 
         content = strip_str(message.content)
         if fuzz.partial_ratio(content, "twitter") > 85:
-            try:
+            with suppress(NotFound):
                 await message.delete()
-            except NotFound:
-                pass
             await message.author.send("Trolled")
 
     @commands.Cog.listener()
@@ -54,20 +54,7 @@ class Censorship(commands.Cog):
             return
 
         await message.delete()
-        await message.channel.send(
-            f"{message.author.mention} WTF.", allowed_mentions=self.allowed_mentions, delete_after=3
-        )
-
-    @commands.Cog.listener("on_message")
-    async def on_tenor(self, message: Message):
-        if message.author.bot or not message.guild:
-            return
-        elif message.guild.id not in self.bot.data.tenor_guilds:
-            return
-        elif re.match(tenor_pattern, message.content):
-            await message.delete()
-            await message.channel.send(f"{message.author.mention} Stupid", allowed_mentions=self.allowed_mentions)
+        await message.channel.send(f"{message.author.mention} WTF.", allowed_mentions=allowed_mentions, delete_after=3)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Censorship(bot))
+setup = Censorship.basic_setup

@@ -3,35 +3,34 @@ from random import choice, random
 
 from discord import Forbidden, Message
 from discord.ext import commands
-from utils.classes import RatBot
-from utils.functions import safe_load
+from utils import RatCog
 
 
-class Reactions(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.lmfao = safe_load("data/lmfao.json", "🤬")
-        self.lmagex = re.compile("lmf?ao", re.I)
+LaughPattern = re.compile(r"lmf?ao", re.IGNORECASE)
+TrollPattern = re.compile(r"trol(l|i|e)", re.IGNORECASE)
+
+
+class Reactions(RatCog):
+    """Reactions to messages with troll/laughing emojis"""
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
 
-        if re.search(self.bot.data.trollgex, message.content):
+        if re.search(TrollPattern, message.content):
             try:
-                await message.add_reaction(choice(self.bot.data.trolljis))
+                await message.add_reaction(choice(self.emojis.trolls))
             except Forbidden:
                 if message.author == self.bot.user:
                     return
                 await message.channel.send("Trolled")
 
-        if re.search(self.lmagex, message.content):
-            if random() > 0.01:
+        if re.search(LaughPattern, message.content):
+            if random() > 0.02:
                 return
             try:
-                await message.add_reaction(self.lmfao)
+                await message.add_reaction(self.emojis.laugh)
             except Forbidden:
                 await message.channel.send("Lmao !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Reactions(bot))
+setup = Reactions.basic_setup

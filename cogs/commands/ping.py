@@ -1,27 +1,25 @@
-from discord import Forbidden, HTTPException
-from discord import Member, TextChannel, User
+from typing import Optional, Union
+import discord
 from discord.ext import commands
-from typing import Optional
-from utils.classes import RatBot
-
-from utils.converters import FlagConverter
+from utils import FlagConverter, RatCog
 
 
-class Ping(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+Messageable = Union[discord.Member, discord.TextChannel, discord.User]
+
+
+class Ping(RatCog):
+    """Testing commands"""
 
     @commands.command()
     @commands.is_owner()
-    async def echo(self, ctx: commands.Context, messageable: Optional[Member | TextChannel | User], *, message: str):
+    async def echo(self, ctx: commands.Context, messageable: Optional[Messageable], *, message: str):
         """Echo a message
         Optional parameter messageable determines target"""
         target = messageable or ctx
-        if message.startswith("\\"):
-            message = message[1:]
+        message = message.removeprefix("\\")
         try:
             await target.send(message)
-        except (Forbidden, HTTPException) as e:
+        except (discord.Forbidden, discord.HTTPException) as e:
             await ctx.send(f"{e.__class__.__name__}: {e}")
 
     @commands.command()
@@ -39,8 +37,10 @@ class Ping(commands.Cog):
     @commands.command(hidden=True)
     async def songs(self, ctx: commands.Context):
         """Return the entire song list"""
-        await ctx.send(self.bot.data.songs)
+        resp = str(self.bot.settings.songs)
+        if len(resp) > 1500:
+            resp = self.bot.settings.songs.keys()
+        await ctx.send(resp)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Ping(bot))
+setup = Ping.basic_setup

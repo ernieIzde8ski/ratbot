@@ -1,29 +1,24 @@
-from discord import Forbidden
-from discord.ext import commands
-
-import re
+import contextlib
 from typing import Optional
-from utils.classes import RatBot
 
-from utils.functions import safe_dump
-from utils.converters import EasyList, FlagConverter, Percentage
+import discord
+from discord.ext import commands
+from utils import EasyList, FlagConverter, Percentage, RatCog
 
 
-class Settings(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Settings(RatCog):
+    """Bot-wide settings management"""
 
     @commands.command(aliases=["prefix", "pfx"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_prefix(self, ctx: commands.Context, prefix: Optional[str]):
+    async def set_prefix(self, ctx: commands.Context, prefix: Optional[str] = None):
         """Sets a guild-wide prefix
         --reset can be used to reset the prefix to the default instead"""
-        id = str(ctx.guild.id)
-        established_prefix = self.bot.pfx.prefixes.get(id)
+        established_prefix = self.bot.prefixes.prefixes.get(ctx.guild.id)
         # If no prefix argument is passed, display current prefix.
         if prefix is None:
             if established_prefix is not None:
-                await ctx.send(f"Your prefix is `{established_prefix}`")
+                await ctx.send(f"Your prefix is `{established_prefix}` .")
             else:
                 raise commands.BadArgument("No prefix is set.")
         # If the prefix argument is an argument to reset, reset the current prefix.
@@ -31,63 +26,41 @@ class Settings(commands.Cog):
             if established_prefix is None:
                 raise commands.BadArgument("No prefix is set")
             await ctx.send(f"Resetting prefix from `{established_prefix}`")
-            await self.bot.pfx.reset(id)
+            await self.bot.prefixes.reset(ctx.guild.id)
         # If the prefix argument is otherwise present, update the prefix to it.
         else:
-            await self.bot.pfx.update(id, prefix)
-            await ctx.send(f"Updated prefix to {prefix}.")
-
-    @commands.command(aliases=["tenor_toggle"])
-    @commands.has_guild_permissions(manage_guild=True)
-    async def toggle_tenors(self, ctx: commands.Context):
-        """Toggle Tenor gif deleting"""
-        if ctx.guild.id in self.bot.data.tenor_guilds:
-            await ctx.send("Disabling tenor slaying in this server")
-            self.bot.data.tenor_guilds.remove(ctx.guild.id)
-        else:
-            await ctx.send("Enabling tenor slaying in this server")
-            self.bot.data.tenor_guilds.add(ctx.guild.id)
-        safe_dump("data/tenor_guilds.json", list(self.bot.data.tenor_guilds))
+            await self.bot.prefixes.update(ctx.guild.id, prefix)
+            await ctx.send(f"Updated prefix to `{prefix}` .")
 
     @commands.command(aliases=["toggle_petrosyan", "toggle_pipi"])
     @commands.has_guild_permissions(manage_guild=True)
     async def toggle_petrosian(self, ctx: commands.Context):
         """Toggles the bot DMing individuals the Petrosian copypasta"""
-        id = str(ctx.guild.id)
-        if id in self.bot.data.pipi_guilds:
-            await ctx.send("Reenabling the Petrosian copypasta")
-            self.bot.data.pipi_guilds.remove(id)
-        else:
+        guild = self.guilds[ctx.guild.id]
+        if guild.pipi_enabled:
             await ctx.send("Disabling the Petrosian copypasta")
-            self.bot.data.pipi_guilds.add(id)
-        safe_dump("data/pipi.json", list(self.bot.data.pipi_guilds))
+            guild.pipi_enabled = False
+        else:
+            await ctx.send("Reenabling the Petrosian copypasta")
+            guild.pipi_enabled = True
+        self.bot.settings.save()
 
     @commands.command(aliases=["toggle_bans"])
     @commands.has_guild_permissions(administrator=True)
-    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Optional[Percentage] = 0.0002):
+    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Optional[Percentage | float]):
         """Toggle the bot randomly banning individuals"""
-        id = str(ctx.guild.id)
-        if id in self.bot.data.banning_guilds and not percent:
+        guild = self.guilds[ctx.guild.id]
+        if guild.ban_chance is not None and not percent:
             await ctx.send("Disabling random bans in this guild")
-            self.bot.data.banning_guilds.pop(id)
+            guild.ban_chance = None
         else:
             if not percent:
                 percent = 0.00002
             elif not (0 < percent < 1):
-                return await ctx.send("Error: Percentage must be from 0% to 100% (or 0.0 to 1.0)")
+                raise ValueError("Percentage must be from 0% to 100% (0.0 to 1.0)")
             await ctx.send(f"Enabling random bans in this guild with a {percent * 100}% chance")
-            self.bot.data.banning_guilds[id] = percent
-        safe_dump("data/banning.json", self.bot.data.banning_guilds)
-
-    @commands.command(aliases=["update_trollgex", "troll"])
-    @commands.is_owner()
-    async def update_troll_regex(self, ctx: commands.Context, *, regex: Optional[str]):
-        if regex is None:
-            await ctx.send(f'Current regex: `r"{self.bot.data.trollgex.pattern}"`')
-        else:
-            self.bot.data.trollgex = re.compile(regex, re.I)
-            safe_dump("data/trollgex.json", regex)
-            await ctx.send(f"Set troll regex to {regex}")
+            guild.ban_chance = percent
+        self.bot.settings.save()
 
     @commands.command(aliases=["append_trolljis", "trolfl"])
     @commands.is_owner()
@@ -96,18 +69,17 @@ class Settings(commands.Cog):
     ):
         # TODO: See if works as a tuple instead of custom list constructor. Use `extend`.
         if trolljis is None:
-            await ctx.send("Currently enabled troll emojis: {}".format(", ".join(self.bot.data.trolljis)))
+            await ctx.send(f'Currently enabled troll emojis: {", ".join(self.emojis.trolls)}')
+
         else:
-            try:
+            with contextlib.suppress(discord.Forbidden):
                 for trollji in trolljis:
                     await ctx.message.add_reaction(trollji)
-            except (Forbidden):
-                pass
             if flag.get("reset"):
-                self.bot.data.trolljis = []
-            self.bot.data.trolljis += trolljis
-            await ctx.send(f"Set troll emojis to: {', '.join(self.bot.data.trolljis)}")
+                self.emojis.trolls = []
+            self.emojis.trolls += trolljis
+            self.bot.settings.save()
+            await ctx.send(f"Set troll emojis to: {', '.join(self.emojis.trolls)}")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Settings(bot))
+setup = Settings.basic_setup

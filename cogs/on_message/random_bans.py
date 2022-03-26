@@ -1,34 +1,30 @@
 from asyncio import sleep
 from random import random
 
-from discord import AllowedMentions, Forbidden, Message
+import discord
 from discord.ext import commands
+from utils import RatCog
 
-from utils.classes import RatBot
 
-
-class Bans(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Bans(RatCog):
+    """Random bans serviced by your local Rat Bot"""
 
     @commands.Cog.listener()
-    async def on_message(self, message: Message):
-        if not message.guild or message.author == self.bot.user:
+    async def on_message(self, message: discord.Message):
+        if (
+            not message.guild
+            or message.author == self.bot.user
+            or (chance := self.guilds[message.guild.id].ban_chance) is None
+            or random() > chance
+        ):
             return
 
-        guild_id = str(message.guild.id)
-        if guild_id not in self.bot.data.banning_guilds:
-            return
-        elif random() > self.bot.data.banning_guilds[guild_id]:
-            return
-
-        message = await message.reply("Uh Oh", allowed_mentions=AllowedMentions.all())
+        message = await message.reply("Uh Oh", allowed_mentions=self.bot._all_mentions)
         await sleep(7)
         try:
             await message.author.ban()
-        except Forbidden:
-            await message.reply("OK Nevermind", allowed_mentions=AllowedMentions.all())
+        except discord.Forbidden:
+            await message.reply("OK Nevermind", allowed_mentions=self.bot._all_mentions)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Bans(bot))
+setup = Bans.basic_setup

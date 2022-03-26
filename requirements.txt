@@ -1,5 +1,5 @@
-# These versions are the ones currently used to test
-aiohttp >= 3.7.4
+# These versions are the ones used in development
+# lower versions very well could work, I wouldn't know
 discord.py >= 1.7.3
 python-dotenv >= 0.17.1
 fuzzywuzzy >= 0.18.0
@@ -8,3 +8,8 @@ beautifulsoup4 >= 4.9.3
 pytz >= 2021.1
 unidecode >= 1.2.0
 typing_extensions >= 4.0.1
+owmpy>=0.3.2
+pydantic>=1.9.0
+
+# dev tools
+black>=22.1.0

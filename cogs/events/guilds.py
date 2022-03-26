@@ -1,12 +1,10 @@
 from discord import Color, Embed, Guild
 from discord.ext import commands
-from utils.classes import RatBot
-from utils.converters import FlagConverter
+from utils import FlagConverter, RatCog
 
 
-class Guilds(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
+class Guilds(RatCog):
+    """Guild status logging"""
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: Guild):
@@ -29,10 +27,10 @@ class Guilds(commands.Cog):
         """
         Return guild list
         Usage:
-            r;guilds
-            r;guilds --order member_count --reverse
+            guilds
+            guilds --reverse --order ('member_count' | 'alphabetical')
         """
-        order = "alphabetical" if not (order := sort.get("order")) else order.lower()
+        order = (sort.get("order") or "alphabetical").lower()
         reverse = bool(sort.get("reverse"))
 
         if order == "alphabetical":
@@ -46,5 +44,4 @@ class Guilds(commands.Cog):
         await ctx.send("\n".join(guilds))
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Guilds(bot))
+setup = Guilds.basic_setup

@@ -30,10 +30,10 @@ python index.py
     // link to a repo
     // used in cogs/commands/info.py
     "github": "https://github.com/ernieIzde8ski/ratbot",
-    // invite to a server
+    // invite to a guild
     // used in cogs/commands/info.py
     "invite": "https://discord.gg/rHyt33PMmn",
-    // id of the server that cogs/events/weather_updates.py checks
+    // id of the above guild
     "primary_guild": 488475203303768065,
     // Channel IDs to send various messages to
     "channels": {

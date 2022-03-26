@@ -2,20 +2,15 @@ from typing import Union
 
 from discord import Activity, ActivityType, Game, Status
 from discord.ext import commands
-from utils.converters import FlagConverter
-from utils.classes import RatBot
+from utils import FlagConverter, RatCog
 
 
-class Stati(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.bot.loop.create_task(self.initialize())
+class Stati(RatCog):
+    """Status management"""
 
-    async def initialize(self) -> None:
+    async def _on_ready(self) -> None:
         await self.bot.wait_until_ready()
-        activity = Activity(
-            name=self.bot.config["default_status"].format(self.bot.config["prefix"][0]), type=ActivityType.watching
-        )
+        activity = Activity(name=self.bot.config.status.format(self.bot.config.prefix[0]), type=ActivityType.watching)
         await self.bot.change_presence(activity=activity)
 
         self.bot.app = await self.bot.application_info()
@@ -32,7 +27,12 @@ class Stati(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def set_presence(self, ctx: commands.Context, *, presence: Union[FlagConverter, str]):
-        """Sets a presence"""
+        """Sets a presence
+
+        Usage:
+            set_presence a Fun Video-Game
+            set_presence --activity Fun Video-Igri --status idle
+        """
         if isinstance(presence, dict):
             activity = Game(presence.get("activity"))
             status = self.get_status(presence.get("status"))
@@ -43,5 +43,4 @@ class Stati(commands.Cog):
         await ctx.send(f"Set activity, status to {activity}, {status}")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Stati(bot))
+setup = Stati.basic_setup

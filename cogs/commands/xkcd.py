@@ -1,17 +1,18 @@
 from random import randint
-from typing import Optional, Union
+from typing import Union
 
 from aiohttp import ClientSession
 from discord import Color, Embed
 from discord.ext import commands, tasks
 from fuzzywuzzy import fuzz
-from utils.classes import RatBot
-from utils.functions import safe_dump, safe_load
+from utils import RatBot, RatCog, safe_dump, safe_load
 
 
-class XKCD(commands.Cog):
+class XKCD(RatCog):
+    """Interactions with XKCD comics"""
+
     def __init__(self, bot: RatBot):
-        self.bot = bot
+        super().__init__(bot=bot)
         self.xkcds = safe_load("data/xkcd.json", [{"int": -1}])
         self.update_index.start()
 
@@ -41,11 +42,9 @@ class XKCD(commands.Cog):
                 return await resp.json()
 
     @commands.group(invoke_without_command=True, aliases=["x"])
-    async def xkcd(self, ctx: commands.Context, *, argument: Optional[Union[int, str]]):
+    async def xkcd(self, ctx: commands.Context, *, argument: Union[int, str] = -1):
         """Return an XKCD from an argument"""
-        if not argument:
-            argument = -1
-        elif isinstance(argument, str):
+        if isinstance(argument, str):
             argument = await self.get_best_match(argument.lower())
 
         xkcd = await self.get_xkcd(argument)
@@ -80,7 +79,7 @@ class XKCD(commands.Cog):
             self.update_index.cancel()
             self.update_index.start()
 
-    @tasks.loop(hours=6)
+    @tasks.loop(hours=12)
     async def update_index(self):
         self._latest = await self.get_xkcd(-1)
         if self._latest.get("error"):
@@ -97,5 +96,4 @@ class XKCD(commands.Cog):
         print("Updated XKCDs")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(XKCD(bot))
+setup = XKCD.basic_setup

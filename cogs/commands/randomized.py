@@ -1,21 +1,13 @@
-from typing import Optional
 import random
 import re
+from typing import Optional
 
 from discord.ext import commands
-
-from utils.classes import RatBot
-from utils.functions import safe_dump, safe_load, strip_str
-from utils.random_band import BandRetrieval
+from utils import BandRetrieval, RatCog, strip_str
 
 
-class Randomized(commands.Cog):
-    def __init__(self, bot: RatBot):
-        self.bot = bot
-        self.bands = BandRetrieval()
-        self.bmed: list[str] = safe_load("data/bm.json", [])
-        self.songs: dict[str, str] = safe_load("data/songs.json", {})
-        self.bot.data.songs = list(self.songs.keys())
+class Randomized(RatCog):
+    bands = BandRetrieval()
 
     @commands.command(aliases=["rb", "bands"])
     @commands.cooldown(2, 45, commands.BucketType.guild)
@@ -62,22 +54,22 @@ class Randomized(commands.Cog):
         emphasis = random.choice(["!", ".", "?"]) * random.randint(1, 8)
 
         await ctx.send(f"**{argument}** are **{determination}{emphasis}**")
-        if argument not in self.bmed:
+
+        if argument not in self.bot.settings.measured:
             await self.bot.status_channels.BM.send(f"```{argument}, {determination}{emphasis}```")
-            self.bmed.append(argument)
-            safe_dump("data/bm.json", self.bmed)
+            self.bot.settings.measured.add(argument)
+            self.bot.settings.save()
 
     @commands.command(aliases=["gobi"])
     async def gobi_percentage(self, ctx: commands.Context, *, argument: Optional[str]):
         """Determines gobiness of an argument"""
         if isinstance(argument, str):
-            argument = argument[:1000] + (" [...]" if argument[1000:] else "")
+            argument = (argument[:1000] + (" [...]" if argument[1000:] else "")).strip()
         if not argument:
-            raise commands.BadArgument("**Your are 100% Gobi.**")
+            raise commands.BadArgument(r"**Your are 100% Gobi.**")
 
         seed = strip_str(argument)
         random.seed(seed)
-
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
 
@@ -89,7 +81,7 @@ class Randomized(commands.Cog):
     @commands.command(aliases=["choice", "choose"])
     async def pick(self, ctx: commands.Context, *arguments: str):
         """
-        Chooses one random item split by spaces
+        Chooses one random item from a list split by spaces
 
         Multiple word items can be split with quotation blocks: 'r.choose item1 "item 2" item3'
         """
@@ -98,9 +90,9 @@ class Randomized(commands.Cog):
     @commands.group(aliases=["song", "rs"], invoke_without_command=True)
     async def random_song(self, ctx: commands.Context):
         """Returns a random song from a saved directory"""
-        if not self.bot.data.songs:
+        if not self.songs:
             raise commands.CommandError("Bot does not have any songs")
-        await ctx.send("https://youtu.be/" + random.choice(self.bot.data.songs))
+        await ctx.send(f"https://youtu.be/{random.choice(list(self.songs))}")
 
     @random_song.command()
     @commands.is_owner()
@@ -108,11 +100,9 @@ class Randomized(commands.Cog):
         link = re.sub(r"(https?:\/\/)?(www.)?(youtube.com|youtu.be)\/(watch\?v=)?", "", link)
         link = re.sub(r"&.+=.+$", "", link)
 
-        if link in self.bot.data.songs:
+        if link in self.songs:
             await ctx.send(f"Overwriting `{link}`: `{self.songs[link]}`")
         self.songs[link] = title
-        safe_dump("data/songs.json", self.songs)
-        self.bot.data.songs = list(self.songs.keys())
         await ctx.send(f"Set `{link}` to `{title}`")
 
     @random_song.command()
@@ -124,5 +114,4 @@ class Randomized(commands.Cog):
         await ctx.send(resp)
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Randomized(bot))
+setup = Randomized.basic_setup
