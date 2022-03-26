@@ -91,6 +91,7 @@ def _get_all_cogs(cog_dir: Path):
         elif p0.suffix == ".py":
             yield fix(p0)
 
+
 def get_all_cogs(cog_dir: Path = Path("./cogs")) -> set[str]:
     return set(_get_all_cogs(cog_dir))
 
@@ -105,7 +106,6 @@ class config_channels(BaseModel):
     """For handling on/off messages"""
     Guilds: int = 841863106996338699
     """For notifying of guilds joined and left"""
-
 
     def items(self) -> Iterable[tuple[str, int]]:
         for attr in self.__all__:
