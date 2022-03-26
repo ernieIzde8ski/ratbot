@@ -18,7 +18,7 @@ class Settings(RatCog):
         # If no prefix argument is passed, display current prefix.
         if prefix is None:
             if established_prefix is not None:
-                await ctx.send(f"Your prefix is `{established_prefix}` .")
+                return await ctx.send(f"Your prefix is `{established_prefix}` .")
             else:
                 raise commands.BadArgument("No prefix is set.")
         # If the prefix argument is an argument to reset, reset the current prefix.
@@ -31,6 +31,7 @@ class Settings(RatCog):
         else:
             await self.bot.prefixes.update(ctx.guild.id, prefix)
             await ctx.send(f"Updated prefix to `{prefix}` .")
+        self.bot.prefixes.save()
 
     @commands.command(aliases=["toggle_petrosyan", "toggle_pipi"])
     @commands.has_guild_permissions(manage_guild=True)
