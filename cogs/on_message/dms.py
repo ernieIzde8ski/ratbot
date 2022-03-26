@@ -2,7 +2,7 @@ import re
 
 from discord import Color, Embed
 from discord.ext import commands
-from utils.classes import RatBot, RatCog
+from utils import RatCog
 
 
 class DMs(RatCog):

@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from discord.ext import commands
 from pytz import BaseTzInfo, timezone
-from utils import RatBot, RatCog, safe_dump
+from utils import RatCog
 
 
 class Miscellaneous(RatCog):
@@ -28,7 +28,8 @@ class Miscellaneous(RatCog):
         if tz is None:
             utz = self.users[ctx.author.id].tz
             tz = timezone(utz or self.config.tz)
-        elif isinstance(tz, str):
+
+        if isinstance(tz, str):
             raise commands.BadArgument(
                 'Converting to "timezone" failed for parameter "tz". \n'
                 "Valid timezone list: <https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>"
@@ -49,11 +50,9 @@ class Miscellaneous(RatCog):
                 "A valid list is available here: "
                 "<https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>"
             )
-        tz = tz.__str__()
-        self.users[ctx.author.id] = tz
+        self.users[ctx.author.id].tz = str(tz)
         self.bot.settings.save()
         await ctx.send(f"Set your timezone to {tz}")
 
 
-def setup(bot: RatBot):
-    bot.add_cog(Miscellaneous(bot))
+setup = Miscellaneous.basic_setup

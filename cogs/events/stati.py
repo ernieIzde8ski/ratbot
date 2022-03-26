@@ -27,7 +27,12 @@ class Stati(RatCog):
     @commands.command()
     @commands.is_owner()
     async def set_presence(self, ctx: commands.Context, *, presence: Union[FlagConverter, str]):
-        """Sets a presence"""
+        """Sets a presence
+
+        Usage:
+            set_presence a Fun Video-Game
+            set_presence --activity Fun Video-Igri --status idle
+        """
         if isinstance(presence, dict):
             activity = Game(presence.get("activity"))
             status = self.get_status(presence.get("status"))

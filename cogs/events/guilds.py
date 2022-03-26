@@ -27,8 +27,8 @@ class Guilds(RatCog):
         """
         Return guild list
         Usage:
-            r;guilds
-            r;guilds --order member_count --reverse
+            guilds
+            guilds --reverse --order ('member_count' | 'alphabetical')
         """
         order = (sort.get("order") or "alphabetical").lower()
         reverse = bool(sort.get("reverse"))

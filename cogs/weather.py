@@ -80,7 +80,7 @@ class WeatherCommands(RatCog):
             await ctx.send(f"Set units to `{user.units}`")
         else:
             raise commands.CommandError(f"Couldn't do shit: class '{value.__class__}'")
-        
+
         self.rwth.save()
 
     @weather.command(aliases=["toggle"])

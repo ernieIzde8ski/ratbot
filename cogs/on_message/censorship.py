@@ -15,9 +15,11 @@ class Censorship(RatCog):
     """Allows me to delete things I don't like"""
 
     async def on_twitter(self, message: Message) -> None:
-        if not message.guild or message.author.id not in [368780147563823114, 700133917264445480]:
-            return
-        elif self.config.primary_guild != message.guild.id:
+        if (
+            not message.guild
+            or message.author.id not in {368780147563823114, 700133917264445480}
+            or self.config.primary_guild != message.guild.id
+        ):
             return
 
         content = strip_str(message.content)

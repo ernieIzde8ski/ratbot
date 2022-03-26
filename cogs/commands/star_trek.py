@@ -18,7 +18,7 @@ class Trek(RatCog):
         resp += " ".join(random.sample(self.borg_samples, k=random.randint(2, self.borglen)))
         await ctx.send(resp.format(Borg=borg, Locutus=ctx.author.display_name.title()))
 
-    @commands.command(aliases=["rt", "trek"])
+    @commands.command(aliases=["rt", "tos", "trek"])
     async def random_tos_plot(self, ctx: commands.Context, count: int = 1):
         """Generates a random Star Trek: The Original Series plot"""
         if not (1 <= count <= 10):

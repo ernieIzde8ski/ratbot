@@ -1,7 +1,7 @@
 import contextlib
 from typing import Optional
 
-from discord import Forbidden
+import discord
 from discord.ext import commands
 from utils import EasyList, FlagConverter, Percentage, RatCog
 
@@ -14,9 +14,7 @@ class Settings(RatCog):
     async def set_prefix(self, ctx: commands.Context, prefix: Optional[str] = None):
         """Sets a guild-wide prefix
         --reset can be used to reset the prefix to the default instead"""
-        print("a")
         established_prefix = self.bot.prefixes.prefixes.get(ctx.guild.id)
-        print("b")
         # If no prefix argument is passed, display current prefix.
         if prefix is None:
             if established_prefix is not None:
@@ -49,7 +47,7 @@ class Settings(RatCog):
 
     @commands.command(aliases=["toggle_bans"])
     @commands.has_guild_permissions(administrator=True)
-    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Optional[Percentage] = 0.0002):
+    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Optional[Percentage | float]):
         """Toggle the bot randomly banning individuals"""
         guild = self.guilds[ctx.guild.id]
         if guild.ban_chance is not None and not percent:
@@ -74,12 +72,13 @@ class Settings(RatCog):
             await ctx.send(f'Currently enabled troll emojis: {", ".join(self.emojis.trolls)}')
 
         else:
-            with contextlib.suppress(Forbidden):
+            with contextlib.suppress(discord.Forbidden):
                 for trollji in trolljis:
                     await ctx.message.add_reaction(trollji)
             if flag.get("reset"):
-                self.bot.data.trolljis = []
-            self.bot.data.trolljis += trolljis
+                self.emojis.trolls = []
+            self.emojis.trolls += trolljis
+            self.bot.settings.save()
             await ctx.send(f"Set troll emojis to: {', '.join(self.emojis.trolls)}")
 
 

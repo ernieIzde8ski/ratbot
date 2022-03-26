@@ -2,7 +2,7 @@ from typing import Literal
 
 from discord import Color, Embed
 from discord.ext import commands
-from utils import RatBot, RatCog
+from utils import RatCog
 
 
 class Log(RatCog):

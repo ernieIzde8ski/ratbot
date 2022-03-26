@@ -45,7 +45,6 @@ class Bible(RatCog):
         if version is None:
             footer += f" | If this version is difficult or this message too annoying, you can click the link or use {ctx.prefix}set_translation KJV"
 
-
         embed = Embed(title=resp.ref, description=resp.text, color=ctx.me.color, url=url).set_footer(text=footer)
         await ctx.send(embed=embed)
 

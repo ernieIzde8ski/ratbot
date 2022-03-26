@@ -5,9 +5,9 @@ Yes, this means I wrote a wrapper for the wrapper that I maintain. Cry about it
 """
 
 import aiohttp
-from owmpy.current import (CurrentWeather, CurrentWeatherStatus, StandardUnits,Units)
+from owmpy.current import CurrentWeather, CurrentWeatherStatus, StandardUnits, Units
 
-from .dataclasses import (RatWeatherData, RatWeatherResponses, RawUnits, WUser, WUserCoords, WUsers)
+from .dataclasses import RatWeatherData, RatWeatherResponses, RawUnits, WUser, WUserCoords, WUsers
 from .functions import safe_load
 
 UnitConversions: dict[RawUnits, Units] = {

@@ -1,23 +1,23 @@
 import re
 from json import dump
-from typing import Optional
+from typing import Iterable, Optional
 
 from discord.ext import commands
 from utils import FlagConverter, RatCog
 
 
 class Cogs(RatCog):
-    all_extensions: list[str]
     # TODO: Combine repeated functions
+    all_exts: Iterable[str]
 
     async def _on_ready(self):
-        self.all_extensions = list(self.bot.extensions.keys())
+        self.bot.config.enabled_extensions = set(self.bot.extensions.keys())
+        self.all_exts = self.bot.config.enabled_extensions
 
-    def dump_extensions(self):
-        self.all_extensions = list(self.bot.extensions.keys())
-        self.all_extensions.sort(key=lambda i: i.lower())
-        with open("enabled_extensions.json", "w", encoding="utf-8") as file:
-            dump(self.all_extensions, file)
+    def save(self):
+        self.bot.config.enabled_extensions = set(self.bot.extensions.keys())
+        self.all_exts = self.bot.config.enabled_extensions
+        self.bot.config.save()
 
     @staticmethod
     def trim_whitespace(string: str) -> str:
@@ -31,12 +31,20 @@ class Cogs(RatCog):
         """
         await ctx.send(f"Loaded extensions: `{'`, `'.join(self.bot.extensions.keys())}`")
 
+    @cogs.command(name="save", aliases=["s"])
+    @commands.is_owner()
+    async def _save(self, ctx: commands.Context):
+        """Calls the Cogs.save() function"""
+        self.save()
+        await ctx.send("Saved enabled cogs!")
+        print(f"Saved enabled cogs: {self.all_exts}")
+
     @cogs.command(aliases=["l"])
     @commands.is_owner()
     async def load(self, ctx: commands.Context, tag: Optional[FlagConverter] = {}, *, params: str):
         """Load given cog(s)"""
         if params == "*":
-            extensions = self.all_extensions
+            extensions = self.all_exts
         else:
             extensions = re.split(r", *", params)
             extensions.sort()
@@ -53,14 +61,14 @@ class Cogs(RatCog):
         await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
-        self.dump_extensions()
+        self.save()
 
     @cogs.command(aliases=["u"])
     @commands.is_owner()
     async def unload(self, ctx: commands.Context, tag: Optional[FlagConverter] = {}, *, params: str):
         """Unload given cog(s)"""
         if params == "*":
-            extensions = self.all_extensions
+            extensions = self.all_exts
         else:
             extensions = re.split(r", *", params)
             extensions.sort()
@@ -77,7 +85,7 @@ class Cogs(RatCog):
         await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
-        self.dump_extensions()
+        self.save()
 
     @cogs.command(aliases=["r"])
     @commands.is_owner()
@@ -101,7 +109,7 @@ class Cogs(RatCog):
         await ctx.send(resp)
         if tag.get("t") or tag.get("temporary"):
             return
-        self.dump_extensions()
+        self.save()
 
 
 setup = Cogs.basic_setup

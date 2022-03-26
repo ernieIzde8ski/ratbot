@@ -24,7 +24,6 @@ class Petrosian(RatCog):
             or not message.guild
             or not self.guilds[message.guild.id].pipi_enabled
             or not re.search(PipiPattern, message.content)
-            or re.search(PipiPattern, message.content)
             or random() > 0.33
         ):
             return

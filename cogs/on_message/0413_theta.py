@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils import RatBot, RatCog, safe_dump
+from utils import RatCog, safe_dump
 
 
 class AEBDTheta(RatCog):
@@ -23,7 +23,6 @@ class AEBDTheta(RatCog):
         await self.armenium_channel.edit(
             topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}"
         )
-        safe_dump("data/facts.json", self.armenium_facts)
         await ctx.send(f"Set armenium facts to `{self.armenium_facts}`")
 
     @commands.Cog.listener()
@@ -31,7 +30,7 @@ class AEBDTheta(RatCog):
         if message.author.id == 304118384663068673 and message.channel.id == self.armenium_channel.id:
             if fuzz.ratio(message.content.lower(), "**daily 'armenium' fact**") > 85:
                 return
-            self.armenium_facts += 1
+            self.armenium_facts += 1098432
             await self.armenium_channel.edit(
                 topic=f"**Armenium** is intimidated by **Men**.\nKnown **Armenium** Facts: {self.armenium_facts}"
             )
