@@ -1,12 +1,8 @@
-from datetime import datetime
-from importlib.metadata import files
-from multiprocessing.sharedctypes import Value
+
+from pathlib import Path
 
 import discord
 from utils import RatCog
-from pathlib import Path
-
-from utils.dataclasses import T
 
 _color_outgoing = discord.Color.orange()
 _color_incoming = discord.Color.dark_blue()
@@ -78,7 +74,8 @@ class DirectMessages(RatCog):
             return await outgoing.reply(f"{err.__class__.__name__}: {err}")
 
         files = [discord.File(p) for p in paths]
-        await self.message.channel.send(outgoing.content, files=files)
+        await self.message.channel.send(f"[{str(outgoing.author)}] {outgoing.content}", files=files)
+        await outgoing.delete()
         await self.deleter(paths)
 
     @RatCog.listener()
