@@ -149,12 +149,13 @@ class WUserCoords(BaseModel):
 
 
 class WUser(BaseModel):
-    coords: WUserCoords = Field(default_factory=WUserCoords)
+    coords: WUserCoords | None = None
     units: RawUnits = "standard"
     guild_id: int = 488475203303768065
-    tz: str = "GMT"
-    last_sent: int = 0
-    aliases: set[str] = {"Bozo"}
+    """The API gives you multiple servers when a user switches their status. This changes it to just 1."""
+    tz: str = "America/Los_Angeles"
+    last_sent: str = "0000-00-00"
+    aliases: list[str] = ["Bozo"]
 
 
 class WUsers(BaseModel):
@@ -165,12 +166,18 @@ class WUsers(BaseModel):
 
 
 class RatWeatherResponses(BaseModel):
-    greetings: set[str] = Field(default_factory=set)
-    """First part of the daily weather notification. Includes {} for formatting."""
+    greetings: list[str] = Field(default_factory=list)
+    """First part of the daily weather notification. Each greeting includes {} for formatting."""
     temp_reactions: list[tuple[int, str]] = Field(default_factory=list)
     """Reactions to the current temperature, mapped as Kelvin/Reaction. Bot checks lower bounds first."""
     final_reaction: str = "You will die"
     """Reaction when temp_reactions are exhausted"""
+    music_ignored: str = "WHAT IS WRONG WTIH YOU ARE YOU STUPID AOR SOMETHING . OR ARE YOU JUST STUPID OR ARE YOU"
+    """Reaction when the prompt for music is ignored"""
+    music_approved: list[str] = ["Awsom", "Based", "Yes", "Yea", "Good", "Here"]
+    """Reactions when the prompt for music is accepted"""
+    music_rejected: list[str] = ["Rude", "Dam", "Cringe ?", "Troled", '"You Will Die" -- Helloween guy']
+    """Reactions when the prompt for music is rejected"""
 
 
 class RatWeatherData(SaveableModel):
@@ -180,3 +187,5 @@ class RatWeatherData(SaveableModel):
     """User data on location/unit preferences"""
     resps: RatWeatherResponses = Field(default_factory=RatWeatherResponses)
     """Things to say to people"""
+    music_chance: float = 0.10
+    """Chance for rat to ask to recommend music"""

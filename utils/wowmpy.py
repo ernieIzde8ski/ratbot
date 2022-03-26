@@ -45,4 +45,6 @@ class RatWeather:
 
     async def fetch_user(self, __id: int) -> CurrentWeatherStatus:
         user = self.data.users.all[__id]
+        if user.coords is None:
+            raise ValueError("User does not have location data set up!")
         return await self.client.get(coords=tuple(user.coords), units=self.validate_units(user.units))
