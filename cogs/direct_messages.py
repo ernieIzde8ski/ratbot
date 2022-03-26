@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 import discord
@@ -28,9 +27,12 @@ class DirectMessages(RatCog):
         desc = message.content[:max_len] + (message.content[max_len:] and " […]")
 
         atts = len(message.attachments)
-        footer = f"{message.created_at.isoformat(sep=' ', timespec='seconds')} • Providing links for up to {min(atts, 5)} of {atts} attributes"
+        footer = f"{message.created_at.isoformat(sep=' ', timespec='seconds')} " + (
+            f"• Providing links for up to {min(atts, 5)} of {atts} attributes" if atts else ""
+        )
 
-        embed = discord.Embed(title=title, description=desc, color=color).set_footer(text=footer)
+        embed = discord.Embed(title=title, description=desc, color=color)
+        embed.set_footer(text=footer) # type: ignore
         if urls:
             embed.set_image(url=message.attachments[0].url).add_field(name="Attachments", value=urls, inline=True)
         return embed
@@ -60,7 +62,7 @@ class DirectMessages(RatCog):
         if outgoing.content == "--DIE":
             await outgoing.reply("No longer replying to the current DM")
             self.message = None
-        if outgoing.author.bot or self.message is None:
+        if outgoing.author.bot or self.message is None: # type: ignore
             return
         # Caps at 7 minutes - the same duration between Discord sending distinct messages
         time_since = outgoing.created_at - self.message.created_at
