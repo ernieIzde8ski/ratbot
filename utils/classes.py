@@ -112,11 +112,11 @@ class RatBot(commands.Bot):
     weather_apikey: str | None
 
     def __init__(self, *args, weather_apikey: str | None = None, **kwargs):
-        self.config = RatConfig.load(path="config.json")
+        self.config = RatConfig.load(path="config.json", default_kwargs={})
         self.prefixes = Prefixes(self.config.prefix)
         super().__init__(*args, command_prefix=self.prefixes.get, **kwargs)
 
-        self.settings = RatSettings.load("data/settings.json")
+        self.settings = RatSettings.load("data/settings.json", default_kwargs={})
         self.status_channels = StatusChannels(self.config.channels)
         self.blocking = Blocking()
         self.weather_apikey = weather_apikey
