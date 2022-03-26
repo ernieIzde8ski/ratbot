@@ -72,7 +72,7 @@ class RatSettings(SaveableModel):
 ## config.json
 
 
-def get_all_cogs(cog_dir: Path = Path("./cogs")):
+def _get_all_cogs(cog_dir: Path):
     cog_dir = cog_dir.absolute()
     posix = cog_dir.as_posix()
 
@@ -91,6 +91,9 @@ def get_all_cogs(cog_dir: Path = Path("./cogs")):
         elif p0.suffix == ".py":
             yield fix(p0)
 
+def get_all_cogs(cog_dir: Path = Path("./cogs")) -> set[str]:
+    return set(_get_all_cogs(cog_dir))
+
 
 class config_channels(BaseModel):
     __all__ = ("BM", "DM", "Status", "Guilds")
@@ -103,8 +106,6 @@ class config_channels(BaseModel):
     Guilds: int = 841863106996338699
     """For notifying of guilds joined and left"""
 
-    def __iter__(self):
-        yield from self.__all__
 
     def items(self) -> Iterable[tuple[str, int]]:
         for attr in self.__all__:
@@ -128,7 +129,7 @@ class RatConfig(SaveableModel):
     """Invite to the primary guild."""
     channels: config_channels = Field(default_factory=config_channels)
     """IDs of various channels inside the primary guild."""
-    enabled_extensions: set[str] = Field(default_factory=partial(set, get_all_cogs))
+    enabled_extensions: set[str] = Field(default_factory=get_all_cogs)
     """Extensions to load on startup."""
 
 
