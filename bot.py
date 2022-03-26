@@ -5,22 +5,15 @@ from os import getenv
 from discord import AllowedMentions, Intents
 from dotenv import load_dotenv
 
-from utils import Blocking, RatBot, RatConfig
+from utils import Blocking, RatBot
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
 apikey = getenv("CURRENT_WEATHER_TOKEN")
 
-with open("config.json", "r", encoding="utf-8") as file:
-    config: RatConfig = load(file)
-
 
 bot = RatBot(
-    allowed_mentions=AllowedMentions.none(),
-    intents=Intents.all(),
-    config=config,
-    block_check=Blocking(),
-    weather_apikey=apikey,
+    allowed_mentions=AllowedMentions.none(), intents=Intents.all(), block_check=Blocking(), weather_apikey=apikey
 )
 
 bot.load_enabled_extensions()
