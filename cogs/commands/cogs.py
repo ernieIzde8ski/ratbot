@@ -28,6 +28,7 @@ class Cogs(RatCog):
     async def _git(self, ctx: commands.Context):
         code = os.system("git pull")
         await ctx.send(f"Process exited with {code = }")
+
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx: commands.Context):
         """Return cog list

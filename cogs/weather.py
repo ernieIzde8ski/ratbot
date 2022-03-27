@@ -6,7 +6,9 @@ from functools import cache
 
 import discord
 from discord.ext import commands
-from pytz import timezone
+from owmpy.current import StandardUnits
+from owmpy.utils import convert_temp
+from pytz import BaseTzInfo, timezone
 from utils import Coordinates, MaybeUser, RatBot, RatCog, WUser, wowmpy
 from utils.functions import safe_load
 
@@ -68,14 +70,22 @@ class WeatherCommands(RatCog):
         ctx: commands.Context,
         victim: MaybeUser = None,
         *,
-        value: typing.Union[Coordinates, discord.Guild, str, None],
+        value: typing.Union[Coordinates, discord.Guild, timezone, str, None],
     ):
-        """Set location, guild, or unit data"""
+        """
+        Set location, guild, timezone, or unit data
+
+        Usage:
+            weather set 4, 13 # set latitude, longitude
+            w s 0413-Theta    # set guild
+            w s imperial      # set units
+            w s toggle        # toggle daily weather notifications
+        """
         if victim and not await self.bot.is_owner(ctx.author):
             raise commands.NotOwner("Only bot owners may specify a victim")
         target: int = (victim or ctx.author).id  # type: ignore
         if value is None:
-            raise ValueError
+            return await ctx.send(self.users.all[target])
 
         if target not in self.users.all:
             self.users.all[target].guild_id = getattr(ctx.guild, "id", None) or self.bot.config.primary_guild
@@ -85,17 +95,37 @@ class WeatherCommands(RatCog):
         if isinstance(value, discord.Guild):
             user.guild_id = value.id
             await ctx.send(f"Set guild_id to `{user.guild_id}`.")
+        elif isinstance(value, BaseTzInfo):
+            user.tz = f"{value}"
+            await ctx.send(f"Set tz to `{user.tz}`.")
         elif isinstance(value, list):
             user.coords = wowmpy.WUserCoords(lat=value[0], lon=value[1])
             await ctx.send(f"Set coords to `{user.coords}`.")
         elif isinstance(value, str):
-            units = self.rwth.validate_units(value).api_name
-            user.units = units  # type: ignore
-            await ctx.send(f"Set units to `{user.units}`")
+            try:
+                units = self.rwth.validate_units(value).api_name
+                user.units = units  # type: ignore
+                await ctx.send(f"Set units to `{user.units}`")
+            except ValueError as err:
+                raise ValueError(
+                    f"{err}\n"
+                    + ", if you are trying to set a timezone, see here for a valid list: "
+                    + "<https://gist.github.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568>"
+                ) from err
         else:
             raise commands.CommandError(f"Couldn't do shit: class '{value.__class__}'")
 
         self.rwth.save()
+
+    @weather.command(aliases=["e"])
+    @commands.is_owner()
+    async def expose(self, ctx: commands.Context, *, target: MaybeUser = None):
+        """Displays weather data from a given user. Defaults to self."""
+        id: int = (target or ctx.author).id  # type: ignore
+
+        if id not in self.users.all:
+            raise ValueError(f"No data for user with id {id}")
+        await ctx.send(self.users.all[id])
 
     @weather.command(aliases=["toggle"])
     async def toggle_active(self, ctx: commands.Context, *, user: MaybeUser = None):
@@ -142,7 +172,7 @@ class WeatherNotifications(RatCog):
 
         temp = round(stats.main.temp, 1)
         felt = round(stats.main.feels_like, 1)
-        _eval = self.temp_eval(felt)
+        _eval = self.temp_eval(convert_temp(temp, __from=stats.units, __to=StandardUnits.METRIC))
 
         russian = random.choices(self.russian, k=random.randint(2, 5))
         russian[0] = f"**{russian[0]}"
@@ -184,7 +214,7 @@ class WeatherNotifications(RatCog):
         else:
             await channel.send(random.choice(self.resps.music_rejected))
 
-    @commands.Cog.listener()
+    @RatCog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
         if (
             after.id not in self.users.active  # type: ignore
@@ -203,7 +233,16 @@ class WeatherNotifications(RatCog):
 
         stats = await self.rwth.fetch_user(after.id)  # type: ignore
         content = self.message_constructor(user=user, stats=stats)
-        message: discord.Message = await after.send(content)
+
+        try:
+            message: discord.Message = await after.send(content)
+        except discord.Forbidden as err:
+            await self.bot.status_channels.BM.send(
+                f"{err.__class__.__name__}: {err}\n"
+                f"User {after} most likely has me blocked ; removing from active weather notification list"
+            )
+            return self.users.active.remove(after.id)  # type: ignore
+
         user.last_sent = today
         if random.random() < self.rwth.data.music_chance:
             await self.additional_messaging(channel=message.channel)

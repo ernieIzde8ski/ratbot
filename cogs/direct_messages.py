@@ -32,7 +32,7 @@ class DirectMessages(RatCog):
         )
 
         embed = discord.Embed(title=title, description=desc, color=color)
-        embed.set_footer(text=footer) # type: ignore
+        embed.set_footer(text=footer)  # type: ignore
         if urls:
             embed.set_image(url=message.attachments[0].url).add_field(name="Attachments", value=urls, inline=True)
         return embed
@@ -62,7 +62,7 @@ class DirectMessages(RatCog):
         if outgoing.content == "--DIE":
             await outgoing.reply("No longer replying to the current DM")
             self.message = None
-        if outgoing.author.bot or self.message is None: # type: ignore
+        if outgoing.author.bot or self.message is None:  # type: ignore
             return
         # Caps at 7 minutes - the same duration between Discord sending distinct messages
         time_since = outgoing.created_at - self.message.created_at
@@ -76,9 +76,15 @@ class DirectMessages(RatCog):
             return await outgoing.reply(f"{err.__class__.__name__}: {err}")
 
         files = [discord.File(p) for p in paths]
-        await self.message.channel.send(f"[{str(outgoing.author)}] {outgoing.content}", files=files)
-        await outgoing.delete()
-        await self.deleter(paths)
+        try:
+            await self.message.channel.send(f"[{str(outgoing.author)}] {outgoing.content}", files=files)
+            await outgoing.delete()
+        except discord.Forbidden as err:
+            await outgoing.reply(
+                f"{err.__class__.__name__}: {err}" f"Could not copy this message ; Closing the dm channel"
+            )
+        finally:
+            await self.deleter(paths)
 
     @RatCog.listener()
     async def on_message(self, message: discord.Message):

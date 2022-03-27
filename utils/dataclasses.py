@@ -30,6 +30,15 @@ class SaveableModel(BaseModel):
             return file.write(json)
 
 
+class RepresentableModel(BaseModel):
+    @staticmethod
+    def __str_item(__k: str, __v: Any):
+        return f"""{__k}: {f"'{__v}'" if isinstance(__v, str) else __v}"""
+
+    def __str__(self) -> str:
+        return "\n".join(self.__str_item(k, v) for k, v in self)
+
+
 ## data/settings.json
 
 
@@ -149,7 +158,7 @@ class WUserCoords(BaseModel):
         yield self.lon
 
 
-class WUser(BaseModel):
+class WUser(RepresentableModel):
     coords: WUserCoords | None = None
     units: RawUnits = "standard"
     guild_id: int = 488475203303768065
