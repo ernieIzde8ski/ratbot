@@ -1,3 +1,4 @@
+import os
 import re
 from json import dump
 from typing import Iterable, Optional
@@ -23,6 +24,10 @@ class Cogs(RatCog):
     def trim_whitespace(string: str) -> str:
         return "".join(string.split())
 
+    @commands.command(name="git")
+    async def _git(self, ctx: commands.Context):
+        code = os.system("git pull")
+        await ctx.send(f"Process exited with {code = }")
     @commands.group(invoke_without_command=True, aliases=["c"])
     async def cogs(self, ctx: commands.Context):
         """Return cog list
