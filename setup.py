@@ -95,6 +95,7 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
+    raise NotImplementedError("File does not match current standards. Import data from a backup or proceed without instead. Necessary environment variables will be DISCORD_TOKEN and CURRENT_WEATHER_TOKEN (if loading the weather cog).")
     basicConfig(level=INFO)
     # For whatever reason, normal asyncio.run raises a superficial (as it works perfectly) RuntimeError
     # at the end of the process. This is a working workaround.
