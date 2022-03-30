@@ -31,7 +31,7 @@ async def on_prefix_update(id, new_prefix):
     await bot.prefixes.update(id, new_prefix)
 
 
-if "-DIE" in sys.argv:
+if "--die" in sys.argv or "-D" in sys.argv:
     exit()
 
 bot.run(token)
