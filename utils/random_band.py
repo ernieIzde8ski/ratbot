@@ -1,5 +1,6 @@
 import re
 from textwrap import shorten
+from typing import Hashable, TypedDict
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -9,6 +10,15 @@ from unidecode import unidecode
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
 
+class Band(TypedDict):
+    origin: tuple[str, str]
+    status: str
+    formed: str
+    genre: str
+    lyrics: str
+    label: str
+    name: str
+    url: str
 
 class BandRetrieval:
     def __init__(self):
@@ -16,12 +26,12 @@ class BandRetrieval:
         self.iterations = {}
 
     async def _get_bands(
-        self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50
-    ) -> list[dict]:
+        self, loops: int, index: Hashable, *, _filter: str = "", max_iterations: int = 50
+    ) -> list[Band]:
         """Get random bands & statistics"""
         _filter = _filter.lower()
         bands = []
-        for i in range(loops):
+        for _ in range(loops):
             self.iterations[index] += 1
             try:
                 async with self.session.get(url) as resp:
@@ -37,47 +47,32 @@ class BandRetrieval:
                     stats2 = [v for k, v in enumerate(stats2) if k % 2 == 1]
 
                     stats = stats1 + stats2
-                    band = {
-                        "origin": [stats[0], stats[1]],
-                        "status": stats[2],
-                        "formed": stats[3],
-                        "genre": stats[4],
-                        "lyrics": stats[5],
-                        "label": stats[6],
-                        "name": band_name,
-                    }
+                    band = Band(origin=(stats[0], stats[1]), status=stats[2],formed= stats[3],genre= stats[4],lyrics= stats[5],label= stats[6],name= band_name,url= str(resp.url))
             except IndexError:
-                band = (await self._get_bands(1, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit))[0]
+                band = (await self._get_bands(1, index, _filter=_filter, max_iterations=max_iterations))[0]
             if _filter not in band["genre"].lower() and _filter not in band["name"].lower():
-                if self.iterations[index] < iteration_hard_limit:
-                    band = await self._get_bands(1, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit)
-                    if band == []:
-                        continue
-                    band = band[0]
-                else:
+                if self.iterations[index] >= max_iterations:
                     continue
+                band = await self._get_bands(1, index, _filter=_filter, max_iterations=max_iterations)
+                if band == []:
+                    continue
+                band = band[0]
             bands.append(band)
         return bands
 
     async def get_bands(
-        self, loops: int, index: str, *, _filter: str = "", iteration_hard_limit: int = 50
-    ) -> list[dict]:
-        self.iterations[index] = 0
-        bands = await self._get_bands(loops, index, _filter=_filter, iteration_hard_limit=iteration_hard_limit)
-        del self.iterations[index]
+        self, max_bands: int, hash: Hashable, *, _filter: str = "", max_iterations: int = 50
+    ) -> list[Band]:
+        self.iterations[hash] = 0
+        bands = await self._get_bands(max_bands, hash, _filter=_filter, max_iterations=max_iterations)
+        del self.iterations[hash]
         return bands
 
     async def format(
-        self,
-        index: str,
-        integer: int = 5,
-        sort_method: str = "band",
-        *,
-        _filter: str = "",
-        iteration_hard_limit: int = 50,
+        self, cache_index: str, max_bands: int = 5, sort_method: str = "band", *, _filter: str = ""
     ) -> str:
         """Format random bands"""
-        bands = await self.get_bands(integer, index, _filter=_filter)
+        bands = await self.get_bands(max_bands, cache_index, _filter=_filter)
 
         if bands == []:
             return "Couldn't find a single goddamn band with those parameters. Good job."

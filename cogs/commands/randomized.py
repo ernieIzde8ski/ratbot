@@ -7,11 +7,28 @@ from utils import BandRetrieval, RatCog, strip_str
 
 
 class Randomized(RatCog):
+    # TODO: Rewrite into a dependency module
     bands = BandRetrieval()
 
-    @commands.command(aliases=["rb", "bands"])
-    @commands.cooldown(2, 45, commands.BucketType.guild)
-    @commands.max_concurrency(1, commands.BucketType.user)
+    @staticmethod
+    async def split_message(ctx: commands.Context, message: str) -> None:
+        """Takes a long message and splits it into multiple, surrounded by code blocks"""
+        if message.__len__() < 1950:
+            await ctx.send(message)
+            return
+
+        lines = message.split("\n")
+        resp = ""
+        for line in lines:
+            if (len(line) + len(resp) < 1950) and (line != lines[-1]):
+                resp += f"\n{line}"
+            else:
+                await ctx.send(resp)
+                resp = line
+
+    @commands.group(invoke_without_command=True, aliases=["rb", "bands"])
+    @commands.cooldown(rate=5, per=60, type=commands.BucketType.guild)
+    @commands.max_concurrency(number=1, per=commands.BucketType.user)
     async def random_bands(
         self, ctx: commands.Context, upper_limit: int = 3, sort_method: str = "band", *, _filter: str = ""
     ):
@@ -21,25 +38,20 @@ class Randomized(RatCog):
             raise commands.BadArgument('Parameter "integer" must range from 1 to 10.')
 
         bands = await self.bands.format(
-            str(ctx.author.id), upper_limit, sort_method, _filter=_filter, iteration_hard_limit=(upper_limit * 10)
+            str(ctx.author.id), upper_limit, sort_method, _filter=_filter
         )
+        await self.split_message(ctx, f"```\n{bands}\n```")
+
+    @random_bands.command(aliases=["urls", "links"])
+    @commands.max_concurrency(number=1, per=commands.BucketType.user)
+    async def URLs(self, ctx: commands.Context, max_bands: int = 3):
+        if not (1 <= max_bands <= 10) and not self.bot.is_owner(ctx.author):
+            raise commands.BadArgument('Parameter "integer" must range from 1 to 10.')
+
+        bands = self.bands.get_bands(max_bands=max_bands, hash=ctx.author, max_iterations=max_bands*10)
+        bands = "\n".join(band["url"] for band in await bands)
         await self.split_message(ctx, bands)
 
-    @staticmethod
-    async def split_message(ctx: commands.Context, message: str) -> None:
-        """Takes a long message and splits it into multiple, surrounded by code blocks"""
-        if message.__len__() < 1950:
-            await ctx.send(f"```\n{message}\n```")
-            return
-
-        lines = message.split("\n")
-        resp = ""
-        for line in lines:
-            if (line.__len__() + resp.__len__() < 1950) and (line != lines[-1]):
-                resp += f"\n{line}"
-            else:
-                await ctx.send(f"```\n{resp}\n```")
-                resp = line
 
     @commands.command(aliases=["bm"])
     async def based_meter(self, ctx: commands.Context, *, argument: Optional[str]):
@@ -70,6 +82,7 @@ class Randomized(RatCog):
 
         seed = strip_str(argument)
         random.seed(seed)
+
         determination = round(random.random() * 100, 2)
         await ctx.send(f"{argument} are {determination}% Gobi.")
 
