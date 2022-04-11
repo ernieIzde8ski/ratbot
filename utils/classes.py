@@ -38,7 +38,7 @@ class Blocking:
     """Handles blocking/unblocking users"""
 
     path = "data/blocked.json"
-    blocked: set[int] = safe_load(path)
+    blocked: set[int] = set(safe_load(path, []))
     """User IDs from blocked individuals"""
 
     def __iter__(self):
