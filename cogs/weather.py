@@ -215,7 +215,7 @@ class WeatherNotifications(RatCog):
             await channel.send(random.choice(self.resps.music_rejected))
 
     @RatCog.listener()
-    async def on_member_update(self, before: discord.Member, after: discord.Member):
+    async def on_presence_update(self, before: discord.Member, after: discord.Member):
         if (
             after.id not in self.users.active  # type: ignore
             or (user := self.users.all[after.id]).guild_id != after.guild.id  # type: ignore
