@@ -7,7 +7,7 @@ from json.decoder import JSONDecodeError
 from discord.ext import commands
 
 
-class FlagConverter(commands.Converter):
+class FlagConverter(commands.Converter, dict):
     """Convert flags to a dictionary"""
 
     async def convert(self, ctx: commands.Context, arguments: str) -> dict[str, typing.Any]:

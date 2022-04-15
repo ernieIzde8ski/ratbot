@@ -11,6 +11,7 @@ class Information(RatCog):
     """A single informatic command pertaining to RatBot"""
 
     async def _on_ready(self) -> None:
+        assert self.bot.user
         self.invite = utils.oauth_url(self.bot.user.id, permissions=PERMISSIONS)
         self.prefixes = " || ".join(self.bot.config.prefix)
 
@@ -30,7 +31,7 @@ class Information(RatCog):
         )
 
         embed = Embed(title="Information, Support", description=main, color=ctx.me.color).set_footer(
-            text=footer, icon_url=self.bot.app.owner.avatar_url
+            text=footer, icon_url=self.bot.app.owner.avatar.url if self.bot.app.owner.avatar else None
         )
 
         await ctx.send(embed=embed)

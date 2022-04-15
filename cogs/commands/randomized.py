@@ -37,9 +37,7 @@ class Randomized(RatCog):
         if not (1 <= upper_limit <= 10 or ctx.author.id == self.bot.owner_id):
             raise commands.BadArgument('Parameter "integer" must range from 1 to 10.')
 
-        bands = await self.bands.format(
-            str(ctx.author.id), upper_limit, sort_method, _filter=_filter
-        )
+        bands = await self.bands.format(str(ctx.author.id), upper_limit, sort_method, _filter=_filter)
         await self.split_message(ctx, f"```\n{bands}\n```")
 
     @random_bands.command(aliases=["urls", "links"])
@@ -48,10 +46,9 @@ class Randomized(RatCog):
         if not (1 <= max_bands <= 10) and not self.bot.is_owner(ctx.author):
             raise commands.BadArgument('Parameter "integer" must range from 1 to 10.')
 
-        bands = self.bands.get_bands(max_bands=max_bands, hash=ctx.author, max_iterations=max_bands*10)
+        bands = self.bands.get_bands(max_bands=max_bands, hash=ctx.author, max_iterations=max_bands * 10)
         bands = "\n".join(band["url"] for band in await bands)
         await self.split_message(ctx, bands)
-
 
     @commands.command(aliases=["bm"])
     async def based_meter(self, ctx: commands.Context, *, argument: Optional[str]):
