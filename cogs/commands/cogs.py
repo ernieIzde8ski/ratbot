@@ -57,7 +57,7 @@ class Cogs(RatCog):
         resp = ""
         for extension in extensions:
             try:
-                self.bot.load_extension(extension)
+                await self.bot.load_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
@@ -81,7 +81,7 @@ class Cogs(RatCog):
         resp = ""
         for extension in extensions:
             try:
-                self.bot.unload_extension(extension)
+                await self.bot.unload_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
@@ -105,7 +105,7 @@ class Cogs(RatCog):
         resp = ""
         for extension in extensions:
             try:
-                self.bot.reload_extension(extension)
+                await self.bot.reload_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
