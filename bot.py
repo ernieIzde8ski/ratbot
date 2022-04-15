@@ -16,9 +16,6 @@ bot = RatBot(
     allowed_mentions=AllowedMentions.none(), intents=Intents.all(), block_check=Blocking(), weather_apikey=apikey
 )
 
-bot.load_enabled_extensions()
-
-
 @bot.event
 async def on_message(message):
     commands_allowed = await bot.blocking.reply(message)

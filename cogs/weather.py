@@ -249,8 +249,8 @@ class WeatherNotifications(RatCog):
         self.rwth.save()
 
 
-def setup(bot: RatBot):
+async def setup(bot: RatBot):
     bot.reset_weather()
-    bot.add_cog(WeatherCommands(bot))
-    bot.add_cog(WeatherNotifications(bot))
+    await bot.add_cog(WeatherCommands(bot))
+    await bot.add_cog(WeatherNotifications(bot))
     bot.weather.save()
