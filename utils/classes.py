@@ -59,7 +59,7 @@ class Blocking:
         """Returns whether or not a message is good for command parsing"""
         if message.author.bot or message.author.id in self:  # type: ignore
             return False
-        elif message.guild:
+        elif isinstance(message.channel, discord.TextChannel):
             if message.channel.name == "rat" and (message.content != "rat" or message.attachments):
                 await message.delete()
                 return False
