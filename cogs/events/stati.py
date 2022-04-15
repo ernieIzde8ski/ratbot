@@ -1,3 +1,4 @@
+import contextlib
 from typing import Union
 
 from discord import Activity, ActivityType, Game, Status
@@ -18,11 +19,7 @@ class Stati(RatCog):
 
     @staticmethod
     def get_status(status: str):
-        status = status.lower()
-        try:
-            return getattr(Status, status)
-        except AttributeError:
-            return None
+        return getattr(Status, status.lower(), None)
 
     @commands.command()
     @commands.is_owner()

@@ -88,8 +88,9 @@ class DirectMessages(RatCog):
 
     @RatCog.listener()
     async def on_message(self, message: discord.Message):
-        if message.author.id in self.bot.blocking:  # type: ignore
-            return None
+        if message.author.id not in self.bot.blocking:
+            return
+
         if not message.guild:
             return await self.direct_message(message)
         if message.channel == self.bot.status_channels.DM:
