@@ -1,9 +1,8 @@
 # These versions are the ones used in development
 # lower versions very well could work, I wouldn't know
 
-# discord.py >= 2.0.0
-# as this is not the dpy version on PyPi, it must be installed manually:
-#   pip install -U git+https://github.com/Rapptz/discord.py
+# as this is not the dpy version on PyPi, it must be installed manually
+git+https://github.com/Rapptz/discord.py
 
 python-dotenv >= 0.17.1
 fuzzywuzzy >= 0.18.0

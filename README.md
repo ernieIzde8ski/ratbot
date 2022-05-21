@@ -8,9 +8,11 @@ The main version of rat, a Discord bot developed by ernieIzde8ski in Python. It 
 
 ## Running
 
+Using a virtual environment is strongly recommended.
+
 ~~~bash
 python -m pip install -r requirements.txt
-pip install -U git+https://github.com/Rapptz/discord.py
+python setup
 python .
 ~~~
 
