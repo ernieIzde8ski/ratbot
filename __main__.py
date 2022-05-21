@@ -8,7 +8,7 @@ from utils import Blocking, RatBot
 
 load_dotenv()
 token = getenv("DISCORD_TOKEN")
-apikey = getenv("CURRENT_WEATHER_TOKEN")
+apikey = getenv("WEATHER_TOKEN")
 
 
 bot = RatBot(

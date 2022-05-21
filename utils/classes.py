@@ -141,7 +141,6 @@ class RatBot(commands.Bot):
         self.app = await self.application_info()
         print(f"Retrieved application info! (owner: {self.app.owner})")
 
-
     def reset_weather(self, apikey: str | None = None) -> None:
         self.weather_apikey = apikey or self.weather_apikey
         if not self.weather_apikey:
