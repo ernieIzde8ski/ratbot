@@ -1,3 +1,4 @@
+import asyncio
 import typing
 
 import aiohttp
@@ -124,20 +125,22 @@ class RatBot(commands.Bot):
 
         self._all_mentions = discord.AllowedMentions.all()
 
+    async def load_enabled_extension(self, ext: str, /):
+        try:
+            await self.load_extension(ext)
+        except (commands.ExtensionError, ModuleNotFoundError) as err:
+            print(f"{err.__class__.__name__}: {err}")
+        else:
+            print(f"Loaded extension {ext}!")
+
     async def load_enabled_extensions(self):
         # TODO: maybe disabled extensions instead of enabled
-        for extension in self.config.enabled_extensions:
-            try:
-                await self.load_extension(extension)
-            except (commands.ExtensionError, ModuleNotFoundError) as err:
-                print(f"{err.__class__.__name__}: {err}")
-            else:
-                print(f"Loaded extension {extension}!")
+        loader = (self.load_enabled_extension(ext) for ext in self.config.enabled_extensions)
+        await asyncio.gather(*loader)
         print("Loaded all extensions?!")
 
     async def setup_hook(self) -> None:
         await self.load_enabled_extensions()
-        await self.wait_until_ready()
         self.app = await self.application_info()
         print(f"Retrieved application info! (owner: {self.app.owner})")
 

@@ -27,6 +27,15 @@ class BandRetrieval:
         self.session = ClientSession()
         self.iterations = {}
 
+    async def __aenter__(self):
+        pass
+
+    async def __aexit__(self, *args):
+        await self.session.close()
+
+    async def close(self):
+        return await self.__aexit__()
+
     async def _get_bands(
         self, loops: int, index: Hashable, *, _filter: str = "", max_iterations: int = 50
     ) -> list[Band]:

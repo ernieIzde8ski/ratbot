@@ -44,7 +44,7 @@ def generate_xkcds():
         cont = input("An xkcd cache already exists. Continue anyways? [y/N]")[:1]
         if cont.lower() != "y":
             return
-    
+
     max = fetch_xkcd()["num"]
     logging.debug(f"XKCD: Going up to #{max}")
     xkcds = ((fetch_xkcd(n)) for n in range(1, max + 1) if n != 404)

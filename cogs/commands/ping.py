@@ -40,7 +40,7 @@ class Ping(RatCog):
         resp = str(self.bot.settings.songs)
         if len(resp) > 1500:
             resp = self.bot.settings.songs.keys()
-        await ctx.send(resp)
+        await ctx.send(", ".join(resp))
 
 
 setup = Ping.basic_setup

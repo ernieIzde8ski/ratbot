@@ -3,7 +3,7 @@ from typing import Optional
 
 import discord
 from discord.ext import commands
-from utils import EasyList, FlagConverter, Percentage, RatCog
+from utils import CommaList, FlagConverter, Percentage, RatCog
 
 
 class Settings(RatCog):
@@ -66,7 +66,7 @@ class Settings(RatCog):
     @commands.command(aliases=["append_trolljis", "trolfl"])
     @commands.is_owner()
     async def append_troll_emojis(
-        self, ctx: commands.Context, flag: Optional[FlagConverter] = {}, *, trolljis: Optional[EasyList]
+        self, ctx: commands.Context, flag: Optional[FlagConverter] = {}, *, trolljis: Optional[CommaList]
     ):
         # TODO: See if works as a tuple instead of custom list constructor. Use `extend`.
         if trolljis is None:

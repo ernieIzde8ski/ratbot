@@ -1,4 +1,3 @@
-import contextlib
 from typing import Union
 
 from discord import Activity, ActivityType, Game, Status

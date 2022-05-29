@@ -4,11 +4,16 @@ from typing import Optional
 
 from discord.ext import commands
 from utils import BandRetrieval, RatCog, strip_str
+from utils.classes import RatBot
 
 
 class Randomized(RatCog):
     # TODO: Rewrite into a dependency module
-    bands = BandRetrieval()
+    async def _on_ready(self):
+        self.bands = BandRetrieval()
+
+    async def cog_unload(self):
+        await self.bands.close()
 
     @staticmethod
     async def split_message(ctx: commands.Context, message: str) -> None:
@@ -59,6 +64,7 @@ class Randomized(RatCog):
         if not argument:
             raise commands.BadArgument("**Your are Cringe!!!!!!!!!**")
 
+        random.seed(strip_str(argument))
         determination = random.choice(["Based", "Cringe"])
         emphasis = random.choice(["!", ".", "?"]) * random.randint(1, 8)
 

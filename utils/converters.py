@@ -5,9 +5,10 @@ from json import loads
 from json.decoder import JSONDecodeError
 
 from discord.ext import commands
+import pytz
 
 
-class FlagConverter(commands.Converter, dict):
+class FlagConverter(commands.Converter):
     """Convert flags to a dictionary"""
 
     async def convert(self, ctx: commands.Context, arguments: str) -> dict[str, typing.Any]:
@@ -27,11 +28,8 @@ class FlagConverter(commands.Converter, dict):
                 value = True
             else:
                 value = " ".join([i.replace("__", " ") for i in value])
-                try:
+                with suppress(JSONDecodeError):
                     value = loads(value)
-                except JSONDecodeError:
-                    with suppress(JSONDecodeError):
-                        value = loads(value.lower())
             resp[key] = value
 
         return resp
@@ -125,7 +123,7 @@ initial_list_pattern = re.compile(r"(?<!\\),\s*")
 secondary_list_pattern = re.compile(r"\s+")
 
 
-class EasyList(commands.Converter):
+class CommaList(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str) -> list[str]:
         arguments = re.split(initial_list_pattern, argument)
         if arguments == [argument]:
