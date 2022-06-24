@@ -163,8 +163,8 @@ class WeatherNotifications(RatCog):
 
     @staticmethod
     def _prepare_resp(__input: typing.Iterable[str | typing.Iterable[str]]) -> str:
-        __input = (i if isinstance(i, str) else " ".join(i) for i in __input)
-        return "\n\n".join(__input)
+        resp = (i if isinstance(i, str) else " ".join(i) for i in __input)
+        return "\n\n".join(resp)
 
     def message_constructor(self, user: WUser, stats: wowmpy.CurrentWeatherStatus) -> str:
         greeting = random.choice(self.rwth.data.resps.greetings)
