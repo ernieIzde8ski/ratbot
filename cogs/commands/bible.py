@@ -1,4 +1,3 @@
-from typing import Optional
 
 from discord import Embed
 from discord.ext import commands
@@ -30,7 +29,7 @@ class Bible(RatCog):
 
     @commands.command(aliases=["v", "🙏"])
     async def bible_verse(
-        self, ctx: commands.Context, display_verse: Optional[StrictBool] = True, *, reference: str = "Joshua 21:8"
+        self, ctx: commands.Context, display_verse: StrictBool | None = True, *, reference: str = "Joshua 21:8"
     ):
         """Returns a passage based off a reference"""
         version = self.users[ctx.author.id].preferred_version
@@ -49,7 +48,7 @@ class Bible(RatCog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["set_version", "translation", "version"])
-    async def set_translation(self, ctx: commands.Context, *, translation: Optional[str]):
+    async def set_translation(self, ctx: commands.Context, *, translation: str | None):
         """Sets a version to use in the bible_verse command
         Due to the limitations of the api I use (https://bible-api.com/),
         there's only a few functional translations (displayed by invoking

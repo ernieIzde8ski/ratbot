@@ -56,7 +56,7 @@ class Coordinates(commands.Converter):
         return "".join(string.split())
 
     @staticmethod
-    def assert_float(num: typing.Union[float, typing.Literal[None]]) -> float:
+    def assert_float(num: float | None) -> float:
         if num is None:
             raise commands.BadArgument("Latitude or longitude not present")
         return num
@@ -73,7 +73,7 @@ class Coordinates(commands.Converter):
         arguments = [re.split(r"(?i)(?<=\d)(?:Degrees|Deg(\.)?|°)?(?!\d)", argument) for argument in arguments]
         arguments = [[i for i in index if i] for index in arguments]
 
-        coords: list[typing.Union[float, typing.Literal[None]]] = [None, None]
+        coords: list[float | None] = [None, None]
         for i, arg in enumerate(arguments):
             len = arg.__len__()
             if not (1 <= len <= 2):

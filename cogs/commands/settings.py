@@ -48,7 +48,7 @@ class Settings(RatCog):
 
     @commands.command(aliases=["toggle_bans"])
     @commands.has_guild_permissions(administrator=True)
-    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Optional[Percentage | float]):
+    async def toggle_random_bans(self, ctx: commands.Context, *, percent: Percentage | float | None):
         """Toggle the bot randomly banning individuals"""
         guild = self.guilds[ctx.guild.id]
         if guild.ban_chance is not None and not percent:

@@ -70,7 +70,7 @@ class WeatherCommands(RatCog):
         ctx: commands.Context,
         victim: MaybeUser = None,
         *,
-        value: typing.Union[Coordinates, discord.Guild, timezone, str, None],
+        value: Coordinates | discord.Guild | timezone | str | None,
     ):
         """
         Set location, guild, timezone, or unit data

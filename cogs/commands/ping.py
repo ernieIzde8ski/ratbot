@@ -1,10 +1,10 @@
-from typing import Optional, Union
+from typing import Optional
 import discord
 from discord.ext import commands
 from utils import FlagConverter, RatCog
 
 
-Messageable = Union[discord.Member, discord.TextChannel, discord.User]
+Messageable = discord.Member | discord.TextChannel | discord.User
 
 
 class Ping(RatCog):

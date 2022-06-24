@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional, Union
 
 from discord.ext import commands
 from pytz import BaseTzInfo, timezone
@@ -21,7 +20,7 @@ class Miscellaneous(RatCog):
         await ctx.send("https://cdn.discordapp.com/attachments/404758309418172436/876620413701062727/ymq2us28roi61.png")
 
     @commands.group(invoke_without_command=True, aliases=["now"])
-    async def time(self, ctx: commands.Context, *, tz: Optional[Union[BaseTzInfo, str]]):
+    async def time(self, ctx: commands.Context, *, tz: BaseTzInfo | str | None):
         """Return the current time
         Returns the time based off either a given or set timezone"""
 
@@ -39,7 +38,7 @@ class Miscellaneous(RatCog):
         await ctx.send(now.strftime(f"It's currently `%Y-%m-%d, %H:%M:%S` in the timezone `{tz}`."))
 
     @time.command()
-    async def set(self, ctx: commands.Context, *, tz: Optional[timezone]):
+    async def set(self, ctx: commands.Context, *, tz: timezone | None):
         # TODO: Allow for setting timezone to Discord
         """Sets a PYTZ-compatible timezone
         Valid timezones are at available at
