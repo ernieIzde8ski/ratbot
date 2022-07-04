@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils import RatCog, safe_dump
+from utils import RatCog
 
 
 class AEBDTheta(RatCog):
@@ -9,10 +9,10 @@ class AEBDTheta(RatCog):
 
     async def _on_ready(self):
         channel = self.bot.get_channel(884237172717277225)
-        if not channel:
-            raise ValueError("0413 Not Found")
+        if not isinstance(channel, discord.TextChannel):
+            raise ValueError("Theta: Channel Not found")
         self.armenium_channel: discord.TextChannel = channel
-        self.armenium_facts = int(self.armenium_channel.topic.split()[-1])
+        self.armenium_facts = int((self.armenium_channel.topic or "204141515321").split()[-1])
         print(f"Loaded channel {self.armenium_channel}")
 
     @commands.command()

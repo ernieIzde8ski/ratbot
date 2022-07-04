@@ -5,6 +5,7 @@ from json import loads
 from json.decoder import JSONDecodeError
 
 from discord.ext import commands
+import pytz
 
 
 class FlagConverter(commands.Converter):
@@ -27,11 +28,8 @@ class FlagConverter(commands.Converter):
                 value = True
             else:
                 value = " ".join([i.replace("__", " ") for i in value])
-                try:
+                with suppress(JSONDecodeError):
                     value = loads(value)
-                except JSONDecodeError:
-                    with suppress(JSONDecodeError):
-                        value = loads(value.lower())
             resp[key] = value
 
         return resp
@@ -58,7 +56,7 @@ class Coordinates(commands.Converter):
         return "".join(string.split())
 
     @staticmethod
-    def assert_float(num: typing.Union[float, typing.Literal[None]]) -> float:
+    def assert_float(num: float | None) -> float:
         if num is None:
             raise commands.BadArgument("Latitude or longitude not present")
         return num
@@ -75,7 +73,7 @@ class Coordinates(commands.Converter):
         arguments = [re.split(r"(?i)(?<=\d)(?:Degrees|Deg(\.)?|°)?(?!\d)", argument) for argument in arguments]
         arguments = [[i for i in index if i] for index in arguments]
 
-        coords: list[typing.Union[float, typing.Literal[None]]] = [None, None]
+        coords: list[float | None] = [None, None]
         for i, arg in enumerate(arguments):
             len = arg.__len__()
             if not (1 <= len <= 2):
@@ -125,7 +123,7 @@ initial_list_pattern = re.compile(r"(?<!\\),\s*")
 secondary_list_pattern = re.compile(r"\s+")
 
 
-class EasyList(commands.Converter):
+class CommaList(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str) -> list[str]:
         arguments = re.split(initial_list_pattern, argument)
         if arguments == [argument]:

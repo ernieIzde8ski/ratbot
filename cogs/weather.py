@@ -70,7 +70,7 @@ class WeatherCommands(RatCog):
         ctx: commands.Context,
         victim: MaybeUser = None,
         *,
-        value: typing.Union[Coordinates, discord.Guild, timezone, str, None],
+        value: Coordinates | discord.Guild | timezone | str | None,
     ):
         """
         Set location, guild, timezone, or unit data
@@ -163,8 +163,8 @@ class WeatherNotifications(RatCog):
 
     @staticmethod
     def _prepare_resp(__input: typing.Iterable[str | typing.Iterable[str]]) -> str:
-        __input = (i if isinstance(i, str) else " ".join(i) for i in __input)
-        return "\n\n".join(__input)
+        resp = (i if isinstance(i, str) else " ".join(i) for i in __input)
+        return "\n\n".join(resp)
 
     def message_constructor(self, user: WUser, stats: wowmpy.CurrentWeatherStatus) -> str:
         greeting = random.choice(self.rwth.data.resps.greetings)
@@ -215,7 +215,7 @@ class WeatherNotifications(RatCog):
             await channel.send(random.choice(self.resps.music_rejected))
 
     @RatCog.listener()
-    async def on_member_update(self, before: discord.Member, after: discord.Member):
+    async def on_presence_update(self, before: discord.Member, after: discord.Member):
         if (
             after.id not in self.users.active  # type: ignore
             or (user := self.users.all[after.id]).guild_id != after.guild.id  # type: ignore
@@ -249,8 +249,8 @@ class WeatherNotifications(RatCog):
         self.rwth.save()
 
 
-def setup(bot: RatBot):
+async def setup(bot: RatBot):
     bot.reset_weather()
-    bot.add_cog(WeatherCommands(bot))
-    bot.add_cog(WeatherNotifications(bot))
+    await bot.add_cog(WeatherCommands(bot))
+    await bot.add_cog(WeatherNotifications(bot))
     bot.weather.save()

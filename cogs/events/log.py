@@ -12,6 +12,8 @@ class Log(RatCog):
 
     async def _on_ready(self):
         self.bot.status_channels.get_channels(self.bot)
+        assert self.bot.user
+        print(f"{self.bot.user.name}#{self.bot.user.discriminator} online!")
 
     def embed_constructor(self, status: Literal["online", "offline"]):
         if status == "online":
@@ -21,7 +23,6 @@ class Log(RatCog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f"{self.bot.user.name}#{self.bot.user.discriminator} online!")
         await self.bot.status_channels.Status.send(embed=self.embed_constructor("online"))
 
     @commands.command()

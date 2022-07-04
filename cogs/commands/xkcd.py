@@ -1,9 +1,9 @@
 from random import randint
-from typing import Union
 
+import discord.ext.tasks as tasks
 from aiohttp import ClientSession
 from discord import Color, Embed
-from discord.ext import commands, tasks
+from discord.ext import commands
 from fuzzywuzzy import fuzz
 from utils import RatBot, RatCog, safe_dump, safe_load
 
@@ -42,7 +42,7 @@ class XKCD(RatCog):
                 return await resp.json()
 
     @commands.group(invoke_without_command=True, aliases=["x"])
-    async def xkcd(self, ctx: commands.Context, *, argument: Union[int, str] = -1):
+    async def xkcd(self, ctx: commands.Context, *, argument: int | str = -1):
         """Return an XKCD from an argument"""
         if isinstance(argument, str):
             argument = await self.get_best_match(argument.lower())

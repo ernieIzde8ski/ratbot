@@ -1,7 +1,6 @@
 import os
 import re
-from json import dump
-from typing import Iterable, Optional
+from typing import Iterable
 
 from discord.ext import commands
 from utils import FlagConverter, RatCog
@@ -47,7 +46,7 @@ class Cogs(RatCog):
 
     @cogs.command(aliases=["l"])
     @commands.is_owner()
-    async def load(self, ctx: commands.Context, tag: Optional[FlagConverter] = {}, *, params: str):
+    async def load(self, ctx: commands.Context, tag: FlagConverter | None = {}, *, params: str):
         """Load given cog(s)"""
         if params == "*":
             extensions = self.all_exts
@@ -57,7 +56,7 @@ class Cogs(RatCog):
         resp = ""
         for extension in extensions:
             try:
-                self.bot.load_extension(extension)
+                await self.bot.load_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
@@ -71,7 +70,7 @@ class Cogs(RatCog):
 
     @cogs.command(aliases=["u"])
     @commands.is_owner()
-    async def unload(self, ctx: commands.Context, tag: Optional[FlagConverter] = {}, *, params: str):
+    async def unload(self, ctx: commands.Context, tag: FlagConverter | None = {}, *, params: str):
         """Unload given cog(s)"""
         if params == "*":
             extensions = self.all_exts
@@ -81,7 +80,7 @@ class Cogs(RatCog):
         resp = ""
         for extension in extensions:
             try:
-                self.bot.unload_extension(extension)
+                await self.bot.unload_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:
@@ -95,7 +94,7 @@ class Cogs(RatCog):
 
     @cogs.command(aliases=["r"])
     @commands.is_owner()
-    async def reload(self, ctx: commands.Context, tag: Optional[FlagConverter] = {}, *, params: str):
+    async def reload(self, ctx: commands.Context, tag: FlagConverter | None = {}, *, params: str):
         """Reload given cog(s)"""
         if params == "*":
             extensions = list(self.bot.extensions.keys())
@@ -105,7 +104,7 @@ class Cogs(RatCog):
         resp = ""
         for extension in extensions:
             try:
-                self.bot.reload_extension(extension)
+                await self.bot.reload_extension(extension)
             except (commands.ExtensionError, ModuleNotFoundError) as error:
                 resp += f"{error.__class__.__name__}: {error}\n"
             else:

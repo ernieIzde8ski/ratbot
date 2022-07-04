@@ -1,3 +1,4 @@
+import asyncio
 import typing
 
 import aiohttp
@@ -59,7 +60,7 @@ class Blocking:
         """Returns whether or not a message is good for command parsing"""
         if message.author.bot or message.author.id in self:  # type: ignore
             return False
-        elif message.guild:
+        elif isinstance(message.channel, discord.TextChannel):
             if message.channel.name == "rat" and (message.content != "rat" or message.attachments):
                 await message.delete()
                 return False
@@ -124,23 +125,24 @@ class RatBot(commands.Bot):
 
         self._all_mentions = discord.AllowedMentions.all()
 
-        self.loop.create_task(self._on_ready())
+    async def load_enabled_extension(self, ext: str, /):
+        try:
+            await self.load_extension(ext)
+        except (commands.ExtensionError, ModuleNotFoundError) as err:
+            print(f"{err.__class__.__name__}: {err}")
+        else:
+            print(f"Loaded extension {ext}!")
 
-    async def _on_ready(self) -> None:
-        await self.wait_until_ready()
+    async def load_enabled_extensions(self):
+        # TODO: maybe disabled extensions instead of enabled
+        loader = (self.load_enabled_extension(ext) for ext in self.config.enabled_extensions)
+        await asyncio.gather(*loader)
+        print("Loaded all extensions?!")
+
+    async def setup_hook(self) -> None:
+        await self.load_enabled_extensions()
         self.app = await self.application_info()
         print(f"Retrieved application info! (owner: {self.app.owner})")
-
-    def load_enabled_extensions(self):
-        # TODO: maybe disabled extensions instead of enabled
-        for extension in self.config.enabled_extensions:
-            try:
-                self.load_extension(extension)
-            except (commands.ExtensionError, ModuleNotFoundError) as err:
-                print(f"{err.__class__.__name__}: {err}")
-            else:
-                print(f"Loaded extension {extension}!")
-        print("Loaded all extensions?!")
 
     def reset_weather(self, apikey: str | None = None) -> None:
         self.weather_apikey = apikey or self.weather_apikey
@@ -177,5 +179,5 @@ class RatCog(commands.Cog):
         await coroutine
 
     @classmethod
-    def basic_setup(cls, bot: RatBot):
-        bot.add_cog(cls(bot))
+    async def basic_setup(cls, bot: RatBot):
+        await bot.add_cog(cls(bot))

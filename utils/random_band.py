@@ -10,6 +10,7 @@ from unidecode import unidecode
 url = "https://www.metal-archives.com/band/random"
 regex = r"(\n|.+:)"
 
+
 class Band(TypedDict):
     origin: tuple[str, str]
     status: str
@@ -20,10 +21,20 @@ class Band(TypedDict):
     name: str
     url: str
 
+
 class BandRetrieval:
     def __init__(self):
         self.session = ClientSession()
         self.iterations = {}
+
+    async def __aenter__(self):
+        pass
+
+    async def __aexit__(self, *args):
+        await self.session.close()
+
+    async def close(self):
+        return await self.__aexit__()
 
     async def _get_bands(
         self, loops: int, index: Hashable, *, _filter: str = "", max_iterations: int = 50
@@ -47,7 +58,16 @@ class BandRetrieval:
                     stats2 = [v for k, v in enumerate(stats2) if k % 2 == 1]
 
                     stats = stats1 + stats2
-                    band = Band(origin=(stats[0], stats[1]), status=stats[2],formed= stats[3],genre= stats[4],lyrics= stats[5],label= stats[6],name= band_name,url= str(resp.url))
+                    band = Band(
+                        origin=(stats[0], stats[1]),
+                        status=stats[2],
+                        formed=stats[3],
+                        genre=stats[4],
+                        lyrics=stats[5],
+                        label=stats[6],
+                        name=band_name,
+                        url=str(resp.url),
+                    )
             except IndexError:
                 band = (await self._get_bands(1, index, _filter=_filter, max_iterations=max_iterations))[0]
             if _filter not in band["genre"].lower() and _filter not in band["name"].lower():
