@@ -1,0 +1,8 @@
+# These versions are the ones used in development
+# lower versions very well could work, I wouldn't know
+
+# this may be unstable, hopefully they will update it soon
+git+https://github.com/Rapptz/discord.py
+
+# dev tools
+black>=22.1.0
