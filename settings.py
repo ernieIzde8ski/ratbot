@@ -1,5 +1,6 @@
 import json
 import logging
+import random
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -8,7 +9,6 @@ from discord.ext import commands
 
 if TYPE_CHECKING:
     from utils import RatBot
-
 
 import pydantic
 
@@ -55,10 +55,22 @@ class Settings(Saveable):
 
     blocked: set[int] = pydantic.Field(default_factory=set)
     default_prefixes: tuple[str, ...] = ("r.", "r!")
+
+    guild_invite: str = "https://discord.gg/cdhrdaddyN"
+    github_repo: str = "https://github.com/ernieIzde8ski/ratbot/tree/v3"
+    music: list[str] = [
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "https://www.youtube.com/watch?v=-FGrYI8XgPU",
+    ]
+
     enabled_extensions: list[str] = pydantic.Field(
         default_factory=_enabled_extensions_factory
     )
     custom_prefixes: dict[int, str] = pydantic.Field(default_factory=dict)
+
+    @property
+    def random_music(self):
+        return random.choice(self.music)
 
     def get_prefix(self, bot: "RatBot", msg: Message) -> list[str]:
         if not msg.guild or msg.guild.id not in self.custom_prefixes:
