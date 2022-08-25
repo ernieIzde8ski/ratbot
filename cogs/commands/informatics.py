@@ -33,7 +33,7 @@ class Informatics(RatCog):
             f"Powerful Invite: {oauth_url(self.bot.user.id, permissions=Permissions(8))}"
         )
         self.info_embed_base = Embed(
-            title="Hidden Bot Knowledge",
+            title="Hidden Rat Knowledge",
             description=(
                 f"[Bot Invite]({invite})\n"
                 f"[Server Invite]({settings.guild_invite})\n"
