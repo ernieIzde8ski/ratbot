@@ -23,11 +23,15 @@ class RatBot(commands.Bot):
         )
 
     async def on_message(self, msg: discord.Message):
-        if msg.author.bot:
+        if msg.author.bot or msg.author.id in settings.blocked:
             return
-        elif str(msg.channel) == "rat" and msg.content != "rat":
-            return await msg.delete()
-        elif "rat" in msg.content.lower():
+        elif str(msg.channel) == "rat":
+            if msg.content == "rat":
+                await msg.channel.send("rat")
+            else:
+                await msg.delete()
+                return
+        elif "rat" in msg.content.split():
             await msg.channel.send("rat")
         await self.process_commands(msg)
 
