@@ -23,6 +23,7 @@ class RatBot(commands.Bot):
         )
 
     async def on_message(self, msg: discord.Message):
+        # Message handling occurs before any command parsing
         if msg.author.bot or msg.author.id in settings.blocked:
             return
         elif str(msg.channel) == "rat":
@@ -37,6 +38,7 @@ class RatBot(commands.Bot):
 
     async def on_ready(self):
         logging.info("I'm Alive my Friend ! (I can see the Shadows everywhere)")
+        logging.info(f"i Am {self.user}")
 
     async def setup_hook(self) -> None:
         # load enabled extensions
@@ -46,7 +48,12 @@ class RatBot(commands.Bot):
                 await self.load_extension(ext)
                 logging.info(f"Loaded extension: {ext}")
             except Exception as err:
-                message = "".join((f"{err.__class__.__name__}: {err}\n\n", *traceback.format_exception(err)))
+                message = "".join(
+                    (
+                        f"{err.__class__.__name__}: {err}\n\n",
+                        *traceback.format_exception(err),
+                    )
+                )
                 logging.critical(message)
 
         # make sure settings are saved

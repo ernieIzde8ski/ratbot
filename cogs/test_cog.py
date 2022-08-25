@@ -5,6 +5,7 @@ from utils import RatCog, RatCtx
 class TestCog(RatCog):
     @commands.command()
     async def ping(self, ctx: RatCtx) -> None:
+        """a test command"""
         await ctx.channel.send("pong")
 
 
