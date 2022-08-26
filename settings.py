@@ -4,13 +4,12 @@ import random
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import pydantic
 from discord import Message
 from discord.ext import commands
 
 if TYPE_CHECKING:
     from utils import RatBot
-
-import pydantic
 
 root = Path(__file__).parent
 
@@ -59,6 +58,9 @@ def _enabled_extensions_factory(dir: Path = root / "cogs", suffix="cogs") -> lis
 
 class Settings(Saveable):
     _path = root / "settings.json"
+
+    debug: bool = True
+    """Whether or not debugging is currently active."""
 
     blocked: set[int] = pydantic.Field(default_factory=set)
     """IDs of users to ignore messages from."""
