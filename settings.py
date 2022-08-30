@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pydantic
-from discord import Message
+from discord import Message, TextChannel
 from discord.ext import commands
 
 if TYPE_CHECKING:
@@ -96,4 +96,39 @@ class Settings(Saveable):
         self.enabled_extensions = sorted(set(self.enabled_extensions))
 
 
+class Channels(Saveable):
+    _path = root / "settings.channels.json"
+
+    class _Store(pydantic.BaseModel):
+        status: int = 708882977202896957
+        messages: int = 715297562613121084
+        based_meter: int = 762166605458964510
+        guilds: int = 841863106996338699
+
+    store: _Store = pydantic.Field(default_factory=_Store)
+
+    async def set_channels(self, bot: "RatBot"):
+        await bot.wait_until_ready()
+
+        self.status: TextChannel
+        self.messages: TextChannel
+        self.based_meter: TextChannel
+        self.guilds: TextChannel
+
+        for name, id in dict(self.store).items():
+            channel = bot.get_channel(id)
+            if not channel:
+                logging.error(f"Channel {name} with ID {id} not found")
+            else:
+                setattr(self, name, channel)
+        logging.info("Finished loading channels !")
+
+    def save(self):
+        raise NotImplementedError
+
+    class Config:
+        extra = pydantic.Extra.allow
+
+
 settings = Settings.load()
+channels = Channels.load()

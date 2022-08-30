@@ -4,7 +4,7 @@ from typing import Any, Callable, Coroutine
 
 import discord
 from discord.ext import commands
-from settings import settings
+from settings import settings, channels
 
 
 class RatBot(commands.Bot):
@@ -41,6 +41,10 @@ class RatBot(commands.Bot):
         logging.info(f"i Am {self.user}")
 
     async def setup_hook(self) -> None:
+        # make sure these channels get loaded eventually
+        coro = channels.set_channels(self)
+        self.loop.create_task(coro)
+
         # load enabled extensions
         settings.reduce_enabled_extensions()
         for ext in settings.enabled_extensions:
