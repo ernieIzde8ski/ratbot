@@ -102,6 +102,7 @@ class Channels(Saveable):
     class _Store(pydantic.BaseModel):
         status: int = 708882977202896957
         messages: int = 715297562613121084
+        errors: int = 1014170368140922901
         based_meter: int = 762166605458964510
         guilds: int = 841863106996338699
 
@@ -111,9 +112,15 @@ class Channels(Saveable):
         await bot.wait_until_ready()
 
         self.status: TextChannel
+        """Channel to log on/off messages."""
         self.messages: TextChannel
+        """Channel to log direct messages."""
+        self.errors: TextChannel
+        """Channel to log instances of CommandError."""
         self.based_meter: TextChannel
+        """Channel to log new items from the based_meter command."""
         self.guilds: TextChannel
+        """Channel to log guild join/leave events."""
 
         for name, id in dict(self.store).items():
             channel = bot.get_channel(id)

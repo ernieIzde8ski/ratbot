@@ -1,7 +1,11 @@
 discord.py>=2.0.0
 
+fuzzywuzzy>=0.18.0
 pydantic>=1.9.2
 python-dotenv>=0.20.0
+
+# not strictly necessary but should make it faster
+python-Levenshtein>=0.12.2
 
 # formatting
 black>=22.6.0
