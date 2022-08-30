@@ -8,6 +8,7 @@ class TestCog(RatCog):
         """a test command"""
         await ctx.channel.send("pong")
 
+    @commands.is_owner()
     @commands.hybrid_command()
     async def error(self, ctx: RatCtx):
         raise RuntimeError("get fucked")
