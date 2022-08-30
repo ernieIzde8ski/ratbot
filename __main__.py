@@ -4,6 +4,7 @@ from discord.utils import setup_logging
 setup_logging()
 
 # start imports
+import logging
 from os import getenv
 from pathlib import Path
 
@@ -26,3 +27,5 @@ from settings import settings
 rat = RatBot(command_prefix=settings.get_prefix)
 
 rat.run(TOKEN)
+
+logging.info("Goodbye !")

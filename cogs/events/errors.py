@@ -1,9 +1,10 @@
 import traceback
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
+
 from discord.ext import commands
 from fuzzywuzzy import fuzz
-from utils import RatCog, RatCtx, codeblock
 from settings import channels
+from utils import RatCog, RatCtx, codeblock
 
 
 def similar_string_sort(string: str):

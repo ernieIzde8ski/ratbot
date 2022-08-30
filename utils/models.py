@@ -4,7 +4,7 @@ from typing import Any, Callable, Coroutine
 
 import discord
 from discord.ext import commands
-from settings import settings, channels
+from settings import settings, channels, generate_extensions_list
 
 
 class RatBot(commands.Bot):
@@ -46,6 +46,9 @@ class RatBot(commands.Bot):
         self.loop.create_task(coro)
 
         # load enabled extensions
+        # while programming, it is convenient to load *every* extension
+        if settings.debug:
+            settings.enabled_extensions += generate_extensions_list()
         settings.reduce_enabled_extensions()
         for ext in settings.enabled_extensions:
             try:
@@ -70,7 +73,7 @@ class RatCog(commands.GroupCog):
     during RatBot.setup_hook, its warnings apply."""
     on_ready_hook: None | Callable[[], Coroutine[Any, Any, None]] = None
     """Method added to bot loop after on_ready. Prefer setup_hook where possible,
-    as this will silently fail instead of raising errors."""
+    as using this this will allow the cog to continue regardless instead of erroring out."""
 
     def __init__(self, bot: RatBot) -> None:
         self.bot = bot

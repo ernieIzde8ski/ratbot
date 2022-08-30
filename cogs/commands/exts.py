@@ -1,10 +1,9 @@
-from functools import cached_property
 import logging
 import traceback
-from typing import Any, Callable
+from functools import cached_property
 
 from discord.ext import commands
-from settings import _enabled_extensions_factory, settings
+from settings import generate_extensions_list, settings
 from utils import RatCog, RatCtx, codeblock
 
 
@@ -45,11 +44,7 @@ class ExtensionHandling(RatCog):
         """
         # obtain extensions to iterate over
         exts = (
-            [
-                ext
-                for ext in _enabled_extensions_factory()
-                if ext not in self.bot.extensions
-            ]
+            [ext for ext in generate_extensions_list() if ext not in self.bot.extensions]
             if args == "*"
             else args.split()
         )

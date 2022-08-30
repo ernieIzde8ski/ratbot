@@ -1,8 +1,9 @@
+import asyncio
 import json
 import logging
 import random
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 import pydantic
 from discord import Message, TextChannel
@@ -43,7 +44,7 @@ class Saveable(pydantic.BaseModel):
         return (path or self._path).write_text(text)
 
 
-def _enabled_extensions_factory(dir: Path = root / "cogs", suffix="cogs") -> list[str]:
+def generate_extensions_list(dir: Path = root / "cogs", suffix="cogs") -> list[str]:
     """Iterate through cogs directory and return a series of paths to Python files, formatted for `__import__`."""
     resp = []
     for path in dir.iterdir():
@@ -52,20 +53,24 @@ def _enabled_extensions_factory(dir: Path = root / "cogs", suffix="cogs") -> lis
         elif path.is_file() and path.suffix.lower() == ".py":
             resp.append(f"{suffix}.{path.name.removesuffix(path.suffix)}")
         elif path.is_dir():
-            resp.extend(_enabled_extensions_factory(path, f"{suffix}.{path.name}"))
+            resp.extend(generate_extensions_list(path, f"{suffix}.{path.name}"))
     return resp
+
+
+class RatEmojis(pydantic.BaseModel):
+    online: str = "<:online:708885917133176932>"
+    offline: str = "<:offline:708886391672537139>"
+    restart: str = "<:restarting:708887315853869087>"
 
 
 class Settings(Saveable):
     _path = root / "settings.json"
 
-    debug: bool = True
-    """Whether or not debugging is currently active."""
-
     blocked: set[int] = pydantic.Field(default_factory=set)
     """IDs of users to ignore messages from."""
     default_prefixes: tuple[str, ...] = ("r.", "r!")
     """Default command prefixes. Can be overridden with the `prefix` command per guild."""
+    emojis: RatEmojis = pydantic.Field(default_factory=RatEmojis)
 
     guild_invite: str = "https://discord.gg/cdhrdaddyN"
     """Invite link to a guild."""
@@ -74,8 +79,10 @@ class Settings(Saveable):
     music: list[str] = ["dQw4w9WgXcQ", "-FGrYI8XgPU"]
     """YouTube video keys, preferably of music."""
 
+    debug: bool = True
+    """Whether or not debugging is currently active."""
     enabled_extensions: list[str] = pydantic.Field(
-        default_factory=_enabled_extensions_factory
+        default_factory=generate_extensions_list
     )
     """Extensions to set up while starting the bot."""
 
@@ -96,7 +103,24 @@ class Settings(Saveable):
         self.enabled_extensions = sorted(set(self.enabled_extensions))
 
 
-class Channels(Saveable):
+class DelayedLoad:
+    _loaded = False
+    """Whether the DelayedLoad instance has been loaded yet."""
+    sleepytime: int | float = 2
+    """Period waited in wait_until_loaded method."""
+
+    async def wait_until_loaded(self):
+        while self._loaded is False:
+            await asyncio.sleep(self.sleepytime)
+
+    async def update(self, bot: "RatBot"):
+        """Method where class gets loaded. Set ._loaded to True in subclasses."""
+        raise NotImplementedError(
+            f"Method update is not implemented on subclass {type(self)}"
+        )
+
+
+class Channels(DelayedLoad, Saveable):
     _path = root / "settings.channels.json"
 
     class _Store(pydantic.BaseModel):
@@ -128,6 +152,9 @@ class Channels(Saveable):
                 logging.error(f"Channel {name} with ID {id} not found")
             else:
                 setattr(self, name, channel)
+
+        self._loaded = True
+
         logging.info("Finished loading channels !")
 
     def save(self):
