@@ -1,4 +1,5 @@
 import asyncio
+from functools import cached_property
 import json
 import logging
 import random
@@ -71,6 +72,12 @@ class Settings(Saveable):
     default_prefixes: tuple[str, ...] = ("r.", "r!")
     """Default command prefixes. Can be overridden with the `prefix` command per guild."""
     emojis: RatEmojis = pydantic.Field(default_factory=RatEmojis)
+    ratlord: int = 1014515185618255883
+    """Role to mention when critical error logs occur."""
+
+    @cached_property
+    def pinglord(self):
+        return f""
 
     guild_invite: str = "https://discord.gg/cdhrdaddyN"
     """Invite link to a guild."""
@@ -101,6 +108,10 @@ class Settings(Saveable):
     def reduce_enabled_extensions(self) -> None:
         "Sort and eliminate duplicate enabled extensions"
         self.enabled_extensions = sorted(set(self.enabled_extensions))
+
+    class Config:
+        # arbitrary_types_allowed = True
+        keep_untouched = (cached_property,)
 
 
 class DelayedLoad:

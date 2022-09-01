@@ -13,6 +13,7 @@ class ExtensionHandling(RatCog):
         async def on_ready_hook(self):
             exts = ", ".join(self.bot.extensions)
             logging.info(f"Loaded extensions: {exts}")
+            raise RuntimeError("get fucked 2")
 
     @cached_property
     def ext_key(self):

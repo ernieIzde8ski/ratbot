@@ -5,6 +5,11 @@ from typing import Any, Callable, Coroutine
 import discord
 from discord.ext import commands
 from settings import settings, channels, generate_extensions_list
+from .extra import codeblock
+
+
+def _format_exception(exc: Exception, /):
+    return f"{type(exc).__name__}: {exc}\n\n" + "".join(traceback.format_exception(exc))
 
 
 class RatBot(commands.Bot):
@@ -55,13 +60,7 @@ class RatBot(commands.Bot):
                 await self.load_extension(ext)
                 logging.info(f"Loaded extension: {ext}")
             except Exception as err:
-                message = "".join(
-                    (
-                        f"{err.__class__.__name__}: {err}\n\n",
-                        *traceback.format_exception(err),
-                    )
-                )
-                logging.critical(message)
+                logging.critical(_format_exception(err))
 
         # make sure settings are saved
         settings.save()
@@ -77,20 +76,31 @@ class RatCog(commands.GroupCog):
 
     def __init__(self, bot: RatBot) -> None:
         self.bot = bot
+        if self.on_ready_hook:
+            # create task to add to loop later after bot is ready
+            async def func(hook=self.on_ready_hook):
+                await bot.wait_until_ready()
+                print(self.bot.owner_id)
+                try:
+                    await hook()
+                except Exception as err:
+                    message = _format_exception(err)
+                    logging.critical(message)
+                    await channels.wait_until_loaded()
+                    await channels.errors.send(
+                        f"An exception was raised in `on_ready_hook` in the following cog: `{type(self)}`\n"
+                        + codeblock(message, lang="py")
+                    )
+
+            bot.loop.create_task(func())
 
     @classmethod
     async def basic_setup(cls, bot: RatBot):
         cog = cls(bot)
         await bot.add_cog(cog)
+        # since setup_hook is a coroutine, it must be handled here and not in __init__
         if cog.setup_hook:
             await cog.setup_hook()
-        if cog.on_ready_hook:
-
-            async def coro(hook=cog.on_ready_hook):
-                await bot.wait_until_ready()
-                await hook()
-
-            bot.loop.create_task(coro())
 
 
 RatCtx = commands.Context[RatBot]
