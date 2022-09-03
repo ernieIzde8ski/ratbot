@@ -21,13 +21,13 @@ class Administration(RatCog):
     async def on_ready(self):
         await channels.wait_until_loaded()
         embed = self.get_embed("online")
-        await channels.status.send(embed=embed)
+        await channels.uptime.send(embed=embed)
 
     @commands.hybrid_command()
     async def die(self, ctx: RatCtx):
         if not self.bot.is_closed():
             await ctx.send("God bless with True")
-            await channels.status.send(embed=self.get_embed("offline"))
+            await channels.uptime.send(embed=self.get_embed("offline"))
             await self.bot.close()
 
 

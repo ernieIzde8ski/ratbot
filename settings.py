@@ -135,7 +135,7 @@ class Channels(DelayedLoad, Saveable):
     _path = root / "settings.channels.json"
 
     class _Store(pydantic.BaseModel):
-        status: int = 708882977202896957
+        uptime: int = 1015705231566319717
         messages: int = 715297562613121084
         errors: int = 1014170368140922901
         based_meter: int = 762166605458964510
@@ -146,7 +146,7 @@ class Channels(DelayedLoad, Saveable):
     async def set_channels(self, bot: "RatBot"):
         await bot.wait_until_ready()
 
-        self.status: TextChannel
+        self.uptime: TextChannel
         """Channel to log on/off messages."""
         self.messages: TextChannel
         """Channel to log direct messages."""
