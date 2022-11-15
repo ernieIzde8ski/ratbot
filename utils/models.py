@@ -102,10 +102,10 @@ class RatCog(commands.Cog):
     @classmethod
     async def basic_setup(cls, bot: RatBot):
         cog = cls(bot)
-        await bot.add_cog(cog)
         # since setup_hook is a coroutine, it must be handled here and not in __init__
         if cog.setup_hook:
             await cog.setup_hook()
+        await bot.add_cog(cog)
 
 
 RatCtx = commands.Context[RatBot]
