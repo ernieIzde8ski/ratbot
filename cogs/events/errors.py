@@ -33,7 +33,7 @@ def shorten(string: str, width: int, final_line: str = "[...]") -> str:
 
 
 class ErrorHandling(RatCog):
-    ignored_exceptions = commands.CommandNotFound | commands.NotOwner
+    ignored_exceptions = (commands.CommandNotFound, commands.NotOwner)
     """Exceptions not worth logging."""
 
     @commands.Cog.listener()
