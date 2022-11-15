@@ -56,6 +56,7 @@ class Informatics(RatCog):
             assert isinstance(embed.description, str)
         embed.description = embed.description.format(music=settings.random_music)
         embed.color = ctx.me.color
+
         # send embed
         await ctx.send(embed=embed)
 

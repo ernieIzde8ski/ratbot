@@ -1,10 +1,10 @@
 import asyncio
-from functools import cached_property
 import json
 import logging
 import random
+from functools import cached_property
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Generic, TypeVar
+from typing import TYPE_CHECKING
 
 import pydantic
 from discord import Message, TextChannel
@@ -87,7 +87,9 @@ class Settings(Saveable):
     """YouTube video keys, preferably of music."""
 
     debug: bool = True
-    """Whether or not debugging is currently active."""
+    """Whether debugging is currently active."""
+    synced: bool = False
+    """Whether slash commands have been synced yet. If debug is enabled, this option is irrelevant."""
     enabled_extensions: list[str] = pydantic.Field(
         default_factory=generate_extensions_list
     )

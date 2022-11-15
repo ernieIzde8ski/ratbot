@@ -62,11 +62,17 @@ class RatBot(commands.Bot):
             except Exception as err:
                 logging.critical(_format_exception(err))
 
+        # slash commands are not registered until they are synced
+        if settings.debug or not settings.synced:
+            await self.tree.sync()
+            logging.info("Synced commands!")
+            settings.synced = True
+
         # make sure settings are saved
         settings.save()
 
 
-class RatCog(commands.GroupCog):
+class RatCog(commands.Cog):
     setup_hook: Callable[[], Coroutine[Any, Any, None]] | None = None
     """Method called after initialization. As this may be called
     during RatBot.setup_hook, its warnings apply."""
@@ -80,7 +86,6 @@ class RatCog(commands.GroupCog):
             # create task to add to loop later after bot is ready
             async def func(hook=self.on_ready_hook):
                 await bot.wait_until_ready()
-                print(self.bot.owner_id)
                 try:
                     await hook()
                 except Exception as err:

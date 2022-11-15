@@ -23,6 +23,7 @@ class Administration(RatCog):
         embed = self.get_embed("online")
         await channels.uptime.send(embed=embed)
 
+    @commands.is_owner()
     @commands.hybrid_command()
     async def die(self, ctx: RatCtx):
         if not self.bot.is_closed():

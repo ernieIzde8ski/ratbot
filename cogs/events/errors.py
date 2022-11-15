@@ -33,6 +33,9 @@ def shorten(string: str, width: int, final_line: str = "[...]") -> str:
 
 
 class ErrorHandling(RatCog):
+    ignored_exceptions = commands.CommandNotFound | commands.NotOwner
+    """Exceptions not worth logging."""
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx: RatCtx, err: commands.CommandError):
         if ctx.command and ctx.command.has_error_handler():
@@ -53,10 +56,11 @@ class ErrorHandling(RatCog):
             resp += f"Closest match: `{cmds[-1]}`\n"
         await ctx.reply(resp)
 
-        # avoid logging for CommandNotFound error
-        if isinstance(err, commands.CommandNotFound):
+        # avoid logging certain errors
+        if isinstance(err, self.ignored_exceptions):
             return
-        # log to errors channel
+
+        # log any other error to errors channel
         exc_tb = shorten(format_exception(err), width=1900)
         resp = "An exception occurred:\n" + codeblock(
             f"Guild:   {f'{ctx.guild.id} | {ctx.guild}' if ctx.guild else None}\n"

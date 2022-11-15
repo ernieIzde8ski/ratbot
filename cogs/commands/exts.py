@@ -13,7 +13,6 @@ class ExtensionHandling(RatCog):
         async def on_ready_hook(self):
             exts = ", ".join(self.bot.extensions)
             logging.info(f"Loaded extensions: {exts}")
-            raise RuntimeError("get fucked 2")
 
     @cached_property
     def ext_key(self):
@@ -110,6 +109,11 @@ class ExtensionHandling(RatCog):
                 resp += f"Failed: {ext}\n"
         # send message
         await ctx.send(codeblock(resp))
-
+    
+    @commands.is_owner()
+    @commands.hybrid_command(aliases=("sync", "s"))
+    async def sync_tree(self, ctx: RatCtx):
+        await self.bot.tree.sync()
+        await ctx.send("Synced tree !")
 
 setup = ExtensionHandling.basic_setup
