@@ -73,9 +73,6 @@ class RatBot(commands.Bot):
 
 
 class RatCog(commands.Cog):
-    setup_hook: Callable[[], Coroutine[Any, Any, None]] | None = None
-    """Method called after initialization. As this may be called
-    during RatBot.setup_hook, its warnings apply."""
     on_ready_hook: None | Callable[[], Coroutine[Any, Any, None]] = None
     """Method added to bot loop after on_ready. Prefer setup_hook where possible,
     as using this this will allow the cog to continue regardless instead of erroring out."""
@@ -102,9 +99,6 @@ class RatCog(commands.Cog):
     @classmethod
     async def basic_setup(cls, bot: RatBot):
         cog = cls(bot)
-        # since setup_hook is a coroutine, it must be handled here and not in __init__
-        if cog.setup_hook:
-            await cog.setup_hook()
         await bot.add_cog(cog)
 
 
