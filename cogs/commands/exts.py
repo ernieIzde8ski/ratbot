@@ -109,11 +109,12 @@ class ExtensionHandling(RatCog):
                 resp += f"Failed: {ext}\n"
         # send message
         await ctx.send(codeblock(resp))
-    
+
     @commands.is_owner()
     @commands.hybrid_command(aliases=("sync", "s"))
     async def sync_tree(self, ctx: RatCtx):
         await self.bot.tree.sync()
         await ctx.send("Synced tree !")
+
 
 setup = ExtensionHandling.basic_setup
