@@ -1,7 +1,8 @@
 __pycache__
-.*/
-.env
-.vscode/
 venv/
 settings.json
 settings.*.json
+
+# dotfiles
+.*
+!.gitignore
