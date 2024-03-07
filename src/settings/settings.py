@@ -47,4 +47,6 @@ class Settings(BaseModel):
         with open(fp, "r") as file:
             contents = safe_load(file.read())
 
+        if contents is None:
+            return cls()
         return cls(**contents)
