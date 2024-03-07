@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class LogChannels(BaseModel):
+class RawLogChannels(BaseModel):
     """Discord Channel IDs."""
 
     status: int = 1015705231566319717

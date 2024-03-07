@@ -3,13 +3,20 @@ import logging
 from disnake import Intents, Message, TextChannel
 from disnake.ext.commands import Bot as BaseBot
 
-from .settings import Settings
+from ..settings import Settings
+from .log_channels import LogChannels
 
 
 class Bot(BaseBot):
     """The main bot class."""
 
     settings: Settings
+    """Serializable bot settings."""
+
+    supplements_loaded: bool = False
+    """If supplementary things like log channels are finished loading."""
+
+    logc: LogChannels
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -19,9 +26,15 @@ class Bot(BaseBot):
         super().__init__(intents=intents, command_prefix=settings.default_prefix)
 
     async def on_ready(self) -> None:
+        """Handles setting up supplements & logging activity to a channel."""
         logging.info(f"Logged in as {self.user}!")
+        if self.supplements_loaded is False:
+            self.logc = LogChannels(self)
+            self.supplements_loaded = True
+        await self.logc.status.send(f"im ALIVE {self.settings.emoji_online}")
 
     async def on_message(self, message: Message) -> None:
+        """Handles `rat` processing before handing logic over to command parsing."""
         if message.author.bot:
             return
 

@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from xdg_base_dirs import xdg_config_home
 from yaml import safe_load
 
-from .log_channels import LogChannels
+from .raw_log_channels import RawLogChannels
 
 
 class Settings(BaseModel):
@@ -21,7 +21,8 @@ class Settings(BaseModel):
     """
 
     default_prefix: str = "r."
-    log_channels: LogChannels = Field(default_factory=LogChannels)
+    raw_log_channels: RawLogChannels = Field(default_factory=RawLogChannels)
+    emoji_online: str = "<:online:708885917133176932>"
 
     @functools.cache
     @staticmethod

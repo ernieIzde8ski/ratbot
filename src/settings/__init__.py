@@ -1,3 +1,3 @@
-from . import log_channels
-from .log_channels import LogChannels
+from . import raw_log_channels
+from .raw_log_channels import RawLogChannels
 from .settings import Settings
