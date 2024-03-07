@@ -1,0 +1,8 @@
+# Config files
+.env
+
+# Cache/state junk
+__pycache__/
+*.py[cdo]
+.venv/
+venv/
