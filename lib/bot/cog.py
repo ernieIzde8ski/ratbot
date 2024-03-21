@@ -2,7 +2,7 @@ import asyncio
 from asyncio import sleep
 from functools import cached_property
 
-from disnake import ClientUser
+from disnake import AppInfo, ClientUser
 from disnake.ext.commands import Cog as BaseCog
 
 from lib.bot.log_channels import LogChannels
@@ -17,17 +17,21 @@ class Cog(BaseCog):
     settings: Settings
     """Alias for bot.settings"""
 
+    # the following items are cached properties so that they don't need
+    # to use any post_init_hook magic
     @cached_property
     def logs(self) -> LogChannels:
-        """Alias for bot.logc"""
-        # cached property so that it doesn't need to use any post_init_hook magic
-        return self.bot.logc
+        """Alias for bot.logs"""
+        return self.bot.logs
 
     @cached_property
     def user(self) -> ClientUser:
         """Alias for bot.user"""
-        # cached property so that it doesn't need to use any post_init_hook magic
         return self.bot.user
+
+    @cached_property
+    def app_info(self) -> AppInfo:
+        return self.bot.app_info
 
     async def post_init_hook(self) -> None:
         """

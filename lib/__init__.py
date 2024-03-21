@@ -1,9 +1,9 @@
 import logging
 from os import getenv
-from pathlib import Path
 
 from dotenv import load_dotenv
 
+from . import converters
 from .bot import *
 from .settings import *
 
