@@ -1,7 +1,7 @@
 import functools
 import logging
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 from typing import Self
 
 from pydantic import BaseModel, Field
@@ -10,9 +10,25 @@ from yaml import safe_load
 
 from .raw_log_channels import RawLogChannels
 
+base_dir = Path(__file__).parent.parent.parent
+"""Directory containing __main__.py."""
+
+
+def find_cogs() -> list[str]:
+    resp = []
+
+    paths = (base_dir).joinpath("cogs").rglob("*.py")
+
+    for path in paths:
+        index = path.parts.index("cogs")
+        parts = path.parts[index:]
+        cog = ".".join(parts).removesuffix(".py")
+        resp.append(cog)
+
+    return resp
+
 
 class Settings(BaseModel):
-
     """
     Serializable settings format.
 
@@ -21,8 +37,9 @@ class Settings(BaseModel):
     """
 
     default_prefix: str = "r."
-    raw_log_channels: RawLogChannels = Field(default_factory=RawLogChannels)
     emoji_online: str = "<:online:708885917133176932>"
+    enabled_extensions: list[str] = Field(default_factory=find_cogs)
+    raw_log_channels: RawLogChannels = Field(default_factory=RawLogChannels)
 
     @functools.cache
     @staticmethod

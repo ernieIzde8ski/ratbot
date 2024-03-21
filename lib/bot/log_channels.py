@@ -6,7 +6,7 @@ from disnake import StageChannel, TextChannel, Thread
 if TYPE_CHECKING:
     from ..bot import Bot
 
-LogChannel = Union[TextChannel, Thread, StageChannel]
+LogChannel = TextChannel | Thread | StageChannel
 
 
 class LogChannels:

@@ -1,5 +1,3 @@
-import logging
-
 from disnake import Intents, Message, TextChannel
 from disnake.ext.commands import Bot as BaseBot
 
@@ -27,11 +25,9 @@ class Bot(BaseBot):
 
     async def on_ready(self) -> None:
         """Handles setting up supplements & logging activity to a channel."""
-        logging.info(f"Logged in as {self.user}!")
         if self.supplements_loaded is False:
             self.logc = LogChannels(self)
             self.supplements_loaded = True
-        await self.logc.status.send(f"im ALIVE {self.settings.emoji_online}")
 
     async def on_message(self, message: Message) -> None:
         """Handles `rat` processing before handing logic over to command parsing."""
