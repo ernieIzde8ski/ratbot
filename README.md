@@ -17,18 +17,23 @@ $ python -m venv venv; . venv/bin/activate
 $ python -m pip install -r requirements.txt
 ```
 
-
 ### environment variables
 
-These will be read and overwritten from a `.env` file, if present.
-
 ```sh
+# Optional: directory containing a .env file and/or config.yaml
+# Has no effect if set within .env file
+RATBOT_CONFIG_DIR="$XDG_CONFIG_DIR/ratbot"
+
 # Required; a Discord bot token with messages intents.
 RATBOT_TOKEN_DISCORD=""
 # Optional; `logging` level.
 # Options: DEBUG, INFO, WARNING, ERROR
 RATBOT_LOG_LEVEL="INFO"
 ```
+
+### config.yaml
+
+Optional file.
 
 ## running
 
