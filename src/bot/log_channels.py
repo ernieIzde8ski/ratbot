@@ -21,7 +21,7 @@ class LogChannels:
             try:
                 channel_id = getattr(bot.settings.raw_log_channels, key)
                 channel = bot.get_channel(channel_id)
-                assert isinstance(channel, LogChannel)
+                assert isinstance(channel, (TextChannel, Thread, StageChannel))
                 setattr(self, key, channel)
             except Exception as _:
                 logging.exception(f'Could not load "{key}" channel')
