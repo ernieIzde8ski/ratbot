@@ -1,2 +1,5 @@
 black>=24.3
 isort>=5.13
+
+mypy         >= 1.9.0
+types-PyYAML >= 6.0
