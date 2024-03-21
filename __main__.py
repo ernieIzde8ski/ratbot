@@ -13,8 +13,11 @@ async def main() -> None:
 
     load_extensions(bot, settings)
 
-    with suppress(KeyboardInterrupt):
-        await bot.start(token)
+    try:
+        with suppress(KeyboardInterrupt):
+            await bot.start(token)
+    finally:
+        await bot.close()
 
 
 if __name__ == "__main__":
