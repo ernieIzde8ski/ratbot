@@ -38,6 +38,7 @@ class Settings(BaseModel):
 
     default_prefix: str = "r."
     emoji_online: str = "<:online:708885917133176932>"
+    emoji_offline: str = "<:offline:708886391672537139>"
     enabled_extensions: list[str] = Field(default_factory=find_cogs)
     hide_mod_commands: bool = False
     raw_log_channels: RawLogChannels = Field(default_factory=RawLogChannels)
