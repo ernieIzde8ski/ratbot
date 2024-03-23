@@ -1,17 +1,19 @@
 import logging
 from os import getenv
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-from . import converters
 from .bot import *
 from .settings import *
 
 
 def load_environment() -> str:
-    file = Settings.get_config_dir() / ".env"
-    if file.exists():
-        load_dotenv(file, override=True)
+    config_dir = Settings.get_config_dir()
+
+    dotenv_fp = config_dir / ".env"
+    if dotenv_fp.exists():
+        load_dotenv(dotenv_fp, override=True)
 
     token = getenv("RATBOT_TOKEN_DISCORD")
     if token is None:
@@ -21,6 +23,19 @@ def load_environment() -> str:
     log_level = logging._nameToLevel.get(literal_log_level.strip().upper())
     logging.basicConfig(level=log_level)
     logging.getLogger("disnake").setLevel(logging.WARNING)
+
+    if (log_fp := getenv("RATBOT_LOG_FILE")) is not None:
+        log_fp = log_fp.strip()
+        if log_fp == "":
+            path = config_dir / "log.txt"
+        elif "/" not in log_fp:
+            path = config_dir / log_fp
+        else:
+            path = Path(log_fp)
+
+        file_handler = logging.FileHandler(path)
+        file_handler.setLevel(logging.DEBUG)
+        logging.getLogger().addHandler(file_handler)
 
     return token
 

@@ -14,8 +14,9 @@ async def main() -> None:
     load_extensions(bot, settings)
 
     try:
-        with suppress(KeyboardInterrupt):
-            await bot.start(token)
+        await bot.start(token)
+    except KeyboardInterrupt:
+        pass
     finally:
         await bot.close()
 

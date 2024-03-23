@@ -24,7 +24,12 @@ class Bot(BaseBot):
 
         intents = Intents.default()
         intents.message_content = True
-        super().__init__(intents=intents, command_prefix=settings.default_prefix)
+        super().__init__(
+            intents=intents,
+            command_prefix=settings.prefix,
+            test_guilds=settings.devel.test_guilds,
+            reload=settings.devel.reloading,
+        )
 
     async def on_ready(self) -> None:
         """Handles setting up supplements & logging activity to a channel."""

@@ -1,13 +1,14 @@
 import functools
 import logging
 import os
-from pathlib import Path, PurePath
+from pathlib import Path
 from typing import Self
 
 from pydantic import BaseModel, Field
 from xdg_base_dirs import xdg_config_home
 from yaml import safe_load
 
+from .devel import Devel
 from .raw_log_channels import RawLogChannels
 
 base_dir = Path(__file__).parent.parent.parent
@@ -36,11 +37,12 @@ class Settings(BaseModel):
     `($RATBOT_CONFIG_DIR or $XDG_CONFIG_DIR)/config.yaml`, it overrides defaults.
     """
 
-    default_prefix: str = "r."
+    devel: Devel = Field(default_factory=Devel)
     emoji_online: str = "<:online:708885917133176932>"
     emoji_offline: str = "<:offline:708886391672537139>"
     enabled_extensions: list[str] = Field(default_factory=find_cogs)
     hide_mod_commands: bool = False
+    prefix: str = "r."
     raw_log_channels: RawLogChannels = Field(default_factory=RawLogChannels)
 
     @functools.cache
