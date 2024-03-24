@@ -11,7 +11,7 @@ LogChannel = TextChannel | Thread | StageChannel
 
 class LogChannels:
     status: LogChannel
-    messages: LogChannel
+    dms: LogChannel
 
     def __init__(self, bot: "Bot"):
         annotations = type(self).__dict__["__annotations__"]

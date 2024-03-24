@@ -43,7 +43,11 @@ class Settings(BaseModel):
     enabled_extensions: list[str] = Field(default_factory=find_cogs)
     hide_mod_commands: bool = False
     prefix: str = "r."
+    """Text-based command prefix."""
     raw_log_channels: RawLogChannels = Field(default_factory=RawLogChannels)
+
+    dm_expiry_delay: float = 300.0
+    """cogs.events.direct_messages: delay in seconds before the latest_message expires"""
 
     @functools.cache
     @staticmethod

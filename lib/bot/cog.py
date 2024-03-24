@@ -4,6 +4,7 @@ import logging
 from asyncio import sleep
 from functools import cached_property
 
+import aiohttp
 from disnake import AppInfo, ClientUser
 from disnake.ext.commands import Cog as BaseCog
 
@@ -16,6 +17,8 @@ from .bot import Bot
 class Cog(BaseCog):
     bot: Bot
     """The Bot instance this cog belongs to."""
+    session: aiohttp.ClientSession
+    """Alias for bot.session"""
     settings: Settings
     """Alias for bot.settings"""
 
@@ -49,6 +52,7 @@ class Cog(BaseCog):
     def __init__(self, bot: Bot) -> None:
         super().__init__()
         self.bot = bot
+        self.session = bot.session
         self.settings = bot.settings
 
         # checks if the hook was overridden

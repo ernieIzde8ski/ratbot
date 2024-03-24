@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import asyncio
-from contextlib import suppress
 
 from lib import Bot, Settings, load_environment, load_extensions
 

@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from .bot import *
 from .settings import *
+from .temporary_attachment_holder import TemporaryAttachmentHolder
 
 
 def load_environment() -> str:
