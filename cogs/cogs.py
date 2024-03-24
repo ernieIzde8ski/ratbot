@@ -11,7 +11,7 @@ from disnake.ext.commands import (
     UserInputError,
 )
 
-from lib.bot import Bot, Cog, CommandError, Interaction
+from lib.bot import Cog, CommandError, Interaction
 from lib.converters import CommaList
 
 ERROR_LOG_FORMAT = """
@@ -118,7 +118,3 @@ class Cogs(Cog):
 
             msg = ERROR_LOG_FORMAT.format(contents=msg, owner=self.app_info.owner)
             await inter.send(msg, ephemeral=True)
-
-
-def setup(bot: Bot) -> None:
-    bot.add_cog(Cogs(bot))

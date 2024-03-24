@@ -1,4 +1,6 @@
 import asyncio
+import inspect
+import logging
 from asyncio import sleep
 from functools import cached_property
 
@@ -52,3 +54,14 @@ class Cog(BaseCog):
         # checks if the hook was overridden
         if type(self).post_init_hook != Cog.post_init_hook:
             asyncio.create_task(self.__post_init_hook__())
+
+    @classmethod
+    def __init_subclass__(cls, /, include_setup: bool = True) -> None:
+        """Defines the setup function for most subclassing cogs."""
+        if include_setup is False:
+            return
+
+        ext = inspect.getmodule(cls)
+        if ext is None:
+            return logging.warn(f"Could not find module for cog: '{cls.__name__}'")
+        ext.__dict__["setup"] = lambda bot: bot.add_cog(cls(bot))

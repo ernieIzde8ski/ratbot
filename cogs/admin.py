@@ -1,6 +1,6 @@
 from disnake.ext import commands
 
-from lib.bot import Bot, Cog, Interaction
+from lib.bot import Cog, Interaction
 
 
 class Admin(Cog):
@@ -12,7 +12,3 @@ class Admin(Cog):
             await self.logs.status.send("im DYING " + self.settings.emoji_offline)
         finally:
             exit(0)
-
-
-def setup(bot: Bot) -> None:
-    bot.add_cog(Admin(bot))
