@@ -1,5 +1,5 @@
 # Config files
-.env
+.vscode/
 
 # Cache/state junk
 __pycache__/
