@@ -9,9 +9,7 @@ from .settings import *
 from .temporary_attachment_holder import TemporaryAttachmentHolder
 
 
-def load_environment() -> str:
-    config_dir = Settings.get_config_dir()
-
+def load_environment(config_dir: Path) -> str:
     dotenv_fp = config_dir / ".env"
     if dotenv_fp.exists():
         load_dotenv(dotenv_fp, override=True)
@@ -20,10 +18,22 @@ def load_environment() -> str:
     if token is None:
         raise RuntimeError("RATBOT_TOKEN_DISCORD not set!")
 
+    return token
+
+
+def setup_logging(config_dir: Path) -> None:
+    """Sets up root logging and such. Some environment variables are used."""
+    logging.getLogger("disnake").setLevel(logging.WARNING)
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+
+    main_handler = logging.StreamHandler()
     literal_log_level = getenv("RATBOT_LOG_LEVEL") or "INFO"
     log_level = logging._nameToLevel.get(literal_log_level.strip().upper())
-    logging.basicConfig(level=log_level)
-    logging.getLogger("disnake").setLevel(logging.WARNING)
+    if log_level is not None:
+        main_handler.setLevel(log_level)
+    root_logger.addHandler(main_handler)
 
     if (log_fp := getenv("RATBOT_LOG_FILE")) is not None:
         log_fp = log_fp.strip()
@@ -36,9 +46,7 @@ def load_environment() -> str:
 
         file_handler = logging.FileHandler(path)
         file_handler.setLevel(logging.DEBUG)
-        logging.getLogger().addHandler(file_handler)
-
-    return token
+        root_logger.addHandler(file_handler)
 
 
 def load_extensions(bot: Bot, settings: Settings) -> None:

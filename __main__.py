@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 import asyncio
 
-from lib import Bot, Settings, load_environment, load_extensions
+from lib import Bot, Settings, load_environment, load_extensions, setup_logging
 
 
 async def main() -> None:
-    token = load_environment()
+    config_dir = Settings.get_config_dir()
+
+    token = load_environment(config_dir)
+    setup_logging(config_dir)
 
     settings = Settings.load_from_env()
     bot = Bot(settings)
@@ -14,7 +17,8 @@ async def main() -> None:
 
     try:
         await bot.start(token)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        # This disables some useless noise when SIGINT'ing
         pass
     finally:
         await bot.close()
