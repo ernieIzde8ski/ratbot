@@ -35,7 +35,6 @@ class DirectMessages(Cog):
         if message.author.bot and its_not_me:
             return
 
-        logging.info("a")
         color = COLOR_OTHER if its_not_me else COLOR_SELF
 
         recipient: User | None = message.author if its_not_me else message.channel.recipient  # type: ignore
@@ -59,10 +58,7 @@ class DirectMessages(Cog):
             files = tah.as_files()
 
         try:
-            logging.info("c")
             m = await self.logs.dms.send(embed=embed, files=files)
-            logging.info(m.channel)
-            logging.info("d")
         finally:
             self.latest_message = message
             tah.close()
