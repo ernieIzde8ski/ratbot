@@ -30,6 +30,10 @@ class Bot(BaseBot):
 
         intents = Intents.default()
         intents.message_content = True
+        intents.members = True
+        intents.presences = True
+        intents.typing = False
+
         super().__init__(
             intents=intents,
             command_prefix=settings.prefix,

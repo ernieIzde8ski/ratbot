@@ -1,0 +1,20 @@
+greeting:
+  - "Здавстуй"
+morning_greeting:
+  - "good Morning,"
+  - "Доброе утро,"
+  - "Dzień dobry"
+  - "Get fucked"
+  - "Have a day"
+  - "wake up wake up Wakeu p wake up Wake up wake up"
+  - "welcome to Réel ,"
+min_quotes: 2
+max_quotes: 4
+temp_evals:
+  - temp: -30
+    message: "very cold"
+  - temp: 0
+    message: "pretty cold"
+  - temp: 30
+    message: "pretty warm"
+default_eval: "very warm"
