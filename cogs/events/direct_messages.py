@@ -11,10 +11,6 @@ COLOR_SELF = Color.orange()
 COLOR_OTHER = Color.green()
 
 
-class DMError(Exception):
-    pass
-
-
 class DirectMessages(Cog):
     """Listens for private messages and relays them to a channel."""
 
@@ -82,7 +78,7 @@ class DirectMessages(Cog):
                 target = await self.bot.getch_user(user_id, strict=True)
                 message_content = match[2]
             except ValueError as parent_error:
-                error = DMError(f"could not parse user id: '{match[1]}'")
+                error = Exception(f"could not parse user id: '{match[1]}'")
                 raise error from parent_error
         elif self.latest_message is None:
             return
