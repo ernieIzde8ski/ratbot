@@ -6,7 +6,6 @@ from disnake.ext.commands import Param
 
 from lib.bot import Interaction
 
-T = TypeVar("T")
 _comma_pattern = re.compile(r"\s*(?<![^\\]\\),\s*")
 
 

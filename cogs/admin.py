@@ -1,6 +1,6 @@
 from disnake.ext import commands
 
-from lib.bot import Cog, Interaction
+from lib import Cog, Interaction
 
 
 class Admin(Cog):

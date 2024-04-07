@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import asyncio
 
-from lib import Bot, Settings, load_environment, load_extensions, setup_logging
+from lib import Bot, Settings, dirs, load_environment, load_extensions, setup_logging
 
 
 async def main() -> None:
-    config_dir = Settings.get_config_dir()
+    config_dir = dirs.config_home()
 
     token = load_environment(config_dir)
     setup_logging(config_dir)

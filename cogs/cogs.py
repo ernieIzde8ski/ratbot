@@ -11,8 +11,7 @@ from disnake.ext.commands import (
     UserInputError,
 )
 
-from lib.bot import Cog, CommandError, Interaction
-from lib.converters import CommaList
+from lib import Cog, CommaList, CommandError, Interaction
 
 ERROR_LOG_FORMAT = """
 ```

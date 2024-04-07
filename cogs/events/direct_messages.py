@@ -5,8 +5,7 @@ from datetime import UTC, datetime, timedelta
 from disnake import Color, Embed, File, Message, User
 from disnake.abc import Messageable
 
-from lib import Cog, TemporaryAttachmentHolder
-from lib.bot.bot import Bot
+from lib import Bot, Cog, TemporaryAttachmentHolder
 
 COLOR_SELF = Color.orange()
 COLOR_OTHER = Color.green()

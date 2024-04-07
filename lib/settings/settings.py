@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from xdg_base_dirs import xdg_config_home
 from yaml import safe_load
 
+from .. import dirs
 from .devel import Devel
 from .raw_log_channels import RawLogChannels
 
@@ -49,18 +50,9 @@ class Settings(BaseModel):
     dm_expiry_delay: float = 300.0
     """cogs.events.direct_messages: delay in seconds before the latest_message expires"""
 
-    @functools.cache
-    @staticmethod
-    def get_config_dir() -> Path:
-        env_path: str | None = os.getenv("RATBOT_CONFIG_DIR")
-        if env_path is None:
-            return xdg_config_home() / "ratbot"
-        else:
-            return Path(env_path)
-
     @classmethod
     def load_from_env(cls) -> Self:
-        fp = cls.get_config_dir() / "config.yaml"
+        fp = dirs.config_home() / "config.yaml"
 
         if not fp.exists():
             logging.warning("Configuration file does not exist. Using defaults.")
