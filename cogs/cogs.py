@@ -98,7 +98,7 @@ class Cogs(Cog):
     ) -> None:
         """Unloads given extensions."""
         await self.ext_command_handler(
-            inter, self.bot.reload_extension, "unload", extensions
+            inter, self.bot.unload_extension, "unload", extensions
         )
 
     @Cog.listener()
