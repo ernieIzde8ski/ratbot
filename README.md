@@ -10,11 +10,12 @@ requirements: `python`/`pip` >= 3.12, `git`. Windows and other non-Linux systems
 are not intentionally supported, but if they do work, nice
 
 ```sh
-$ git clone "https://github.com/ernieIzde8ski/ratbot.git" -b 2024-rewrite
-$ cd ratbot
-  # optional, stops you from cluttering your usual site-packages
-$ python -m venv venv; . venv/bin/activate
-$ python -m pip install -r requirements.txt
+git clone "https://github.com/ernieIzde8ski/ratbot.git" -b 2024-rewrite
+cd ratbot
+# optional, stops you from cluttering your usual site-packages
+python -m venv venv
+. venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
 ### environment variables
@@ -34,6 +35,13 @@ RATBOT_LOG_LEVEL="INFO"
 ### config.yaml
 
 Optional file.
+
+### additional devel steps
+
+```sh
+pip install -r requirements-dev.txt
+pre-commit install
+```
 
 ## running
 

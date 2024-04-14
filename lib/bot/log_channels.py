@@ -1,12 +1,12 @@
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 from disnake import StageChannel, TextChannel, Thread
 
 if TYPE_CHECKING:
     from ..bot import Bot
 
-LogChannel = TextChannel | Thread | StageChannel
+LogChannel: TypeAlias = TextChannel | Thread | StageChannel
 
 
 class LogChannels:
