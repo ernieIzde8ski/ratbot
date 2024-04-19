@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-from owmpy.utils.standard_units import StandardUnits
+from owmpy.utils import StandardUnits
 from pydantic import BaseModel
 
 from .units import Units

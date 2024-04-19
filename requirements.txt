@@ -1,6 +1,6 @@
 disnake         >=  2.6.1
 Levenshtein     >=  0.25.1
-owmpy           >=  1.0.4
+owmpy           >=  1.0.5
 pydantic        >=  2.6.3
 python-dotenv   >=  1.0.1
 pyyaml          >=  6.0.1

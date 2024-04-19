@@ -1,7 +1,7 @@
 from typing import Annotated
 
-from owmpy.utils import StandardUnits  # type: ignore
-from owmpy.utils import Units as BaseUnits  # type: ignore
+from owmpy.utils import StandardUnits
+from owmpy.utils import Units as BaseUnits
 from pydantic import PlainSerializer, PlainValidator, ValidationError
 
 
@@ -10,7 +10,7 @@ def _validate_units(value: str) -> BaseUnits:
     match value:
         case "IMPERIAL" | "METRIC" | "STANDARD":
             return getattr(StandardUnits, value)
-        case default:
+        case _:
             raise ValidationError(f"Unrecognized units: '{value}'")
 
 
@@ -22,7 +22,7 @@ def _serialize_units(units: BaseUnits) -> str:
             return "METRIC"
         case StandardUnits.STANDARD:
             return "STANDARD"
-        case default:
+        case _:
             raise ValidationError("Unrecognized units")
 
 

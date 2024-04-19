@@ -5,8 +5,8 @@ from datetime import date, datetime
 from os import getenv
 
 from disnake import Member, Status
-from owmpy import current
-from owmpy.utils.standard_units import StandardUnits, convert_temp
+from owmpy.current import Client
+from owmpy.utils import StandardUnits, convert_temp
 from pydantic import ValidationError
 
 from lib import Bot, Cog, dirs
@@ -25,7 +25,7 @@ class Weather(Cog):
         weather_token = getenv("RATBOT_TOKEN_WEATHER")
         if weather_token is None:
             raise RuntimeError("$RATBOT_TOKEN_WEATHER is unset")
-        self.client = current.Client(weather_token, bot.session)  # type: ignore
+        self.client = Client(weather_token, bot.session)
         self.mconfig = MessageConfig.load_or_default()
 
         users: dict[int, WeatherUser] = {}
