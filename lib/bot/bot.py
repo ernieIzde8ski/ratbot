@@ -71,6 +71,8 @@ class Bot(BaseBot):
             else:
                 await message.delete()
         else:
+            # custom event, is used in cogs
+            self.dispatch("parseable_message", message, message.content.lower())
             if "rat" in re.split(r"\b", message.content):
                 await message.channel.send("rat")
             await self.process_commands(message)

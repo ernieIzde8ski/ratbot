@@ -1,6 +1,8 @@
 disnake         >=  2.6.1
+Levenshtein     >=  0.25.1
 owmpy           >=  1.0.4
 pydantic        >=  2.6.3
 python-dotenv   >=  1.0.1
 pyyaml          >=  6.0.1
+thefuzz         >=  0.22.1
 xdg-base-dirs   >=  6.0.1
