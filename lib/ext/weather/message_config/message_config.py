@@ -12,7 +12,7 @@ from .temperature_evaluation import TemperatureEvaluation
 
 
 class MessageConfig(BaseModel):
-    greeting: list[str]
+    first_words: list[str]
     morning_greeting: list[str]
     min_quotes: int
     max_quotes: int

@@ -1,5 +1,4 @@
-greeting:
-  - "Здавстуй"
+first_words: ["Здавстуй"]
 morning_greeting:
   - "good Morning,"
   - "Доброе утро,"

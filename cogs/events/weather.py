@@ -62,7 +62,7 @@ class Weather(Cog):
         )
 
         return message_template.format(
-            greeting=random.choice(self.mconfig.greeting),
+            first_word=random.choice(self.mconfig.first_words),
             morning_greeting=random.choice(self.mconfig.morning_greeting),
             name=random.choice(user.aliases),
             temp_real=round(resp.main.temp, 2),

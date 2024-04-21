@@ -1,4 +1,4 @@
-__**{greeting}**__
+__**{first_word}**__
 
 {morning_greeting} {name}, hope you have Exciting Day. (Just kidding your Stupid)
 
