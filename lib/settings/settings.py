@@ -1,16 +1,14 @@
-import functools
 import logging
-import os
 from pathlib import Path
 from typing import Self
 
 from pydantic import BaseModel, Field
-from xdg_base_dirs import xdg_config_home
 from yaml import safe_load
 
 from .. import dirs
 from .devel import Devel
 from .raw_log_channels import RawLogChannels
+from .reaction_emojis import ReactionEmojis
 
 base_dir = Path(__file__).parent.parent.parent
 """Directory containing __main__.py."""
@@ -49,6 +47,11 @@ class Settings(BaseModel):
 
     dm_expiry_delay: float = 300.0
     """cogs.events.direct_messages: delay in seconds before the latest_message expires"""
+
+    reaction_emojis: list[ReactionEmojis] = Field(
+        default_factory=lambda: [ReactionEmojis.default]
+    )
+    """for cogs.events.reactions."""
 
     @classmethod
     def load_from_env(cls) -> Self:
