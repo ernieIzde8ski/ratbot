@@ -5,7 +5,8 @@ from disnake import AllowedMentions, Forbidden, HTTPException, Message
 from thefuzz import fuzz
 
 from lib import Cog
-from lib.ext import git
+
+from .commands import COMMANDS
 
 pattern = re.compile(r"^git\s+([^\s]+)")
 
@@ -36,14 +37,12 @@ class Git(Cog):
 
         if input_cmd in ["--help", "help"]:
             reply = GIT_HELP
-        elif input_cmd in git.COMMANDS:
+        elif input_cmd in COMMANDS:
             reply = "lmao no fuck you"
         else:
             reply = f"git: '{input_cmd}' is not a git command. See 'git --help'."
 
-            similarities = [
-                (fuzz.ratio(input_cmd.lower(), cmd), cmd) for cmd in git.COMMANDS
-            ]
+            similarities = [(fuzz.ratio(input_cmd.lower(), cmd), cmd) for cmd in COMMANDS]
             similarities = sorted((s for s in similarities if s[0] > 66), reverse=True)
             if similarities and similarities[0][0] > 90:
                 similar_words = [similarities[0][1]]

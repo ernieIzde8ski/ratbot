@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Iterable
 
-from thefuzz import fuzz  # type: ignore
+from thefuzz import fuzz
 
 cwd = Path(__file__).parent
 with open(cwd / "commands.txt") as file:
