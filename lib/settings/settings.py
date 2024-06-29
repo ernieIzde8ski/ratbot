@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Self
+from typing import Iterable, Self
 
 from pydantic import BaseModel, Field
 from yaml import safe_load
@@ -10,22 +10,36 @@ from .devel import Devel
 from .raw_log_channels import RawLogChannels
 from .reaction_emojis import ReactionEmojis
 
-base_dir = Path(__file__).parent.parent.parent
+BASE_DIR = Path(__file__).parent.parent.parent
 """Directory containing __main__.py."""
 
 
+def find_cogs_in(dir: Path, *, root: Path = BASE_DIR) -> Iterable[str]:
+    """Find cogs in some directory, formatted in a way disnake understands,
+    relative to a base directory."""
+
+    for path in dir.iterdir():
+
+        if path.name == "__pycache__":
+            continue
+
+        is_dir = path.is_dir()
+        is_module = is_dir and (path / "__init__.py").exists()
+        is_source_file = path.is_file() and path.suffix.lower() == ".py"
+
+        if is_source_file:
+            yield ".".join(path.relative_to(root).parts).removesuffix(".py")
+        elif is_module:
+            yield ".".join(path.relative_to(root).parts)
+        elif is_dir:
+            yield from find_cogs_in(path, root=root)
+        else:
+            logging.warn(f"nebulous file in cogs directory: {path.relative_to(root)}")
+
+
 def find_cogs() -> list[str]:
-    resp = []
-
-    paths = (base_dir).joinpath("cogs").rglob("*.py")
-
-    for path in paths:
-        index = path.parts.index("cogs")
-        parts = path.parts[index:]
-        cog = ".".join(parts).removesuffix(".py")
-        resp.append(cog)
-
-    return resp
+    """Find the default cogs."""
+    return list(find_cogs_in(BASE_DIR / "cogs", root=BASE_DIR))
 
 
 class Settings(BaseModel):
