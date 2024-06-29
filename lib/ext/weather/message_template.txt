@@ -1,7 +1,0 @@
-__**{first_word}**__
-
-{morning_greeting} {name}, hope you have Exciting Day. (Just kidding your Stupid)
-
-It is currently {temp_real} degrees {temp_unit_long} (and it Feels like {temp_felt}{temp_unit_short}), with cloudiness of {clouds_percent}%. In Fact, Outside it is {condition}, with a humidity of {humidity}% and windspeeds at {windspeed} {speed_unit_long}. {assessment}
-
-**{russian_text}**

@@ -3,6 +3,7 @@ import logging
 import random
 from datetime import date, datetime
 from os import getenv
+from pathlib import Path
 
 from disnake import Member, Status
 from owmpy.current import Client
@@ -10,10 +11,13 @@ from owmpy.utils import StandardUnits, convert_temp
 from pydantic import ValidationError
 
 from lib import Bot, Cog, dirs
-from lib.ext.weather import MessageConfig, WeatherUser, get_message_template, getch_bible
+
+from .bible import getch_bible
+from .message_config import MessageConfig
+from .message_template import message_template
+from .weather_user import WeatherUser
 
 weather_dir = dirs.weather_home()
-message_template = get_message_template()
 
 
 class Weather(Cog):
@@ -61,7 +65,7 @@ class Weather(Cog):
             convert_temp(resp.main.temp, resp.units, StandardUnits.METRIC)
         )
 
-        return message_template.format(
+        return message_template(
             first_word=random.choice(self.mconfig.first_words),
             morning_greeting=random.choice(self.mconfig.morning_greeting),
             name=random.choice(user.aliases),
@@ -69,9 +73,9 @@ class Weather(Cog):
             temp_unit_long=resp.units.temp.long,
             temp_felt=round(resp.main.feels_like, 2),
             temp_unit_short=resp.units.temp.short,
-            clouds_percent=resp.clouds.all,
+            cloudiness_percentage=resp.clouds.all,
             condition=resp.weather[0].description.title(),
-            humidity=round(resp.main.humidity, 2),
+            humidity_percentage=round(resp.main.humidity, 2),
             windspeed=resp.wind.speed,
             speed_unit_long=resp.units.speed.long,
             assessment=assessment,
