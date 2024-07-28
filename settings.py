@@ -4,7 +4,7 @@ import logging
 import random
 from functools import cached_property
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Generic, TypeVar
 
 import pydantic
 from discord import Message, TextChannel
@@ -19,30 +19,52 @@ root = Path(__file__).parent
 class Saveable(pydantic.BaseModel):
     """A model that can be saved to the path at `cls._path`."""
 
-    indent: int | None = None
+    _indent: int | None = None
     "Indent level to save .json file at."
     _path = root
     "Path to load/save from."
 
     @classmethod
-    def load(cls, path: Path | None = None, generate_when_missing=True):
+    def default_constructor(cls):
+        """
+        Constructor called in load when FileNotFoundError occurs.
+        Useful because of models with __root__ attributes.
+        """
+        root = cls.__annotations__.get("__root__")
+        # mypy isn't particularly aware of subclasses
+        return cls() if root is None else cls(__root__=root())  # type: ignore
+
+    @classmethod
+    def load(
+        cls,
+        path: Path | None = None,
+        generate_when_missing=True,
+    ):
         """Load the class from a json file."""
         path = (path or cls._path).absolute()
         try:
-            return cls(**json.loads(path.read_text()))
+            kwargs = json.loads(path.read_text())
+            return (
+                cls(**json.loads(path.read_text()))
+                if "__root__" not in cls.__annotations__
+                # subclass with __root__ support
+                else cls(__root__=kwargs)  # type: ignore
+            )
         except FileNotFoundError:
             if not generate_when_missing:
                 raise
-            logging.error(f"No {cls.__name__} instance found at path: {path}")
-            res = cls()
+            logging.warning(f"No {cls.__name__} instance found at path: {path}")
+            res = cls.default_constructor()
             res.save()
             return res
 
     def save(self, path: Path | None = None, **json_kwargs):
         """Save the class to a json file. Accepts extra params for cls.json"""
-        indent = json_kwargs.pop("indent", self.indent)
+        path = path or self._path
+        logging.debug(f"Saving file at {path}")
+        indent = json_kwargs.pop("indent", self._indent)
         text = self.json(indent=indent, **json_kwargs)
-        return (path or self._path).write_text(text)
+        return path.write_text(text)
 
 
 def generate_extensions_list(dir: Path = root / "cogs", suffix="cogs") -> list[str]:

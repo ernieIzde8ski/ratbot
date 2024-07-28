@@ -63,7 +63,7 @@ class RatBot(commands.Bot):
                 logging.critical(_format_exception(err))
 
         # slash commands are not registered until they are synced
-        if settings.debug or not settings.synced:
+        if not settings.synced:
             await self.tree.sync()
             logging.info("Synced commands!")
             settings.synced = True

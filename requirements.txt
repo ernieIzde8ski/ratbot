@@ -1,8 +1,14 @@
-discord.py>=2.0.0
+# the big one
+discord.py>=2.1.0
 
+# niceties
 fuzzywuzzy>=0.18.0
 pydantic>=1.9.2
 python-dotenv>=0.20.0
+pytz>=2022.6
+
+# my braindead ass actually wrote this
+owmpy>=0.4.1
 
 # not strictly necessary but should make it faster
 Levenshtein>=0.12.2
